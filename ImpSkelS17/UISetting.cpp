@@ -89,7 +89,7 @@ void ImpressionistUI::cb_exit(Fl_Menu_* o, void* v)
 //-----------------------------------------------------------
 void ImpressionistUI::cb_about(Fl_Menu_* o, void* v)
 {
-	fl_message("Impressionist FLTK version for CS341, Spring 2002");
+	fl_message("Impressionist FLTK version for COMP4411, Spring 2018, Work By Rex Cheng");
 }
 
 //------- UI should keep track of the current for all the controls for answering the query from Doc ---------
@@ -105,6 +105,15 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 
 	int type = (int)v;
 
+	if (type == BRUSH_LINES || type == BRUSH_SCATTERED_LINES) {
+		//Enable thickness and angle in line mode only
+		pUI->m_BrushThicknessSlider->activate();
+		pUI->m_BrushAngleSlider->activate();
+	}
+	else {
+		pUI->m_BrushThicknessSlider->deactivate();
+		pUI->m_BrushAngleSlider->deactivate();
+	}
 
 	pDoc->setBrushType(type);
 }

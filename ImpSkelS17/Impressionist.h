@@ -1,6 +1,6 @@
 #ifndef IMPRESSIONIST_H
 #define IMPRESSIONIST_H
-#define SAMPLE_SOLUTION
+
 #include <stdio.h>
 
 #include <FL/Fl.h>

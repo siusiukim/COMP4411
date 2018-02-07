@@ -244,30 +244,32 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushSizeSlider->callback(cb_sizeSlides);
 
 	// Line width (thickness) slider
-	m_BrushSizeSlider = new Fl_Value_Slider(10, 100, 300, 20, "Line width");
-	m_BrushSizeSlider->user_data((void*)(this));	// record self to be used by static callback functions
-	m_BrushSizeSlider->type(FL_HOR_NICE_SLIDER);
-	m_BrushSizeSlider->labelfont(FL_COURIER);
-	m_BrushSizeSlider->labelsize(12);
-	m_BrushSizeSlider->minimum(MIN_THICKNESS);
-	m_BrushSizeSlider->maximum(MAX_THICKNESS);
-	m_BrushSizeSlider->step(1);
-	m_BrushSizeSlider->value(m_thickness);
-	m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
-	m_BrushSizeSlider->callback(cb_thicknessSlides);
+	m_BrushThicknessSlider = new Fl_Value_Slider(10, 100, 300, 20, "Line width");
+	m_BrushThicknessSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_BrushThicknessSlider->type(FL_HOR_NICE_SLIDER);
+	m_BrushThicknessSlider->labelfont(FL_COURIER);
+	m_BrushThicknessSlider->labelsize(12);
+	m_BrushThicknessSlider->minimum(MIN_THICKNESS);
+	m_BrushThicknessSlider->maximum(MAX_THICKNESS);
+	m_BrushThicknessSlider->step(1);
+	m_BrushThicknessSlider->value(m_thickness);
+	m_BrushThicknessSlider->align(FL_ALIGN_RIGHT);
+	m_BrushThicknessSlider->callback(cb_thicknessSlides);
+	m_BrushThicknessSlider->deactivate();
 
 	// Angle slider
-	m_BrushSizeSlider = new Fl_Value_Slider(10, 120, 300, 20, "Line Angle");
-	m_BrushSizeSlider->user_data((void*)(this));	// record self to be used by static callback functions
-	m_BrushSizeSlider->type(FL_HOR_NICE_SLIDER);
-	m_BrushSizeSlider->labelfont(FL_COURIER);
-	m_BrushSizeSlider->labelsize(12);
-	m_BrushSizeSlider->minimum(MIN_ANGLE);
-	m_BrushSizeSlider->maximum(MAX_ANGLE);
-	m_BrushSizeSlider->step(1);
-	m_BrushSizeSlider->value(m_angle);
-	m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
-	m_BrushSizeSlider->callback(cb_angleSlides);
+	m_BrushAngleSlider = new Fl_Value_Slider(10, 120, 300, 20, "Line Angle");
+	m_BrushAngleSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_BrushAngleSlider->type(FL_HOR_NICE_SLIDER);
+	m_BrushAngleSlider->labelfont(FL_COURIER);
+	m_BrushAngleSlider->labelsize(12);
+	m_BrushAngleSlider->minimum(MIN_ANGLE);
+	m_BrushAngleSlider->maximum(MAX_ANGLE);
+	m_BrushAngleSlider->step(1);
+	m_BrushAngleSlider->value(m_angle);
+	m_BrushAngleSlider->align(FL_ALIGN_RIGHT);
+	m_BrushAngleSlider->callback(cb_angleSlides);
+	m_BrushAngleSlider->deactivate();
 
 	m_brushDialog->end();
 }
