@@ -31,6 +31,9 @@
 #define MIN_ANGLE 0
 #define MAX_ANGLE 359
 
+#define MIN_OPACITY 0.0f
+#define MAX_OPACITY 1.0f
+
 class ImpressionistUI {
 public:
 	ImpressionistUI();
@@ -49,6 +52,7 @@ public:
 	Fl_Slider*			m_BrushSizeSlider;
 	Fl_Slider*			m_BrushThicknessSlider;
 	Fl_Slider*			m_BrushAngleSlider;
+	Fl_Slider*			m_BrushOpacitySlider;
 
 	Fl_Button*          m_ClearCanvasButton;
 
@@ -69,11 +73,15 @@ public:
 	int					getAngle();
 	void				setAngle(int angle);
 
+	float				getOpacity();
+	void				setOpacity(float opacity);
+
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
 	// All attributes here
 	int	m_nSize, m_thickness, m_angle;
+	float m_opacity;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
@@ -94,6 +102,7 @@ private:
 	static void	cb_sizeSlides(Fl_Widget* o, void* v);
 	static void	cb_thicknessSlides(Fl_Widget* o, void* v);
 	static void	cb_angleSlides(Fl_Widget* o, void* v);
+	static void	cb_opacitySlides(Fl_Widget* o, void* v);
 };
 
 #endif

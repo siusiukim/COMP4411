@@ -19,6 +19,7 @@ void CircleBrush::BrushBegin(const Point source, const Point target)
 
 	int size = pDoc->getSize();
 	glPointSize((float)size);
+
 	BrushMove(source, target);
 }
 
@@ -33,9 +34,14 @@ void CircleBrush::BrushMove(const Point source, const Point target)
 	}
 
 	int radius = dlg->getSize()/2;
+	float alpha = dlg->getOpacity();
+
+	//Init alpha
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 
 	glBegin(GL_POLYGON);
-	SetColor(source);
+	SetColorWithAlpha(source, alpha);
 
 	for (int i = 0; i < CIRCLE_FINENESS; i++) {
 		double angle = i * 2 * M_PI / CIRCLE_FINENESS;
@@ -43,6 +49,7 @@ void CircleBrush::BrushMove(const Point source, const Point target)
 	}
 
 	glEnd();
+	glDisable(GL_BLEND);
 }
 
 void CircleBrush::BrushEnd(const Point source, const Point target)

@@ -244,7 +244,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushSizeSlider->callback(cb_sizeSlides);
 
 	// Line width (thickness) slider
-	m_BrushThicknessSlider = new Fl_Value_Slider(10, 100, 300, 20, "Line width");
+	m_BrushThicknessSlider = new Fl_Value_Slider(10, 120, 300, 20, "Line width");
 	m_BrushThicknessSlider->user_data((void*)(this));	// record self to be used by static callback functions
 	m_BrushThicknessSlider->type(FL_HOR_NICE_SLIDER);
 	m_BrushThicknessSlider->labelfont(FL_COURIER);
@@ -258,7 +258,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushThicknessSlider->deactivate();
 
 	// Angle slider
-	m_BrushAngleSlider = new Fl_Value_Slider(10, 120, 300, 20, "Line Angle");
+	m_BrushAngleSlider = new Fl_Value_Slider(10, 160, 300, 20, "Line Angle");
 	m_BrushAngleSlider->user_data((void*)(this));	// record self to be used by static callback functions
 	m_BrushAngleSlider->type(FL_HOR_NICE_SLIDER);
 	m_BrushAngleSlider->labelfont(FL_COURIER);
@@ -270,6 +270,19 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushAngleSlider->align(FL_ALIGN_RIGHT);
 	m_BrushAngleSlider->callback(cb_angleSlides);
 	m_BrushAngleSlider->deactivate();
+
+	// Opacity slider
+	m_BrushOpacitySlider = new Fl_Value_Slider(10, 200, 300, 20, "Opacity");
+	m_BrushOpacitySlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_BrushOpacitySlider->type(FL_HOR_NICE_SLIDER);
+	m_BrushOpacitySlider->labelfont(FL_COURIER);
+	m_BrushOpacitySlider->labelsize(12);
+	m_BrushOpacitySlider->minimum(MIN_OPACITY);
+	m_BrushOpacitySlider->maximum(MAX_OPACITY);
+	m_BrushOpacitySlider->step(0.01);
+	m_BrushOpacitySlider->value(m_angle);
+	m_BrushOpacitySlider->align(FL_ALIGN_RIGHT);
+	m_BrushOpacitySlider->callback(cb_opacitySlides);
 
 	m_brushDialog->end();
 }

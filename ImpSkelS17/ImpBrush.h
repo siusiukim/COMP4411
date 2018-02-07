@@ -46,6 +46,7 @@ public:
 
 	// according to the source image and the position, determine the draw color
 	void SetColor( const Point source );
+	void SetColorWithAlpha(const Point source, float alpha);
 
 	// get Doc to communicate with it
 	ImpressionistDoc* GetDocument( void );

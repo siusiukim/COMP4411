@@ -150,6 +150,12 @@ void ImpressionistUI::cb_angleSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_angle = int(((Fl_Slider *)o)->value());
 }
 
+void ImpressionistUI::cb_opacitySlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_opacity = int(((Fl_Slider *)o)->value());
+}
+
+
 ImpressionistDoc* ImpressionistUI::getDocument()
 {
 	return m_pDoc;
@@ -199,7 +205,7 @@ void ImpressionistUI::setThickess(int thickness)
 {
 	m_thickness = thickness;
 	if (is_in_range(thickness, MIN_THICKNESS, MAX_THICKNESS)) {
-		m_BrushSizeSlider->value(thickness);
+		m_BrushThicknessSlider->value(thickness);
 	}
 }
 
@@ -212,6 +218,19 @@ void ImpressionistUI::setAngle(int angle)
 {
 	m_angle = angle;
 	if (is_in_range(angle, MIN_ANGLE, MAX_ANGLE)) {
-		m_BrushSizeSlider->value(angle);
+		m_BrushAngleSlider->value(angle);
+	}
+}
+
+float ImpressionistUI::getOpacity()
+{
+	return m_opacity;
+}
+
+void ImpressionistUI::setOpacity(float opacity)
+{
+	m_opacity = opacity;
+	if (is_in_range(m_opacity, MIN_OPACITY, MAX_OPACITY)) {
+		m_BrushOpacitySlider->value(m_opacity);
 	}
 }
