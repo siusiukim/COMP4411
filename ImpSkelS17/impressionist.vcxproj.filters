@@ -13,12 +13,15 @@
       <UniqueIdentifier>{b89c4043-2e1a-46ad-8c0b-3512354115f9}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{a4aa969e-47fd-4672-b7f4-58cb589f3f59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Brushes">
+      <UniqueIdentifier>{24dd04af-6f14-4ed1-ba23-5689108f6bea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bitmap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ImpBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Impressionist.cpp">
@@ -27,17 +30,26 @@
     <ClCompile Include="ImpressionistDoc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImpressionistUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OriginalView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PaintView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UISetting.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIConstruct.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
     <ClCompile Include="PointBrush.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Brushes</Filter>
+    </ClCompile>
+    <ClCompile Include="LineBrush.cpp">
+      <Filter>Source Files\Brushes</Filter>
+    </ClCompile>
+    <ClCompile Include="ImpBrush.cpp">
+      <Filter>Source Files\Brushes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,7 +74,10 @@
     <ClInclude Include="PaintView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PointBrush.h">
+    <ClInclude Include="Brushes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtil.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

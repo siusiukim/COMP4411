@@ -22,6 +22,15 @@
 
 #include "ImpBrush.h"
 
+#define MIN_POINT_SIZE 1
+#define MAX_POINT_SIZE 40
+
+#define MIN_THICKNESS 1
+#define MAX_THICKNESS 40
+
+#define MIN_ANGLE 0
+#define MAX_ANGLE 359
+
 class ImpressionistUI {
 public:
 	ImpressionistUI();
@@ -29,11 +38,11 @@ public:
 	// The FLTK widgets
 	Fl_Window*			m_mainWindow;
 	Fl_Menu_Bar*		m_menubar;
-								
+
 	PaintView*			m_paintView;
 	OriginalView*		m_origView;
 
-// for brush dialog
+	// for brush dialog
 	Fl_Window*			m_brushDialog;
 	Fl_Choice*			m_BrushTypeChoice;
 
@@ -48,19 +57,24 @@ public:
 	void				resize_windows(int w, int h);
 
 	// Interface to get attribute
-
 	int					getSize();
 	void				setSize(int size);
+
+	int					getThickness();
+	void				setThickess(int thickness);
+
+	int					getAngle();
+	void				setAngle(int angle);
 
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
 	// All attributes here
-	int		m_nSize;
+	int	m_nSize, m_thickness, m_angle;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
-	static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE+1];
+	static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE + 1];
 
 	static ImpressionistUI*	whoami(Fl_Menu_* o);
 
@@ -75,7 +89,8 @@ private:
 	static void	cb_brushChoice(Fl_Widget* o, void* v);
 	static void	cb_clear_canvas_button(Fl_Widget* o, void* v);
 	static void	cb_sizeSlides(Fl_Widget* o, void* v);
-
+	static void	cb_thicknessSlides(Fl_Widget* o, void* v);
+	static void	cb_angleSlides(Fl_Widget* o, void* v);
 };
 
 #endif

@@ -19,8 +19,8 @@
 ImpressionistUI *impUI;
 ImpressionistDoc *impDoc;
 
-int main(int	argc, 
-		 char**	argv) 
+int main(int	argc,
+	char**	argv)
 {
 	impDoc = new ImpressionistDoc();
 
@@ -31,7 +31,7 @@ int main(int	argc,
 	impUI->setDocument(impDoc);
 	impDoc->setUI(impUI);
 
-	Fl::visual(FL_DOUBLE|FL_INDEX);
+	Fl::visual(FL_DOUBLE | FL_INDEX);
 
 	impUI->show();
 
@@ -41,10 +41,10 @@ int main(int	argc,
 // global functions
 float frand()
 {
-	return (float)rand()/RAND_MAX;
+	return (float)rand() / RAND_MAX;
 }
 
 int irand(int max)
 {
-	return rand()%max;
+	return rand() % max;
 }

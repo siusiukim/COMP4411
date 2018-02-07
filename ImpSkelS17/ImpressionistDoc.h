@@ -12,7 +12,7 @@
 
 class ImpressionistUI;
 
-class ImpressionistDoc 
+class ImpressionistDoc
 {
 public:
 	ImpressionistDoc();
@@ -28,34 +28,34 @@ public:
 	int		getSize();						// get the UI size
 	void	setSize(int size);				// set the UI size
 	char*	getImageName();					// get the current image name
-	
+
 
 // Attributes
 public:
 	// Dimensions of original window.
-	int				m_nWidth, 
-					m_nHeight;
+	int				m_nWidth,
+		m_nHeight;
 	// Dimensions of the paint window.
-	int				m_nPaintWidth, 
-					m_nPaintHeight;	
+	int				m_nPaintWidth,
+		m_nPaintHeight;
 	// Bitmaps for original image and painting.
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
 
 
 	// The current active brush.
-	ImpBrush*			m_pCurrentBrush;	
+	ImpBrush*			m_pCurrentBrush;
 	// Size of the brush.
-	int m_nSize;							
+	int m_nSize;
 
 	ImpressionistUI*	m_pUI;
 
-// Operations
+	// Operations
 public:
 	// Get the color of the original picture at the specified coord
-	GLubyte* GetOriginalPixel( int x, int y );   
+	GLubyte* GetOriginalPixel(int x, int y);
 	// Get the color of the original picture at the specified point	
-	GLubyte* GetOriginalPixel( const Point p );  
+	GLubyte* GetOriginalPixel(const Point p);
 
 
 private:
