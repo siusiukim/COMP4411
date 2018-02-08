@@ -152,7 +152,7 @@ void ImpressionistUI::cb_angleSlides(Fl_Widget* o, void* v)
 
 void ImpressionistUI::cb_opacitySlides(Fl_Widget* o, void* v)
 {
-	((ImpressionistUI*)(o->user_data()))->m_opacity = int(((Fl_Slider *)o)->value());
+	((ImpressionistUI*)(o->user_data()))->m_opacity = float(((Fl_Slider *)o)->value());
 }
 
 

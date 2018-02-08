@@ -217,6 +217,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_nSize = 10;
 	m_thickness = 1;
 	m_angle = 0;
+	m_opacity = 1;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -280,7 +281,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushOpacitySlider->minimum(MIN_OPACITY);
 	m_BrushOpacitySlider->maximum(MAX_OPACITY);
 	m_BrushOpacitySlider->step(0.01);
-	m_BrushOpacitySlider->value(m_angle);
+	m_BrushOpacitySlider->value(m_opacity);
 	m_BrushOpacitySlider->align(FL_ALIGN_RIGHT);
 	m_BrushOpacitySlider->callback(cb_opacitySlides);
 

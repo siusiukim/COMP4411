@@ -37,8 +37,8 @@ void CircleBrush::BrushMove(const Point source, const Point target)
 	float alpha = dlg->getOpacity();
 
 	//Init alpha
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glBegin(GL_POLYGON);
 	SetColorWithAlpha(source, alpha);
