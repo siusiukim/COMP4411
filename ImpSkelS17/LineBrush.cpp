@@ -33,7 +33,7 @@ void LineBrush::BrushMove(const Point source, const Point target)
 		return;
 	}
 
-	double angle = GetDirection();
+	double angle = GetDirection(source);
 	int thickness = dlg->getThickness();
 	int length = dlg->getSize();
 

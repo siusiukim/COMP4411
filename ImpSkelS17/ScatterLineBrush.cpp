@@ -35,7 +35,7 @@ void ScatterLineBrush::BrushMove(const Point source, const Point target)
 		return;
 	}
 
-	double angle = GetDirection();
+	double angle = GetDirection(source);
 	int thickness = dlg->getThickness();
 	int length = dlg->getSize();
 	int points = (int)(length*FILL_RATIO + 1);

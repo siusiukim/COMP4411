@@ -70,7 +70,7 @@ public:
 	virtual void DragDirectionEnd(const Point point);
 
 	//Get direction of the brush, in radian
-	float GetDirection();
+	float GetDirection(const Point source);
 	//Functions for tracking cursor movement
 	void CursorBegin(Point point);
 	void CursorMove(Point point);
@@ -88,6 +88,7 @@ private:
 	ImpressionistDoc*	m_pDoc;
 
 	Point dir_start_point;
+
 	Point cursor_last_point, cursor_curr_point;
 	float cursor_direction = 0.0f;
 

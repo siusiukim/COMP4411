@@ -183,9 +183,9 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
 
 // Brush direction menu definition
 Fl_Menu_Item ImpressionistUI::brushDirectionMenu[NUM_DIRECTION_TYPE + 1] = {
-	{ "Slider/Right mouse",		FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)DIRECTION_BY_SLIDER_OR_RIGHT },
-	{ "Cursor movement",		FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)DIRECTION_BY_MOVEMENT },
-	{ "Gradient",				FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)DIRECTION_BY_GRADIENT },
+	{ "Slider/Right mouse",		FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_SLIDER_OR_RIGHT },
+	{ "Cursor movement",		FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_MOVEMENT },
+	{ "Gradient",				FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_GRADIENT },
 	{ 0 }
 };
 
@@ -235,13 +235,13 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushTypeChoice = new Fl_Choice(50, 10, 150, 25, "&Brush");
 	m_BrushTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
 	m_BrushTypeChoice->menu(brushTypeMenu);
-	m_BrushTypeChoice->callback(cb_brushChoice);
+	//m_BrushTypeChoice->callback(cb_brushChoice);
 
 	m_DirectionTypeChoice = new Fl_Choice(50, 30, 150, 25, "&Dir");
 	m_DirectionTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
 	m_DirectionTypeChoice->menu(brushDirectionMenu);
 	//m_DirectionTypeChoice->callback(cb_dirTypeChoice);
-	//m_DirectionTypeChoice->deactivate();
+	m_DirectionTypeChoice->deactivate();
 
 	m_ClearCanvasButton = new Fl_Button(240, 10, 150, 25, "&Clear Canvas");
 	m_ClearCanvasButton->user_data((void*)(this));

@@ -63,14 +63,28 @@ void ImpBrush::SetColorWithAlpha(const Point source, float alpha)
 	glColor4ub(color[0], color[1], color[2], (GLubyte)(alpha * 255));
 }
 
-float ImpBrush::GetDirection() {
+float ImpBrush::GetDirection(const Point source) {
 	ImpressionistUI* ui = GetDocument()->m_pUI;
-	printf("GetDir %d", ui->getDirectionType());
 	switch (ui->getDirectionType()) {
 	case DIRECTION_BY_SLIDER_OR_RIGHT:
 		return GetDocument()->m_pUI->getAngle() * 2 * M_PI / 360;
 	case DIRECTION_BY_MOVEMENT:
 		return cursor_direction;
+	case DIRECTION_BY_GRADIENT:
+		ImpressionistDoc* pDoc = GetDocument();
+		float gray[3][3];
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				GLubyte color[3];
+				memcpy(color, pDoc->GetOriginalPixel(Point(source.x + i - 1, source.y + j - 1)), 3);
+				gray[i][j] = (color[0] + color[1] + color[2]) / 3;
+			}
+		}
+		float sobel_x = -gray[0][0] - 2 * gray[0][1] - gray[0][2]
+			+ gray[2][0] + 2 * gray[2][1] + gray[2][2];
+		float sobel_y = gray[0][0] + 2 * gray[1][0] + gray[2][0]
+			- gray[0][2] - 2 * gray[1][2] - gray[2][2];
+		return atan2f(sobel_x, sobel_y);
 	}
 }
 
@@ -94,18 +108,22 @@ void ImpBrush::DragDirectionBegin(const Point point) {
 }
 
 void ImpBrush::DragDirectionMove(const Point point) {
-	glBegin(GL_LINES);
-	glLineWidth(1);
-	glColor3ub(255, 0, 0);
+	if (GetDocument()->m_pUI->getDirectionType() == DIRECTION_BY_SLIDER_OR_RIGHT) {
+		glBegin(GL_LINES);
+		glLineWidth(1);
+		glColor3ub(255, 0, 0);
 
-	glVertex2d(dir_start_point.x, dir_start_point.y);
-	glVertex2d(point.x, point.y);
+		glVertex2d(dir_start_point.x, dir_start_point.y);
+		glVertex2d(point.x, point.y);
 
-	glEnd();
+		glEnd();
+	}
 }
 
 void ImpBrush::DragDirectionEnd(const Point point) {
-	float direction = atan2(point.y - dir_start_point.y, point.x - dir_start_point.x) * 360 / 2 / M_PI;
-	printf("%f", direction);
-	GetDocument()->m_pUI->setAngle((int)direction);
+	//Convert to deg and set it
+	if (GetDocument()->m_pUI->getDirectionType() == DIRECTION_BY_SLIDER_OR_RIGHT) {
+		float direction = atan2(point.y - dir_start_point.y, point.x - dir_start_point.x) * 360 / 2 / M_PI;
+		GetDocument()->m_pUI->setAngle((int)direction);
+	}
 }

@@ -104,7 +104,6 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 	ImpressionistDoc* pDoc = pUI->getDocument();
 
 	int type = (int)v;
-	printf("Called brush choice!");
 
 	if (type == BRUSH_LINES || type == BRUSH_SCATTERED_LINES) {
 		//Enable thickness and angle in line mode only
@@ -126,7 +125,6 @@ void ImpressionistUI::cb_dirTypeChoice(Fl_Widget* o, void* v)
 	ImpressionistUI* pUI = ((ImpressionistUI *)(o->user_data()));
 	ImpressionistDoc* pDoc = pUI->getDocument();
 
-	printf("Choice: %d", (int)v);
 	pUI->setDirectionType ((int)v);
 }
 
@@ -249,12 +247,10 @@ void ImpressionistUI::setOpacity(float opacity)
 
 int ImpressionistUI::getDirectionType()
 {
-	printf("Get: %d", m_direction);
 	return m_direction;
 }
 
 void ImpressionistUI::setDirectionType(int direction)
 {
-	printf("Set: %d", direction);
 	m_direction = direction;
 }

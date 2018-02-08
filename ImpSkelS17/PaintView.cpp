@@ -117,6 +117,7 @@ void PaintView::draw()
 			break;
 		case RIGHT_MOUSE_DOWN:
 			SaveCurrentContent();
+			RestoreContent();
 			m_pDoc->m_pCurrentBrush->DragDirectionBegin(target);
 			break;
 		case RIGHT_MOUSE_DRAG:
@@ -124,8 +125,9 @@ void PaintView::draw()
 			m_pDoc->m_pCurrentBrush->DragDirectionMove(target);
 			break;
 		case RIGHT_MOUSE_UP:
-			m_pDoc->m_pCurrentBrush->DragDirectionEnd(target);
 			RestoreContent();
+			SaveCurrentContent();
+			m_pDoc->m_pCurrentBrush->DragDirectionEnd(target);
 			break;
 
 		default:
