@@ -22,11 +22,7 @@ void PointBrush::BrushBegin(const Point source, const Point target)
 	ImpressionistUI* dlg = pDoc->m_pUI;
 
 	int size = pDoc->getSize();
-
-
-
 	glPointSize((float)size);
-
 	BrushMove(source, target);
 }
 
@@ -40,12 +36,15 @@ void PointBrush::BrushMove(const Point source, const Point target)
 		return;
 	}
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBegin(GL_POINTS);
 	SetColor(source);
 
 	glVertex2d(target.x, target.y);
 
 	glEnd();
+	glDisable(GL_BLEND);
 }
 
 void PointBrush::BrushEnd(const Point source, const Point target)

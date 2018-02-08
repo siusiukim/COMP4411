@@ -48,6 +48,7 @@ public:
 	// for brush dialog
 	Fl_Window*			m_brushDialog;
 	Fl_Choice*			m_BrushTypeChoice;
+	Fl_Choice*			m_DirectionTypeChoice;
 
 	Fl_Slider*			m_BrushSizeSlider;
 	Fl_Slider*			m_BrushThicknessSlider;
@@ -76,16 +77,20 @@ public:
 	float				getOpacity();
 	void				setOpacity(float opacity);
 
+	void				setDirectionType(int type);
+	int					getDirectionType();
+
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
 	// All attributes here
-	int	m_nSize, m_thickness, m_angle;
+	int	m_nSize, m_thickness, m_angle, m_direction;
 	float m_opacity;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
 	static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE + 1];
+	static Fl_Menu_Item		brushDirectionMenu[NUM_DIRECTION_TYPE + 1];
 
 	static ImpressionistUI*	whoami(Fl_Menu_* o);
 
@@ -103,6 +108,8 @@ private:
 	static void	cb_thicknessSlides(Fl_Widget* o, void* v);
 	static void	cb_angleSlides(Fl_Widget* o, void* v);
 	static void	cb_opacitySlides(Fl_Widget* o, void* v);
+
+	static void	cb_dirTypeChoice(Fl_Widget* o, void* v);
 };
 
 #endif

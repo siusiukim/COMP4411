@@ -36,6 +36,8 @@ void ScatterCircleBrush::BrushMove(const Point source, const Point target)
 	int size = dlg->getSize();
 	int points = (int)(size*size*FILL_RATIO);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	for (int i = 0; i < points; i++) {
 		glBegin(GL_POLYGON);
 		double x = target.x + frand()*size - size / 2.0;
@@ -49,6 +51,7 @@ void ScatterCircleBrush::BrushMove(const Point source, const Point target)
 		
 		glEnd();
 	}
+	glDisable(GL_BLEND);
 }
 
 void ScatterCircleBrush::BrushEnd(const Point source, const Point target)

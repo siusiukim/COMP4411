@@ -34,6 +34,8 @@ void ScatterPointBrush::BrushMove(const Point source, const Point target)
 	int size = dlg->getSize();
 	int points = (int)(size*size*FILL_RATIO);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBegin(GL_POINTS);
 
 	for (int i = 0; i < points; i++) {
@@ -44,6 +46,7 @@ void ScatterPointBrush::BrushMove(const Point source, const Point target)
 	}
 
 	glEnd();
+	glDisable(GL_BLEND);
 }
 
 void ScatterPointBrush::BrushEnd(const Point source, const Point target)

@@ -19,6 +19,7 @@ void ScatterLineBrush::BrushBegin(const Point source, const Point target)
 
 	int size = pDoc->getSize();
 	glPointSize((float)size);
+	CursorBegin(target);
 	BrushMove(source, target);
 }
 
@@ -27,16 +28,20 @@ void ScatterLineBrush::BrushMove(const Point source, const Point target)
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg = pDoc->m_pUI;
 
+	CursorMove(target);
+
 	if (pDoc == NULL) {
 		printf("ScatterPointBrush::BrushMove  document is NULL\n");
 		return;
 	}
 
-	double angle = dlg->getAngle() * 2 * M_PI / 360;
+	double angle = GetDirection();
 	int thickness = dlg->getThickness();
 	int length = dlg->getSize();
 	int points = (int)(length*FILL_RATIO + 1);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	for (int i = 0; i < points; i++) {
 		glLineWidth((float)thickness);
 		glBegin(GL_LINES);
@@ -50,6 +55,7 @@ void ScatterLineBrush::BrushMove(const Point source, const Point target)
 		glVertex2d(x + x_adj / 2, y + y_adj / 2);
 		glEnd();
 	}
+	glDisable(GL_BLEND);
 }
 
 void ScatterLineBrush::BrushEnd(const Point source, const Point target)
