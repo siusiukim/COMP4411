@@ -165,6 +165,11 @@ void ImpressionistUI::cb_opacitySlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_opacity = float(((Fl_Slider *)o)->value());
 }
 
+void ImpressionistUI::cb_spacingSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_spacing = float(((Fl_Slider *)o)->value());
+}
+
 
 ImpressionistDoc* ImpressionistUI::getDocument()
 {
@@ -253,4 +258,14 @@ int ImpressionistUI::getDirectionType()
 void ImpressionistUI::setDirectionType(int direction)
 {
 	m_direction = direction;
+}
+
+int ImpressionistUI::getSpacing()
+{
+	return m_spacing;
+}
+
+void ImpressionistUI::setSpacing(int spacing)
+{
+	m_spacing = spacing;
 }

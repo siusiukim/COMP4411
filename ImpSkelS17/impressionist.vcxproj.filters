@@ -63,6 +63,9 @@
     <ClCompile Include="ScatterCircleBrush.cpp">
       <Filter>Source Files\Brushes</Filter>
     </ClCompile>
+    <ClCompile Include="UIAction.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h">

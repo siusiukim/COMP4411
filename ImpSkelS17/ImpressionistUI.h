@@ -34,6 +34,9 @@
 #define MIN_OPACITY 0.0f
 #define MAX_OPACITY 1.0f
 
+#define MIN_SPACING 1
+#define MAX_SPACING 10
+
 class ImpressionistUI {
 public:
 	ImpressionistUI();
@@ -54,8 +57,10 @@ public:
 	Fl_Slider*			m_BrushThicknessSlider;
 	Fl_Slider*			m_BrushAngleSlider;
 	Fl_Slider*			m_BrushOpacitySlider;
+	Fl_Slider*			m_BrushSpacingSlider;
 
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Button*          m_AutoPaintButton;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -80,11 +85,14 @@ public:
 	void				setDirectionType(int type);
 	int					getDirectionType();
 
+	void				setSpacing(int spacing);
+	int					getSpacing();
+
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
 	// All attributes here
-	int	m_nSize, m_thickness, m_angle, m_direction;
+	int	m_nSize, m_thickness, m_angle, m_direction, m_spacing;
 	float m_opacity;
 
 	// Static class members
@@ -108,8 +116,11 @@ private:
 	static void	cb_thicknessSlides(Fl_Widget* o, void* v);
 	static void	cb_angleSlides(Fl_Widget* o, void* v);
 	static void	cb_opacitySlides(Fl_Widget* o, void* v);
+	static void	cb_spacingSlides(Fl_Widget* o, void* v);
 
 	static void	cb_dirTypeChoice(Fl_Widget* o, void* v);
+
+	static void	autoDrawAction(Fl_Widget* o, void* v);
 };
 
 #endif

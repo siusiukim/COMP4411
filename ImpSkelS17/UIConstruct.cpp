@@ -227,6 +227,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_angle = 0;
 	m_opacity = 1;
 	m_direction = DIRECTION_BY_SLIDER_OR_RIGHT;
+	m_spacing = 1;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -300,6 +301,23 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushOpacitySlider->value(m_opacity);
 	m_BrushOpacitySlider->align(FL_ALIGN_RIGHT);
 	m_BrushOpacitySlider->callback(cb_opacitySlides);
+
+	// Spacing slider
+	m_BrushSpacingSlider = new Fl_Value_Slider(10, 200, 200, 20, "Spacing");
+	m_BrushSpacingSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_BrushSpacingSlider->type(FL_HOR_NICE_SLIDER);
+	m_BrushSpacingSlider->labelfont(FL_COURIER);
+	m_BrushSpacingSlider->labelsize(12);
+	m_BrushSpacingSlider->minimum(MIN_SPACING);
+	m_BrushSpacingSlider->maximum(MAX_SPACING);
+	m_BrushSpacingSlider->step(1);
+	m_BrushSpacingSlider->value(m_spacing);
+	m_BrushSpacingSlider->align(FL_ALIGN_RIGHT);
+	m_BrushSpacingSlider->callback(cb_spacingSlides);
+
+	m_AutoPaintButton = new Fl_Button(300, 200, 80, 20, "Paint");
+	m_AutoPaintButton->user_data((void*)(this));
+	m_AutoPaintButton->callback(autoDrawAction);
 
 	m_brushDialog->end();
 }

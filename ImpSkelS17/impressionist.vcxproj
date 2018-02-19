@@ -147,6 +147,7 @@
     <ClCompile Include="ScatterCircleBrush.cpp" />
     <ClCompile Include="ScatterLineBrush.cpp" />
     <ClCompile Include="ScatterPointBrush.cpp" />
+    <ClCompile Include="UIAction.cpp" />
     <ClCompile Include="UISetting.cpp" />
     <ClCompile Include="LineBrush.cpp" />
     <ClCompile Include="OriginalView.cpp" />
