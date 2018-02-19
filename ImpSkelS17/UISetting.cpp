@@ -128,17 +128,6 @@ void ImpressionistUI::cb_dirTypeChoice(Fl_Widget* o, void* v)
 	pUI->setDirectionType ((int)v);
 }
 
-//------------------------------------------------------------
-// Clears the paintview canvas.
-// Called by the UI when the clear canvas button is pushed
-//------------------------------------------------------------
-void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v)
-{
-	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
-
-	pDoc->clearCanvas();
-}
-
 
 //-----------------------------------------------------------
 // Updates the brush size to use from the value of the size

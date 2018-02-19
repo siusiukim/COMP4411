@@ -19,6 +19,8 @@
 #define RIGHT_MOUSE_UP		6
 
 
+extern float frand();
+
 #ifndef WIN32
 #define min(a, b)	( ( (a)<(b) ) ? (a) : (b) )
 #define max(a, b)	( ( (a)>(b) ) ? (a) : (b) )
@@ -41,26 +43,7 @@ PaintView::PaintView(int			x,
 }
 
 
-void PaintView::draw()
-{
-#ifndef MESA
-	// To avoid flicker on some machines.
-	glDrawBuffer(GL_FRONT_AND_BACK);
-#endif // !MESA
-
-	if (!valid())
-	{
-
-		glClearColor(0.7f, 0.7f, 0.7f, 1.0);
-
-		// We're only using 2-D, so turn off depth 
-		glDisable(GL_DEPTH_TEST);
-
-		ortho();
-
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
-
+void PaintView::convertPoint(Point point, Point* source, Point* target) {
 	Point scrollpos;// = GetScrollPosition();
 	scrollpos.x = 0;
 	scrollpos.y = 0;
@@ -86,6 +69,33 @@ void PaintView::draw()
 	m_nStartCol = scrollpos.x;
 	m_nEndCol = m_nStartCol + drawWidth;
 
+	*source = Point(point.x + m_nStartCol, m_nEndRow - point.y);
+	*target = Point(point.x, m_nWindowHeight - point.y);
+}
+
+void PaintView::draw()
+{
+#ifndef MESA
+	// To avoid flicker on some machines.
+	glDrawBuffer(GL_FRONT_AND_BACK);
+#endif // !MESA
+
+	if (!valid())
+	{
+
+		glClearColor(0.7f, 0.7f, 0.7f, 1.0);
+
+		// We're only using 2-D, so turn off depth 
+		glDisable(GL_DEPTH_TEST);
+
+		ortho();
+
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	Point source, target;
+	convertPoint(coord, &source, &target);
+
 	if (m_pDoc->m_ucPainting && !isAnEvent)
 	{
 		RestoreContent();
@@ -96,9 +106,6 @@ void PaintView::draw()
 
 		// Clear it after processing.
 		isAnEvent = 0;
-
-		Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
-		Point target(coord.x, m_nWindowHeight - coord.y);
 
 		// This is the event handler
 		switch (eventToDo)
@@ -144,7 +151,6 @@ void PaintView::draw()
 #endif // !MESA
 
 }
-
 
 int PaintView::handle(int event)
 {
@@ -244,3 +250,60 @@ void PaintView::RestoreContent()
 
 	//	glDrawBuffer(GL_FRONT);
 }
+
+void PaintView::autoPaint(int spacing) {
+
+#ifndef MESA
+	// To avoid flicker on some machines.
+	glDrawBuffer(GL_FRONT_AND_BACK);
+#endif // !MESA
+
+	if (!valid())
+	{
+		glClearColor(0.7f, 0.7f, 0.7f, 1.0);
+
+		// We're only using 2-D, so turn off depth 
+		glDisable(GL_DEPTH_TEST);
+
+		ortho();
+
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	ImpressionistUI* ui = m_pDoc->m_pUI;
+
+	int orig_size = ui->getSize();
+	int orig_thickness = ui->getThickness();
+	int orig_angle = ui->getAngle();
+
+	if (m_pDoc->m_ucPainting) {
+		for (int i = 0; i < m_nDrawWidth; i += spacing) {
+			for (int j = 0; j < m_nDrawHeight; j += spacing) {
+				Point draw(i + (frand()-0.5f) * spacing * 0.5f, j + (frand()-0.5f) * spacing * 0.5f);
+				Point source, target;
+				convertPoint(draw, &source, &target);
+
+				//Randomness in brush attributes
+				ui->setSize(orig_size + (frand() - 0.5f) * 0.3f * orig_size);
+				ui->setThickess(orig_thickness + (frand() - 0.5f) * 0.3f * orig_thickness);
+				ui->setAngle(orig_angle + (frand() - 0.5f) * 18);
+
+				m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+			}
+		}
+	}
+
+	ui->setSize(orig_size);
+	ui->setThickess(orig_thickness);
+	ui->setAngle(orig_angle);
+
+	SaveCurrentContent();
+	RestoreContent();
+	glFlush();
+
+#ifndef MESA
+	// To avoid flicker on some machines.
+	glDrawBuffer(GL_BACK);
+#endif // !MESA
+}
+

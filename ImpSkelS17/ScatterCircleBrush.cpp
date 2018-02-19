@@ -35,6 +35,7 @@ void ScatterCircleBrush::BrushMove(const Point source, const Point target)
 
 	int size = dlg->getSize();
 	int points = (int)(size*size*FILL_RATIO);
+	float alpha = dlg->getOpacity();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -42,7 +43,7 @@ void ScatterCircleBrush::BrushMove(const Point source, const Point target)
 		glBegin(GL_POLYGON);
 		double x = target.x + frand()*size - size / 2.0;
 		double y = target.y + frand()*size - size / 2.0;
-		SetColor(Point(x, y));
+		SetColorWithAlpha(Point(x, y), alpha);
 
 		for (int i = 0; i < CIRCLE_FINENESS; i++) {
 			double angle = i * 2 * M_PI / CIRCLE_FINENESS;

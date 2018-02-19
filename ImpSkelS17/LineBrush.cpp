@@ -34,6 +34,7 @@ void LineBrush::BrushMove(const Point source, const Point target)
 	}
 
 	double angle = GetDirection(source);
+	float alpha = dlg->getOpacity();
 	int thickness = dlg->getThickness();
 	int length = dlg->getSize();
 
@@ -43,7 +44,7 @@ void LineBrush::BrushMove(const Point source, const Point target)
 
 	glLineWidth((float)thickness);
 	glBegin(GL_LINES);
-	SetColor(source);
+	SetColorWithAlpha(source, alpha);
 
 	double x_adj = cos(angle)*length;
 	double y_adj = sin(angle)*length;

@@ -39,6 +39,7 @@ void ScatterLineBrush::BrushMove(const Point source, const Point target)
 	int thickness = dlg->getThickness();
 	int length = dlg->getSize();
 	int points = (int)(length*FILL_RATIO + 1);
+	float alpha = dlg->getOpacity();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -47,7 +48,7 @@ void ScatterLineBrush::BrushMove(const Point source, const Point target)
 		glBegin(GL_LINES);
 		double x = target.x + frand()*length - length / 2.0;
 		double y = target.y + frand()*length - length / 2.0;
-		SetColor(Point(x, y));
+		SetColorWithAlpha(Point(x, y), alpha);
 
 		double x_adj = cos(angle)*length;
 		double y_adj = sin(angle)*length;

@@ -33,6 +33,7 @@ void ScatterPointBrush::BrushMove(const Point source, const Point target)
 
 	int size = dlg->getSize();
 	int points = (int)(size*size*FILL_RATIO);
+	float alpha = dlg->getOpacity();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -41,7 +42,7 @@ void ScatterPointBrush::BrushMove(const Point source, const Point target)
 	for (int i = 0; i < points; i++) {
 		double x = target.x + frand()*size - size / 2.0;
 		double y = target.y + frand()*size - size / 2.0;
-		SetColor(Point(x, y));
+		SetColorWithAlpha(Point(x, y), alpha);
 		glVertex2d(x, y);
 	}
 

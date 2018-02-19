@@ -227,7 +227,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_angle = 0;
 	m_opacity = 1;
 	m_direction = DIRECTION_BY_SLIDER_OR_RIGHT;
-	m_spacing = 1;
+	m_spacing = MIN_SPACING;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -315,9 +315,13 @@ ImpressionistUI::ImpressionistUI() {
 	m_BrushSpacingSlider->align(FL_ALIGN_RIGHT);
 	m_BrushSpacingSlider->callback(cb_spacingSlides);
 
-	m_AutoPaintButton = new Fl_Button(300, 200, 80, 20, "Paint");
+	m_AutoPaintButton = new Fl_Button(280, 200, 50, 20, "Paint");
 	m_AutoPaintButton->user_data((void*)(this));
 	m_AutoPaintButton->callback(autoDrawAction);
+
+	m_CopyCanvasButton = new Fl_Button(340, 200, 50, 20, "Copy");
+	m_CopyCanvasButton->user_data((void*)(this));
+	m_CopyCanvasButton->callback(cb_copy_canvas);
 
 	m_brushDialog->end();
 }

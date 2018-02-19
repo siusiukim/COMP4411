@@ -34,8 +34,8 @@
 #define MIN_OPACITY 0.0f
 #define MAX_OPACITY 1.0f
 
-#define MIN_SPACING 1
-#define MAX_SPACING 10
+#define MIN_SPACING 5
+#define MAX_SPACING 50
 
 class ImpressionistUI {
 public:
@@ -60,6 +60,7 @@ public:
 	Fl_Slider*			m_BrushSpacingSlider;
 
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Button*          m_CopyCanvasButton;
 	Fl_Button*          m_AutoPaintButton;
 
 	// Member functions
@@ -108,6 +109,7 @@ private:
 	static void	cb_save_image(Fl_Menu_* o, void* v);
 	static void	cb_brushes(Fl_Menu_* o, void* v);
 	static void	cb_clear_canvas(Fl_Menu_* o, void* v);
+	static void	cb_copy_canvas(Fl_Widget* o, void* v);
 	static void	cb_exit(Fl_Menu_* o, void* v);
 	static void	cb_about(Fl_Menu_* o, void* v);
 	static void	cb_brushChoice(Fl_Widget* o, void* v);

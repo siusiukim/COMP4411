@@ -30,6 +30,10 @@ public:
 
 	void RestoreContent();
 
+	void convertPoint(Point point, Point* source, Point* target);
+
+	void autoPaint(int spacing);
+
 	ImpressionistDoc *m_pDoc;
 
 private:
