@@ -24,10 +24,10 @@
 #include "ImpBrush.h"
 
 #define MIN_POINT_SIZE 1
-#define MAX_POINT_SIZE 40
+#define MAX_POINT_SIZE 200
 
 #define MIN_THICKNESS 1
-#define MAX_THICKNESS 40
+#define MAX_THICKNESS 1000
 
 #define MIN_ANGLE 0
 #define MAX_ANGLE 359
@@ -37,6 +37,11 @@
 
 #define MIN_SPACING 5
 #define MAX_SPACING 50
+
+#define MIN_LEARN 5
+#define MAX_LEARN 100
+
+#define LEARN_ITERATION 100
 
 class ImpressionistUI {
 public:
@@ -60,10 +65,12 @@ public:
 	Fl_Slider*			m_BrushAngleSlider;
 	Fl_Slider*			m_BrushOpacitySlider;
 	Fl_Slider*			m_BrushSpacingSlider;
+	Fl_Slider*			m_LearnNumberSlider;
 
 	Fl_Button*          m_ClearCanvasButton;
 	Fl_Button*          m_CopyCanvasButton;
 	Fl_Button*          m_AutoPaintButton;
+	Fl_Button*          m_AutoLearnButton;
 
 	Fl_Int_Input*		m_FilterInput[3][3];
 	Fl_Button*          m_ApplyFilterButton;
@@ -97,6 +104,7 @@ public:
 
 	bool				m_normalize;
 	int					m_filterValue[3][3];
+	int					m_learnNumber;
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
@@ -145,6 +153,9 @@ private:
 	
 	static void cb_applyFilter(Fl_Widget* o, void* v);
 	static void cb_normalizeSwitch(Fl_Widget* o, void* v);
+
+	static void cb_autoLearnDrawing(Fl_Widget* o, void* v);
+	static void cb_learnNumberSlides(Fl_Widget* o, void* v);
 };
 
 #endif

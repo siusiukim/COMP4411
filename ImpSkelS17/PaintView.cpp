@@ -9,6 +9,7 @@
 #include "impressionistUI.h"
 #include "paintview.h"
 #include "ImpBrush.h"
+#include <math.h>
 
 
 #define LEFT_MOUSE_DOWN		1
@@ -305,5 +306,30 @@ void PaintView::autoPaint(int spacing) {
 	// To avoid flicker on some machines.
 	glDrawBuffer(GL_BACK);
 #endif // !MESA
+}
+
+void PaintView::autoLearnPaint(int numLearn) {
+	double minLoss = INFINITY;
+	unsigned char* best_paint = new unsigned char[m_nDrawWidth*m_nDrawHeight*3];
+	unsigned char* cand[5];
+	for (int i = 0; i < 5; i++) {
+		cand[i] = new unsigned char[m_nDrawWidth*m_nDrawHeight * 3];
+	}
+
+	Point *posArray = new Point[6 * numLearn];
+	int *sizeArray = new int[6 * numLearn];
+	int *thicknessArray = new int[6 * numLearn];
+	int *angleArray = new int[6 * numLearn];
+
+	//randomly init params
+
+	for (int i = 0; i < LEARN_ITERATION; i++) {
+
+	}
+
+	delete[] best_paint;
+	for (int i = 0; i < 5; i++) {
+		delete[] cand[i];
+	}
 }
 

@@ -34,6 +34,8 @@ public:
 
 	void autoPaint(int spacing);
 
+	void autoLearnPaint(int numLearn);
+
 	ImpressionistDoc *m_pDoc;
 
 private:

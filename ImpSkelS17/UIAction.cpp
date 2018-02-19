@@ -140,3 +140,12 @@ void ImpressionistUI::autoDrawAction(Fl_Widget* o, void*) {
 	pUI->m_paintView->autoPaint(spacing);
 	pUI->m_paintView->refresh();
 }
+
+void ImpressionistUI::cb_autoLearnDrawing(Fl_Widget* o, void*) {
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+
+	int numLearn = pUI->m_learnNumber;
+
+	pUI->m_paintView->autoLearnPaint(numLearn);
+	pUI->m_paintView->refresh();
+}

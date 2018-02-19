@@ -238,7 +238,7 @@ ImpressionistUI::ImpressionistUI() {
 	}
 
 	// brush dialog definition
-	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
+	m_brushDialog = new Fl_Window(400, 425, "Brush Dialog");
 
 	// Add a brush type choice to the dialog
 	m_BrushTypeChoice = new Fl_Choice(50, 10, 150, 25, "&Brush");
@@ -330,6 +330,23 @@ ImpressionistUI::ImpressionistUI() {
 	m_CopyCanvasButton = new Fl_Button(340, 200, 50, 20, "Copy");
 	m_CopyCanvasButton->user_data((void*)(this));
 	m_CopyCanvasButton->callback(cb_copy_canvas);
+
+	// Learning slider
+	m_LearnNumberSlider = new Fl_Value_Slider(10, 250, 200, 20, "Count");
+	m_LearnNumberSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_LearnNumberSlider->type(FL_HOR_NICE_SLIDER);
+	m_LearnNumberSlider->labelfont(FL_COURIER);
+	m_LearnNumberSlider->labelsize(12);
+	m_LearnNumberSlider->minimum(MIN_LEARN);
+	m_LearnNumberSlider->maximum(MAX_LEARN);
+	m_LearnNumberSlider->step(1);
+	m_LearnNumberSlider->value(m_spacing);
+	m_LearnNumberSlider->align(FL_ALIGN_RIGHT);
+	m_LearnNumberSlider->callback(cb_learnNumberSlides);
+
+	m_AutoLearnButton = new Fl_Button(300, 250, 100, 20, "Auto relax");
+	m_AutoLearnButton->user_data((void*)(this));
+	m_AutoLearnButton->callback(cb_autoLearnDrawing);
 
 	m_brushDialog->end();
 
