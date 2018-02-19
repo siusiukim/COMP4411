@@ -23,75 +23,6 @@ ImpressionistUI* ImpressionistUI::whoami(Fl_Menu_* o)
 	return ((ImpressionistUI*)(o->parent()->user_data()));
 }
 
-//------------------------------------------------------------------
-// Brings up a file chooser and then loads the chosen image
-// This is called by the UI when the load image menu item is chosen
-//------------------------------------------------------------------
-void ImpressionistUI::cb_load_image(Fl_Menu_* o, void* v)
-{
-	ImpressionistDoc *pDoc = whoami(o)->getDocument();
-
-	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
-	if (newfile != NULL) {
-		pDoc->loadImage(newfile);
-	}
-}
-
-//------------------------------------------------------------------
-// Brings up a file chooser and then saves the painted image
-// This is called by the UI when the save image menu item is chosen
-//------------------------------------------------------------------
-void ImpressionistUI::cb_save_image(Fl_Menu_* o, void* v)
-{
-	ImpressionistDoc *pDoc = whoami(o)->getDocument();
-
-	char* newfile = fl_file_chooser("Save File?", "*.bmp", "save.bmp");
-	if (newfile != NULL) {
-		pDoc->saveImage(newfile);
-	}
-}
-
-//-------------------------------------------------------------
-// Brings up the paint dialog
-// This is called by the UI when the brushes menu item
-// is chosen
-//-------------------------------------------------------------
-void ImpressionistUI::cb_brushes(Fl_Menu_* o, void* v)
-{
-	whoami(o)->m_brushDialog->show();
-}
-
-//------------------------------------------------------------
-// Clears the paintview canvas.
-// Called by the UI when the clear canvas menu item is chosen
-//------------------------------------------------------------
-void ImpressionistUI::cb_clear_canvas(Fl_Menu_* o, void* v)
-{
-	ImpressionistDoc* pDoc = whoami(o)->getDocument();
-
-	pDoc->clearCanvas();
-}
-
-//------------------------------------------------------------
-// Causes the Impressionist program to exit
-// Called by the UI when the quit menu item is chosen
-//------------------------------------------------------------
-void ImpressionistUI::cb_exit(Fl_Menu_* o, void* v)
-{
-	whoami(o)->m_mainWindow->hide();
-	whoami(o)->m_brushDialog->hide();
-}
-
-
-//-----------------------------------------------------------
-// Brings up an about dialog box
-// Called by the UI when the about menu item is chosen
-//-----------------------------------------------------------
-void ImpressionistUI::cb_about(Fl_Menu_* o, void* v)
-{
-	fl_message("Impressionist FLTK version for COMP4411, Spring 2018, Work By Rex Cheng");
-}
-
 //------- UI should keep track of the current for all the controls for answering the query from Doc ---------
 //-------------------------------------------------------------
 // Sets the type of brush to use to the one chosen in the brush 
@@ -159,6 +90,60 @@ void ImpressionistUI::cb_spacingSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_spacing = float(((Fl_Slider *)o)->value());
 }
 
+
+//Filter input
+
+void ImpressionistUI::cb_filterInput_00(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[0][0] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_filterInput_01(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[0][1] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_filterInput_02(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[0][2] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_filterInput_10(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[1][0] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_filterInput_11(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[1][1] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_filterInput_12(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[1][2] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_filterInput_20(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[2][0] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_filterInput_21(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[2][1] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_filterInput_22(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_filterValue[2][2] = atoi(((Fl_Int_Input *)o)->value());
+}
+
+void ImpressionistUI::cb_normalizeSwitch(Fl_Widget* o, void* v)
+{
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	if (pUI->m_normalize == TRUE) pUI->m_normalize = FALSE;
+	else pUI->m_normalize = TRUE;
+}
 
 ImpressionistDoc* ImpressionistUI::getDocument()
 {

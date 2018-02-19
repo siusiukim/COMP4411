@@ -180,7 +180,6 @@ int ImpressionistDoc::clearCanvas()
 
 int ImpressionistDoc::copyCanvas()
 {
-
 	// Release old storage
 	if (m_ucPainting)
 	{
@@ -195,6 +194,39 @@ int ImpressionistDoc::copyCanvas()
 	}
 
 	return 0;
+}
+
+void ImpressionistDoc::applyFilter(float filter[3][3]) {
+	if (m_ucBitmap)
+	{
+		unsigned char* m_newPaint = new unsigned char[m_nHeight*m_nWidth * 3];
+		for (int j = 0; j < m_nHeight; j++) {
+			for (int i = 0; i < m_nWidth; i++) {
+				float sum[3] = { 0.0f };
+				for (int fx = 0; fx < 3; fx++) {
+					for (int fy = 0; fy < 3; fy++) {
+						GLubyte* rgb = GetOriginalPixel(i + fx - 1, j + fy - 1);
+						sum[0] += rgb[0] * filter[fx][fy];
+						sum[1] += rgb[1] * filter[fx][fy];
+						sum[2] += rgb[2] * filter[fx][fy];
+					}
+				}
+				for (int i = 0; i < 3; i++) {
+					if (sum[i] < 0) sum[i] = 0;
+					if (sum[i] > 255) sum[i] = 255;
+				}
+				m_newPaint[(j*m_nWidth + i) * 3 + 0] = (GLubyte)sum[0];
+				m_newPaint[(j*m_nWidth + i) * 3 + 1] = (GLubyte)sum[1];
+				m_newPaint[(j*m_nWidth + i) * 3 + 2] = (GLubyte)sum[2];
+			}
+		}
+
+		delete[] m_ucBitmap;
+		m_ucBitmap = m_newPaint;
+
+		m_pUI->m_paintView->refresh();
+		m_pUI->m_origView->refresh();
+	}
 }
 
 //------------------------------------------------------------------

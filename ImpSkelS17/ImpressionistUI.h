@@ -15,6 +15,7 @@
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Light_Button.H>
+#include <FL/Fl_Int_Input.H>
 
 #include "Impressionist.h"
 #include "OriginalView.h"
@@ -50,6 +51,7 @@ public:
 
 	// for brush dialog
 	Fl_Window*			m_brushDialog;
+	Fl_Window*			m_filterDialog;
 	Fl_Choice*			m_BrushTypeChoice;
 	Fl_Choice*			m_DirectionTypeChoice;
 
@@ -62,6 +64,10 @@ public:
 	Fl_Button*          m_ClearCanvasButton;
 	Fl_Button*          m_CopyCanvasButton;
 	Fl_Button*          m_AutoPaintButton;
+
+	Fl_Int_Input*		m_FilterInput[3][3];
+	Fl_Button*          m_ApplyFilterButton;
+	Fl_Light_Button*	m_NormalizeSwitch;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -89,6 +95,8 @@ public:
 	void				setSpacing(int spacing);
 	int					getSpacing();
 
+	bool				m_normalize;
+	int					m_filterValue[3][3];
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
@@ -108,6 +116,7 @@ private:
 	static void	cb_load_image(Fl_Menu_* o, void* v);
 	static void	cb_save_image(Fl_Menu_* o, void* v);
 	static void	cb_brushes(Fl_Menu_* o, void* v);
+	static void	cb_filters(Fl_Menu_* o, void* v);
 	static void	cb_clear_canvas(Fl_Menu_* o, void* v);
 	static void	cb_copy_canvas(Fl_Widget* o, void* v);
 	static void	cb_exit(Fl_Menu_* o, void* v);
@@ -123,6 +132,19 @@ private:
 	static void	cb_dirTypeChoice(Fl_Widget* o, void* v);
 
 	static void	autoDrawAction(Fl_Widget* o, void* v);
+
+	static void cb_filterInput_00(Fl_Widget* o, void* v);
+	static void cb_filterInput_01(Fl_Widget* o, void* v);
+	static void cb_filterInput_02(Fl_Widget* o, void* v);
+	static void cb_filterInput_10(Fl_Widget* o, void* v);
+	static void cb_filterInput_11(Fl_Widget* o, void* v);
+	static void cb_filterInput_12(Fl_Widget* o, void* v);
+	static void cb_filterInput_20(Fl_Widget* o, void* v);
+	static void cb_filterInput_21(Fl_Widget* o, void* v);
+	static void cb_filterInput_22(Fl_Widget* o, void* v);
+	
+	static void cb_applyFilter(Fl_Widget* o, void* v);
+	static void cb_normalizeSwitch(Fl_Widget* o, void* v);
 };
 
 #endif

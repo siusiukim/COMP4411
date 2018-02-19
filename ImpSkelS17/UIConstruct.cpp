@@ -158,6 +158,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&Load Image...",	FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_load_image },
 	{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
+	{ "&Filter...",	FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_filters },
 	{ "&Clear Canvas", FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
 
 	{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
@@ -228,6 +229,13 @@ ImpressionistUI::ImpressionistUI() {
 	m_opacity = 1;
 	m_direction = DIRECTION_BY_SLIDER_OR_RIGHT;
 	m_spacing = MIN_SPACING;
+	m_normalize = false;
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			m_filterValue[i][j] = 1;
+		}
+	}
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -324,5 +332,53 @@ ImpressionistUI::ImpressionistUI() {
 	m_CopyCanvasButton->callback(cb_copy_canvas);
 
 	m_brushDialog->end();
+
+	m_filterDialog = new Fl_Window(400, 325, "Filter Dialog");
+
+	m_ApplyFilterButton = new Fl_Button(10, 10, 100, 25, "Apply filter");
+	m_ApplyFilterButton->user_data((void*)(this));
+	m_ApplyFilterButton->callback(cb_applyFilter);
+
+	m_NormalizeSwitch = new Fl_Light_Button(150, 10, 15, 20, "Normalize");
+	m_NormalizeSwitch->user_data((void*)(this));
+	m_NormalizeSwitch->callback(cb_normalizeSwitch);
+
+	m_FilterInput[0][0] = new Fl_Int_Input(100, 50, 25, 25, "[0][0]");
+	m_FilterInput[0][0]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[0][0]->callback(cb_filterInput_00);
+
+	m_FilterInput[0][1] = new Fl_Int_Input(100, 150, 25, 25, "[0][1]");
+	m_FilterInput[0][1]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[0][1]->callback(cb_filterInput_01);
+
+	m_FilterInput[0][2] = new Fl_Int_Input(100, 250, 25, 25, "[0][2]");
+	m_FilterInput[0][2]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[0][2]->callback(cb_filterInput_02);
+
+	m_FilterInput[1][0] = new Fl_Int_Input(200, 50, 25, 25, "[1][0]");
+	m_FilterInput[1][0]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[1][0]->callback(cb_filterInput_10);
+
+	m_FilterInput[1][1] = new Fl_Int_Input(200, 150, 25, 25, "[1][1]");
+	m_FilterInput[1][1]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[1][1]->callback(cb_filterInput_11);
+
+	m_FilterInput[1][2] = new Fl_Int_Input(200, 250, 25, 25, "[1][2]");
+	m_FilterInput[1][2]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[1][2]->callback(cb_filterInput_12);
+
+	m_FilterInput[2][0] = new Fl_Int_Input(300, 50, 25, 25, "[2][0]");
+	m_FilterInput[2][0]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[2][0]->callback(cb_filterInput_20);
+
+	m_FilterInput[2][1] = new Fl_Int_Input(300, 150, 25, 25, "[2][1]");
+	m_FilterInput[2][1]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[2][1]->callback(cb_filterInput_21);
+
+	m_FilterInput[2][2] = new Fl_Int_Input(300, 250, 25, 25, "[2][2]");
+	m_FilterInput[2][2]->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput[2][2]->callback(cb_filterInput_22);
+
+	m_filterDialog->end();
 }
 
