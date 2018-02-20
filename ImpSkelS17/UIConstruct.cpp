@@ -231,6 +231,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_spacing = MIN_SPACING;
 	m_normalize = false;
 	m_learnNumber = 20;
+	m_iterNumber = 1000;
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
@@ -332,8 +333,12 @@ ImpressionistUI::ImpressionistUI() {
 	m_CopyCanvasButton->user_data((void*)(this));
 	m_CopyCanvasButton->callback(cb_copy_canvas);
 
+	m_CopyCanvasButton = new Fl_Button(280, 225, 110, 20, "Multi-res Paint");
+	m_CopyCanvasButton->user_data((void*)(this));
+	m_CopyCanvasButton->callback(autoMultiDrawAction);
+
 	// Learning slider
-	m_LearnNumberSlider = new Fl_Value_Slider(10, 250, 200, 20, "Count");
+	m_LearnNumberSlider = new Fl_Value_Slider(10, 250, 200, 20, "Blocks");
 	m_LearnNumberSlider->user_data((void*)(this));	// record self to be used by static callback functions
 	m_LearnNumberSlider->type(FL_HOR_NICE_SLIDER);
 	m_LearnNumberSlider->labelfont(FL_COURIER);
@@ -341,9 +346,21 @@ ImpressionistUI::ImpressionistUI() {
 	m_LearnNumberSlider->minimum(MIN_LEARN);
 	m_LearnNumberSlider->maximum(MAX_LEARN);
 	m_LearnNumberSlider->step(1);
-	m_LearnNumberSlider->value(m_spacing);
+	m_LearnNumberSlider->value(m_learnNumber);
 	m_LearnNumberSlider->align(FL_ALIGN_RIGHT);
 	m_LearnNumberSlider->callback(cb_learnNumberSlides);
+
+	m_IterNumberSlider = new Fl_Value_Slider(10, 280, 200, 20, "Iter");
+	m_IterNumberSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_IterNumberSlider->type(FL_HOR_NICE_SLIDER);
+	m_IterNumberSlider->labelfont(FL_COURIER);
+	m_IterNumberSlider->labelsize(12);
+	m_IterNumberSlider->minimum(MIN_ITER);
+	m_IterNumberSlider->maximum(MAX_ITER);
+	m_IterNumberSlider->step(1);
+	m_IterNumberSlider->value(m_iterNumber);
+	m_IterNumberSlider->align(FL_ALIGN_RIGHT);
+	m_IterNumberSlider->callback(cb_iterNumberSlides);
 
 	m_AutoLearnButton = new Fl_Button(300, 250, 100, 20, "Auto relax");
 	m_AutoLearnButton->user_data((void*)(this));

@@ -44,6 +44,10 @@ float frand()
 	return (float)rand() / RAND_MAX;
 }
 
+float z_frand() {
+	return frand() - 0.5f;
+}
+
 int irand(int max)
 {
 	return rand() % max;

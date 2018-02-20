@@ -34,6 +34,8 @@ public:
 
 	void autoPaint(int spacing);
 
+	void autoMultiPaint(int spacing);
+
 	void autoLearnPaint(int numLearn);
 
 	double getRootMeanSquareCost(const unsigned char* org, const unsigned char* cmp);

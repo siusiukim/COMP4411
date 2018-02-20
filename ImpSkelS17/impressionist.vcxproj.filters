@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Brushes">
       <UniqueIdentifier>{24dd04af-6f14-4ed1-ba23-5689108f6bea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Paint">
+      <UniqueIdentifier>{e2bc2d5b-be8a-4509-97b9-89ed6105be52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bitmap.cpp">
@@ -31,9 +34,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OriginalView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PaintView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UISetting.cpp">
@@ -65,6 +65,12 @@
     </ClCompile>
     <ClCompile Include="UIAction.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoPaint.cpp">
+      <Filter>Source Files\Paint</Filter>
+    </ClCompile>
+    <ClCompile Include="PaintView.cpp">
+      <Filter>Source Files\Paint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

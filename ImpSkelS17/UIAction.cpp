@@ -141,6 +141,16 @@ void ImpressionistUI::autoDrawAction(Fl_Widget* o, void*) {
 	pUI->m_paintView->refresh();
 }
 
+void ImpressionistUI::autoMultiDrawAction(Fl_Widget* o, void*) {
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	ImpressionistDoc *pDoc = pUI->getDocument();
+
+	int spacing = pUI->getSpacing();
+
+	pUI->m_paintView->autoMultiPaint(spacing);
+	pUI->m_paintView->refresh();
+}
+
 void ImpressionistUI::cb_autoLearnDrawing(Fl_Widget* o, void*) {
 	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
 
