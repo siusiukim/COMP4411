@@ -35,7 +35,7 @@ void LineBrush::BrushMove(const Point source, const Point target)
 
 	double angle = GetDirection(source);
 	float alpha = dlg->getOpacity();
-	int thickness = dlg->getThickness();
+	float thickness = (float)dlg->getThickness();
 	int length = dlg->getSize();
 
 	//Init alpha
@@ -43,14 +43,21 @@ void LineBrush::BrushMove(const Point source, const Point target)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glLineWidth((float)thickness);
-	glBegin(GL_LINES);
-	SetColorWithAlpha(source, alpha);
+	glBegin(GL_POLYGON);
+	SetColorWithAlpha(source, alpha);;
 
-	double x_adj = cos(angle)*length;
-	double y_adj = sin(angle)*length;
+	double left_x_adj = -length / 2;
+	double right_x_adj = length / 2;
+	double top_y_adj = -thickness / 2;
+	double btm_y_adj = thickness / 2;
 
-	glVertex2d(target.x - x_adj / 2, target.y - y_adj / 2);
-	glVertex2d(target.x + x_adj / 2, target.y + y_adj / 2);
+	double sin_val = sin(angle);
+	double cos_val = cos(angle);
+
+	glVertex2d(target.x + left_x_adj*cos_val + top_y_adj*sin_val, target.y - left_x_adj*sin_val + top_y_adj*cos_val);
+	glVertex2d(target.x + left_x_adj*cos_val + btm_y_adj*sin_val, target.y - left_x_adj*sin_val + btm_y_adj*cos_val);
+	glVertex2d(target.x + right_x_adj*cos_val + btm_y_adj*sin_val, target.y - right_x_adj*sin_val + btm_y_adj*cos_val);
+	glVertex2d(target.x + right_x_adj*cos_val + top_y_adj*sin_val, target.y - right_x_adj*sin_val + top_y_adj*cos_val);
 
 	glEnd();
 	glDisable(GL_BLEND);

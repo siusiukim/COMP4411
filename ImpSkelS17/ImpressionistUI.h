@@ -23,11 +23,11 @@
 
 #include "ImpBrush.h"
 
-#define MIN_POINT_SIZE 1
+#define MIN_POINT_SIZE 10
 #define MAX_POINT_SIZE 200
 
 #define MIN_THICKNESS 1
-#define MAX_THICKNESS 1000
+#define MAX_THICKNESS 200
 
 #define MIN_ANGLE 0
 #define MAX_ANGLE 359
@@ -39,9 +39,9 @@
 #define MAX_SPACING 50
 
 #define MIN_LEARN 5
-#define MAX_LEARN 100
+#define MAX_LEARN 500
 
-#define LEARN_ITERATION 100
+#define LEARN_ITERATION 3000
 
 class ImpressionistUI {
 public:

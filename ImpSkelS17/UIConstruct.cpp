@@ -230,6 +230,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_direction = DIRECTION_BY_SLIDER_OR_RIGHT;
 	m_spacing = MIN_SPACING;
 	m_normalize = false;
+	m_learnNumber = 20;
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {

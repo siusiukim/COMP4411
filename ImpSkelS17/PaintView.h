@@ -36,6 +36,8 @@ public:
 
 	void autoLearnPaint(int numLearn);
 
+	double getRootMeanSquareCost(const unsigned char* org, const unsigned char* cmp);
+
 	ImpressionistDoc *m_pDoc;
 
 private:
