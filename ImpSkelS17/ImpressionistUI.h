@@ -42,7 +42,7 @@
 #define MAX_LEARN 500
 
 #define MIN_ITER 10
-#define MAX_ITER 30000
+#define MAX_ITER 1000
 
 #define MIN_THRESHOLD 10
 #define MAX_THRESHOLD 500
@@ -78,6 +78,8 @@ public:
 	Fl_Button*          m_AutoPaintButton;
 	Fl_Button*          m_MultiAutoPaintButton;
 	Fl_Button*          m_AutoLearnButton;
+
+	Fl_Button*          m_SwapContentButton;
 
 	Fl_Int_Input*		m_FilterInput[3][3];
 	Fl_Button*          m_ApplyFilterButton;
@@ -168,6 +170,8 @@ private:
 	static void cb_autoLearnDrawing(Fl_Widget* o, void* v);
 	static void cb_learnNumberSlides(Fl_Widget* o, void* v);
 	static void cb_iterNumberSlides(Fl_Widget* o, void* v);
+
+	static void cb_swapContentButton(Fl_Widget* o, void* v);
 };
 
 #endif

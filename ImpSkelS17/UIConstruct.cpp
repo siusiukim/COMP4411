@@ -380,6 +380,10 @@ ImpressionistUI::ImpressionistUI() {
 	m_AutoLearnButton->user_data((void*)(this));
 	m_AutoLearnButton->callback(cb_autoLearnDrawing);
 
+	m_SwapContentButton = new Fl_Button(10, 310, 120, 20, "Swap Content");
+	m_SwapContentButton->user_data((void*)(this));
+	m_SwapContentButton->callback(cb_swapContentButton);
+
 	m_brushDialog->end();
 
 	m_filterDialog = new Fl_Window(400, 325, "Filter Dialog");

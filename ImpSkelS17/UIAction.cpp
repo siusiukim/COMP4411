@@ -159,3 +159,16 @@ void ImpressionistUI::cb_autoLearnDrawing(Fl_Widget* o, void*) {
 	pUI->m_paintView->autoLearnPaint(numLearn);
 	pUI->m_paintView->refresh();
 }
+
+void ImpressionistUI::cb_swapContentButton(Fl_Widget* o, void*) {
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	ImpressionistDoc *pDoc = pUI->getDocument();
+
+	unsigned char* temp = pDoc->m_ucPainting;
+	pDoc->m_ucPainting = pDoc->m_ucBitmap;
+	pDoc->m_ucBitmap = temp;
+
+	pUI->m_paintView->refresh();
+	pUI->m_origView->refresh();
+}
+
