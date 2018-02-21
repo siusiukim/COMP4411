@@ -50,6 +50,9 @@ ImpressionistDoc::ImpressionistDoc()
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]
 		= new ScatterCircleBrush(this, "Scattered Circles");
 
+	ImpBrush::c_pBrushes[BRUSH_RUBBER]
+		= new RubberBrush(this, "Rubber");
+
 	// make one of the brushes current
 	m_pCurrentBrush = ImpBrush::c_pBrushes[0];
 
@@ -237,3 +240,28 @@ GLubyte* ImpressionistDoc::GetOriginalPixel(const Point p)
 	return GetOriginalPixel(p.x, p.y);
 }
 
+//------------------------------------------------------------------
+// Get the color of the pixel in the Painted image at coord x and y
+//------------------------------------------------------------------
+GLubyte* ImpressionistDoc::GetPaintedPixel(int x, int y)
+{
+	if (x < 0)
+		x = 0;
+	else if (x >= m_nWidth)
+		x = m_nWidth - 1;
+
+	if (y < 0)
+		y = 0;
+	else if (y >= m_nHeight)
+		y = m_nHeight - 1;
+
+	return (GLubyte*)(m_ucPainting + 3 * (y*m_nWidth + x));
+}
+
+//----------------------------------------------------------------
+// Get the color of the pixel in the Painted image at point p
+//----------------------------------------------------------------
+GLubyte* ImpressionistDoc::GetPaintedPixel(const Point p)
+{
+	return GetPaintedPixel(p.x, p.y);
+}

@@ -63,6 +63,14 @@ void ImpBrush::SetColorWithAlpha(const Point source, float alpha)
 	glColor4ub(color[0], color[1], color[2], (GLubyte)(alpha * 255));
 }
 
+void ImpBrush::SetColorFromPainted(const Point source)
+{
+	ImpressionistDoc* pDoc = GetDocument();
+	GLubyte color[3];
+	memcpy(color, pDoc->GetPaintedPixel(source), 3);
+	glColor3ubv(color);
+}
+
 float ImpBrush::GetDirection(const Point source) {
 	ImpressionistUI* ui = GetDocument()->m_pUI;
 	switch (ui->getDirectionType()) {
@@ -77,7 +85,7 @@ float ImpBrush::GetDirection(const Point source) {
 			for (int j = 0; j < 3; j++) {
 				GLubyte color[3];
 				memcpy(color, pDoc->GetOriginalPixel(Point(source.x + i - 1, source.y + j - 1)), 3);
-				gray[i][j] = (color[0] + color[1] + color[2]) / 3;
+				gray[i][j] = color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114;
 			}
 		}
 		float sobel_x = -gray[0][0] - 2 * gray[0][1] - gray[0][2]

@@ -42,7 +42,6 @@ void LineBrush::BrushMove(const Point source, const Point target)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glLineWidth((float)thickness);
 	glBegin(GL_POLYGON);
 	SetColorWithAlpha(source, alpha);;
 

@@ -18,6 +18,7 @@ enum
 	BRUSH_SCATTERED_POINTS,
 	BRUSH_SCATTERED_LINES,
 	BRUSH_SCATTERED_CIRCLES,
+	BRUSH_RUBBER,
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
@@ -63,6 +64,7 @@ public:
 
 	// according to the source image and the position, determine the draw color
 	void SetColor(const Point source);
+	void SetColorFromPainted(const Point source);
 	void SetColorWithAlpha(const Point source, float alpha);
 
 	virtual void DragDirectionBegin(const Point point);

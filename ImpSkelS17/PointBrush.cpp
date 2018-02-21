@@ -36,6 +36,8 @@ void PointBrush::BrushMove(const Point source, const Point target)
 		return;
 	}
 	float alpha = dlg->getOpacity();
+	int size = pDoc->getSize();
+	glPointSize((float)size);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

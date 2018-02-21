@@ -146,6 +146,7 @@
     <ClCompile Include="ImpBrush.cpp" />
     <ClCompile Include="Impressionist.cpp" />
     <ClCompile Include="ImpressionistDoc.cpp" />
+    <ClCompile Include="RubberBrush.cpp" />
     <ClCompile Include="ScatterCircleBrush.cpp" />
     <ClCompile Include="ScatterLineBrush.cpp" />
     <ClCompile Include="ScatterPointBrush.cpp" />

@@ -91,4 +91,21 @@ public:
 	void DragDirectionEnd(const Point point) {};
 };
 
+class RubberBrush : public ImpBrush
+{
+private:
+	Point last_point;
+public:
+	RubberBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
+
+	void BrushBegin(const Point source, const Point target);
+	void BrushMove(const Point source, const Point target);
+	void BrushEnd(const Point source, const Point target);
+	char* BrushName(void);
+
+	void DragDirectionBegin(const Point point) {};
+	void DragDirectionMove(const Point point) {};
+	void DragDirectionEnd(const Point point) {};
+};
+
 #endif

@@ -57,6 +57,11 @@ public:
 	// Get the color of the original picture at the specified point	
 	GLubyte* GetOriginalPixel(const Point p);
 
+	// Get the color of the Painted picture at the specified coord
+	GLubyte* GetPaintedPixel(int x, int y);
+	// Get the color of the Painted picture at the specified point	
+	GLubyte* GetPaintedPixel(const Point p);
+
 
 private:
 	char			m_imageName[256];
