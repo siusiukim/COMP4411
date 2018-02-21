@@ -195,6 +195,8 @@ void PaintView::autoMultiPaint(int spacing) {
 
 		//Claim memory
 		delete[] blurred_raw;
+
+		SaveCurrentContent();
 	}
 
 	ui->setSize(orig_size);
