@@ -128,7 +128,7 @@ void ImpressionistUI::cb_applyFilter(Fl_Widget* o, void* v)
 			}
 		}
 	}
-	pDoc->applyFilter(filter);
+	pDoc->applyFilter3x3(filter);
 }
 
 void ImpressionistUI::autoDrawAction(Fl_Widget* o, void*) {

@@ -25,7 +25,7 @@ public:
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	int		copyCanvas();					// Copy the raw image to the canvas
-	void	applyFilter(float filter[3][3]);
+	void	applyFilter3x3(float filter[3][3]);
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	int		getSize();						// get the UI size
 	void	setSize(int size);				// set the UI size

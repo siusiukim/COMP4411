@@ -23,7 +23,7 @@
 
 #include "ImpBrush.h"
 
-#define MIN_POINT_SIZE 10
+#define MIN_POINT_SIZE 5
 #define MAX_POINT_SIZE 50
 
 #define MIN_THICKNESS 1
@@ -43,6 +43,9 @@
 
 #define MIN_ITER 10
 #define MAX_ITER 30000
+
+#define MIN_THRESHOLD 10
+#define MAX_THRESHOLD 500
 
 class ImpressionistUI {
 public:
@@ -66,6 +69,7 @@ public:
 	Fl_Slider*			m_BrushAngleSlider;
 	Fl_Slider*			m_BrushOpacitySlider;
 	Fl_Slider*			m_BrushSpacingSlider;
+	Fl_Slider*			m_ThresholdSlider;
 	Fl_Slider*			m_LearnNumberSlider;
 	Fl_Slider*			m_IterNumberSlider;
 
@@ -109,6 +113,7 @@ public:
 	int					m_filterValue[3][3];
 	int					m_learnNumber;
 	int					m_iterNumber;
+	int					m_threshold;
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
@@ -140,6 +145,7 @@ private:
 	static void	cb_angleSlides(Fl_Widget* o, void* v);
 	static void	cb_opacitySlides(Fl_Widget* o, void* v);
 	static void	cb_spacingSlides(Fl_Widget* o, void* v);
+	static void	cb_thresholdSlides(Fl_Widget* o, void* v);
 
 	static void	cb_dirTypeChoice(Fl_Widget* o, void* v);
 

@@ -232,6 +232,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_normalize = false;
 	m_learnNumber = 20;
 	m_iterNumber = 1000;
+	m_threshold = 100;
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
@@ -332,6 +333,18 @@ ImpressionistUI::ImpressionistUI() {
 	m_CopyCanvasButton = new Fl_Button(340, 200, 50, 20, "Copy");
 	m_CopyCanvasButton->user_data((void*)(this));
 	m_CopyCanvasButton->callback(cb_copy_canvas);
+
+	m_ThresholdSlider = new Fl_Value_Slider(10, 225, 200, 20, "Threshold");
+	m_ThresholdSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_ThresholdSlider->type(FL_HOR_NICE_SLIDER);
+	m_ThresholdSlider->labelfont(FL_COURIER);
+	m_ThresholdSlider->labelsize(12);
+	m_ThresholdSlider->minimum(MIN_THRESHOLD);
+	m_ThresholdSlider->maximum(MAX_THRESHOLD);
+	m_ThresholdSlider->step(1);
+	m_ThresholdSlider->value(m_threshold);
+	m_ThresholdSlider->align(FL_ALIGN_RIGHT);
+	m_ThresholdSlider->callback(cb_thresholdSlides);
 
 	m_CopyCanvasButton = new Fl_Button(280, 225, 110, 20, "Multi-res Paint");
 	m_CopyCanvasButton->user_data((void*)(this));

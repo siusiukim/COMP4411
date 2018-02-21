@@ -5,6 +5,9 @@
 #include "ImpBrush.h"
 #include "MathUtil.hpp"
 #include <math.h>
+#include <vector>
+#include <random>
+#include <algorithm>
 
 #define LEFT_MOUSE_DOWN		1
 #define LEFT_MOUSE_DRAG		2
@@ -56,7 +59,6 @@ void PaintView::autoPaint(int spacing) {
 
 const int resolution_steps[] = { 32, 16, 8, 4, 2 };
 const int resolution_count = 5;
-const int do_paint_threshold = 100;
 void PaintView::autoMultiPaint(int spacing) {
 
 	if (!m_pDoc->m_ucPainting) return;
@@ -68,6 +70,18 @@ void PaintView::autoMultiPaint(int spacing) {
 	int orig_size = ui->getSize();
 	int orig_thickness = ui->getThickness();
 	int orig_angle = ui->getAngle();
+
+	//Random
+	std::random_device rd;
+	std::mt19937 g(rd());
+
+	//Clear first
+	SaveCurrentContent();
+	m_pDoc->clearCanvas();
+	RestoreContent();
+	SaveCurrentContent();
+	m_pDoc->clearCanvas();
+	RestoreContent();
 
 	for (int res_idx = 0; res_idx < resolution_count; res_idx++) {
 		int *difference_map = new int[m_nDrawWidth*m_nDrawHeight];
@@ -89,9 +103,17 @@ void PaintView::autoMultiPaint(int spacing) {
 			}
 		}
 
+		struct brush_attr{
+			int x;
+			int y;
+		};
+
+		std::vector<brush_attr> brush_store;
+
 		for (int gridY = spacing / 2; gridY < m_nDrawHeight - spacing / 2; gridY += spacing) {
 			for (int gridX = spacing/2; gridX < m_nDrawWidth - spacing/2; gridX += spacing) {
 			
+				//Gather information within the grid
 				int error_sum = 0, max_error = 0, max_error_x = -1, max_error_y = -1;
 				for (int adj_y = -spacing / 2; adj_y < spacing / 2; adj_y++) {
 					int y_grow = (gridY + adj_y) * m_nDrawWidth;
@@ -108,17 +130,22 @@ void PaintView::autoMultiPaint(int spacing) {
 					}
 				}
 
-				Point draw(i + (frand() - 0.5f) * spacing * 0.5f, j + (frand() - 0.5f) * spacing * 0.5f);
-				Point source, target;
-				convertPoint(draw, &source, &target);
-
-				//Randomness in brush attributes
-				ui->setSize(orig_size + (frand() - 0.5f) * 0.3f * orig_size);
-				ui->setThickess(orig_thickness + (frand() - 0.5f) * 0.3f * orig_thickness);
-				ui->setAngle(orig_angle + (frand() - 0.5f) * 18);
-
-				m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+				if (error_sum / spacing / spacing > ui->m_threshold) {
+					//Paint at max_error point when average paint error > threshold
+					brush_attr attr = { max_error_x, max_error_y };
+					brush_store.push_back(attr);
+				}
 			}
+		}
+
+		//Apply the paint brush in random order
+		std::shuffle(brush_store.begin(), brush_store.end(), g);
+		ui->setSize(resolution_steps[res_idx]);
+		for (int i = 0; i < brush_store.size(); i++) {
+			Point draw(brush_store[i].x, brush_store[i].y);
+			Point source, target;
+			convertPoint(draw, &source, &target);
+			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
 		}
 	}
 

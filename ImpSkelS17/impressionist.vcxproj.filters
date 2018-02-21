@@ -72,6 +72,9 @@
     <ClCompile Include="PaintView.cpp">
       <Filter>Source Files\Paint</Filter>
     </ClCompile>
+    <ClCompile Include="ImageUtil.cpp">
+      <Filter>Source Files\Paint</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h">

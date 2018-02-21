@@ -90,6 +90,11 @@ void ImpressionistUI::cb_spacingSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_spacing = float(((Fl_Slider *)o)->value());
 }
 
+void ImpressionistUI::cb_thresholdSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_threshold = float(((Fl_Slider *)o)->value());
+}
+
 void ImpressionistUI::cb_learnNumberSlides(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_learnNumber = float(((Fl_Slider *)o)->value());

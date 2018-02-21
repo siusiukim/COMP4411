@@ -11,3 +11,7 @@ T cap_range(T a, T lower_bound, T upper_bound) {
 	if (a > upper_bound) return upper_bound;
 	return a;
 }
+
+void apply_filter(const unsigned char* src, unsigned char* dst,
+	int image_width, int image_height,
+	const float* filter, int filter_size);
