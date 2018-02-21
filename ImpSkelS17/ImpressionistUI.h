@@ -35,7 +35,7 @@
 #define MIN_OPACITY 0.0f
 #define MAX_OPACITY 1.0f
 
-#define MIN_SPACING 5
+#define MIN_SPACING 1
 #define MAX_SPACING 50
 
 #define MIN_LEARN 5

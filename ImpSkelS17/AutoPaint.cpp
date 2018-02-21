@@ -59,6 +59,47 @@ void PaintView::autoPaint(int spacing) {
 
 const int resolution_steps[] = { 32, 16, 8, 4, 2 };
 const int resolution_count = 5;
+const float res_gau_kernel[resolution_count][5][5] = {
+	{
+	{ 0.032741,0.037861,0.03974,0.037861,0.032741 },
+	{0.037861,0.043782,0.045955,0.043782,0.037861},
+	{0.03974,0.045955,0.048235,0.045955,0.03974},
+	{0.037861,0.043782,0.045955,0.043782,0.037861},
+	{0.032741,0.037861,0.03974,0.037861,0.032741}
+	}
+	,
+	{
+	{ 0.017056,0.030076,0.036334,0.030076,0.017056 },
+	{0.030076,0.053035,0.064071,0.053035,0.030076},
+	{0.036334,0.064071,0.077404,0.064071,0.036334},
+	{0.030076,0.053035,0.064071,0.053035,0.030076},
+	{0.017056,0.030076,0.036334,0.030076,0.017056}
+	}
+	,
+	{
+	{ 0.000874,0.006976,0.01386,0.006976,0.000874 },
+	{0.006976,0.0557,0.110656,0.0557,0.006976},
+	{0.01386,0.110656,0.219833,0.110656,0.01386},
+	{0.006976,0.0557,0.110656,0.0557,0.006976},
+	{0.000874,0.006976,0.01386,0.006976,0.000874}
+	}
+	,
+	{
+	{ 0,0.000009,0.000069,0.000009,0 },
+	{0.000009,0.011143,0.083256,0.011143,0.000009},
+	{0.000069,0.083256,0.622048,0.083256,0.000069},
+	{0.000009,0.011143,0.083256,0.011143,0.000009},
+	{0,0.000009,0.000069,0.000009,0}
+	}
+	,
+	{
+		{ 0,0,0,0,0 },
+	{0,0.000039,0.006133,0.000039,0},
+	{0,0.006133,0.975316,0.006133,0},
+	{0,0.000039,0.006133,0.000039,0},
+	{0,0,0,0,0}
+	}
+};
 void PaintView::autoMultiPaint(int spacing) {
 
 	if (!m_pDoc->m_ucPainting) return;
@@ -84,8 +125,12 @@ void PaintView::autoMultiPaint(int spacing) {
 	RestoreContent();
 
 	for (int res_idx = 0; res_idx < resolution_count; res_idx++) {
-		int *difference_map = new int[m_nDrawWidth*m_nDrawHeight];
+		//Blur the image to a suitable degree
+		unsigned char * blurred_raw = new unsigned char[m_nDrawWidth*m_nDrawHeight * 3];
+		
+		apply_filter(m_pDoc->m_ucBitmap, blurred_raw, m_nDrawWidth, m_nDrawHeight, res_gau_kernel[res_idx][0], 5);
 
+		int *difference_map = new int[m_nDrawWidth*m_nDrawHeight];
 		if (res_idx == 0) {
 			//Max diff for the first painting, according to the paper
 			for (int i = 0; i < m_nDrawWidth*m_nDrawHeight; i++) {
@@ -95,7 +140,7 @@ void PaintView::autoMultiPaint(int spacing) {
 		else {
 			//Find the difference
 			unsigned char* newArray = m_pDoc->m_ucPainting;
-			unsigned char* orgArray = m_pDoc->m_ucBitmap;
+			unsigned char* orgArray = blurred_raw;
 			for (int i = 0; i < m_nDrawWidth*m_nDrawHeight; i++) {
 				difference_map[i] = (int)sqrtf(((int)newArray[i * 3 + 0] - (int)orgArray[i * 3 + 0])*((int)newArray[i * 3 + 0] - (int)orgArray[i * 3 + 0])
 					+ ((int)newArray[i * 3 + 1] - (int)orgArray[i * 3 + 1]) * ((int)newArray[i * 3 + 1] - (int)orgArray[i * 3 + 1])
@@ -111,13 +156,13 @@ void PaintView::autoMultiPaint(int spacing) {
 		std::vector<brush_attr> brush_store;
 
 		for (int gridY = spacing / 2; gridY < m_nDrawHeight - spacing / 2; gridY += spacing) {
-			for (int gridX = spacing/2; gridX < m_nDrawWidth - spacing/2; gridX += spacing) {
+			for (int gridX = spacing/2; gridX < m_nDrawWidth - spacing / 2; gridX += spacing) {
 			
 				//Gather information within the grid
 				int error_sum = 0, max_error = 0, max_error_x = -1, max_error_y = -1;
-				for (int adj_y = -spacing / 2; adj_y < spacing / 2; adj_y++) {
+				for (int adj_y = -spacing / 2; adj_y <= spacing / 2; adj_y++) {
 					int y_grow = (gridY + adj_y) * m_nDrawWidth;
-					for (int adj_x = -spacing / 2; adj_x < spacing / 2; adj_x++) {
+					for (int adj_x = -spacing / 2; adj_x <= spacing / 2; adj_x++) {
 						int total_grow = y_grow + adj_x + gridX;
 						int this_error = difference_map[total_grow];
 						
@@ -147,6 +192,9 @@ void PaintView::autoMultiPaint(int spacing) {
 			convertPoint(draw, &source, &target);
 			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
 		}
+
+		//Claim memory
+		delete[] blurred_raw;
 	}
 
 	ui->setSize(orig_size);
