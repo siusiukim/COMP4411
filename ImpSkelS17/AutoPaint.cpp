@@ -21,6 +21,11 @@ extern float z_frand();
 
 void PaintView::autoPaint(int spacing) {
 
+	if (!m_pDoc->m_ucPainting) return;
+
+	std::random_device rd;
+	std::mt19937 g(rd());
+
 	glDrawBuffer(GL_FRONT_AND_BACK);
 
 	ImpressionistUI* ui = m_pDoc->m_pUI;
@@ -29,21 +34,35 @@ void PaintView::autoPaint(int spacing) {
 	int orig_thickness = ui->getThickness();
 	int orig_angle = ui->getAngle();
 
-	if (m_pDoc->m_ucPainting) {
-		for (int i = 0; i < m_nDrawWidth; i += spacing) {
-			for (int j = 0; j < m_nDrawHeight; j += spacing) {
-				Point draw(i + (frand() - 0.5f) * spacing * 0.5f, j + (frand() - 0.5f) * spacing * 0.5f);
-				Point source, target;
-				convertPoint(draw, &source, &target);
+	struct brush_attr {
+		Point source, target;
+		int size;
+		int thickness;
+		int angle;
+	};
 
-				//Randomness in brush attributes
-				ui->setSize(orig_size + (frand() - 0.5f) * 0.3f * orig_size);
-				ui->setThickess(orig_thickness + (frand() - 0.5f) * 0.3f * orig_thickness);
-				ui->setAngle(orig_angle + (frand() - 0.5f) * 18);
+	std::vector<brush_attr> brush_store;
+	for (int i = 0; i < m_nDrawWidth; i += spacing) {
+		for (int j = 0; j < m_nDrawHeight; j += spacing) {
+			Point draw(i + (frand() - 0.5f) * spacing * 0.5f, j + (frand() - 0.5f) * spacing * 0.5f);
+			Point source, target;
+			convertPoint(draw, &source, &target);
 
-				m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
-			}
+			//Randomness in brush attributes
+			int thickness = orig_thickness + (frand() - 0.5f) * 0.3f * orig_thickness;
+			int angle = orig_angle + (frand() - 0.5f) * 18;
+			int size = orig_size + (frand() - 0.5f) * 0.3f * orig_size;
+
+			brush_store.push_back({source, target, size, orig_thickness, angle});
 		}
+	}
+
+	std::shuffle(brush_store.begin(), brush_store.end(), g);
+	for (int i = 0; i < brush_store.size(); i++) {
+		ui->setSize(brush_store[i].size);
+		ui->setThickess(brush_store[i].thickness);
+		ui->setAngle(brush_store[i].angle);
+		m_pDoc->m_pCurrentBrush->BrushBegin(brush_store[i].source, brush_store[i].target);
 	}
 
 	ui->setSize(orig_size);
