@@ -78,6 +78,9 @@
     <ClCompile Include="RubberBrush.cpp">
       <Filter>Source Files\Brushes</Filter>
     </ClCompile>
+    <ClCompile Include="CustomBrush.cpp">
+      <Filter>Source Files\Brushes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h">

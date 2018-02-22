@@ -19,6 +19,7 @@ enum
 	BRUSH_SCATTERED_LINES,
 	BRUSH_SCATTERED_CIRCLES,
 	BRUSH_RUBBER,
+	BRUSH_CUSTOM,
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
@@ -85,6 +86,8 @@ public:
 
 	static int			c_nBrushCount;	// How many brushes we have,
 	static ImpBrush**	c_pBrushes;		// and what they are.
+
+	void setOriginalPixelColor(unsigned char* rgb);
 
 private:
 	ImpressionistDoc*	m_pDoc;

@@ -79,6 +79,23 @@ void OriginalView::draw()
 	glFlush();
 }
 
+int OriginalView::handle(int event)
+{
+	switch (event)
+	{
+	case FL_PUSH:
+		int x = Fl::event_x();
+		int y = Fl::event_y();
+		if (m_pDoc->m_pCurrentBrush && m_pDoc->m_ucBitmap) {
+			m_pDoc->m_pCurrentBrush->setOriginalPixelColor(&m_pDoc->m_ucBitmap[(y*(m_pDoc->m_nWidth) + x) * 3]);
+		}
+	}
+
+
+
+	return 1;
+}
+
 void OriginalView::refresh()
 {
 	redraw();

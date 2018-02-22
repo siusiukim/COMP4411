@@ -49,6 +49,13 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 		pUI->m_DirectionTypeChoice->deactivate();
 	}
 
+	if (type == BRUSH_CUSTOM) {
+		pUI->m_LoadBrushButton->activate();
+	}
+	else {
+		pUI->m_LoadBrushButton->deactivate();
+	}
+
 	pDoc->setBrushType(type);
 }
 

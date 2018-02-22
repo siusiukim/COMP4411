@@ -79,7 +79,10 @@ public:
 	Fl_Slider*			m_bScaleSlider;
 
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Button*          m_LoadBrushButton;
+
 	Fl_Button*          m_CopyCanvasButton;
+
 	Fl_Button*          m_AutoPaintButton;
 	Fl_Button*          m_MultiAutoPaintButton;
 	Fl_Button*          m_AutoLearnButton;
@@ -157,6 +160,8 @@ private:
 	static void	cb_opacitySlides(Fl_Widget* o, void* v);
 	static void	cb_spacingSlides(Fl_Widget* o, void* v);
 	static void	cb_thresholdSlides(Fl_Widget* o, void* v);
+
+	static void	cb_load_brush(Fl_Widget* o, void* v);
 
 	static void	cb_rScaleSlides(Fl_Widget* o, void* v);
 	static void	cb_gScaleSlides(Fl_Widget* o, void* v);

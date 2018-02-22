@@ -27,7 +27,7 @@ ImpressionistDoc::ImpressionistDoc()
 	m_ucBitmap = NULL;
 	m_ucRawBitmap = NULL;
 	m_ucPainting = NULL;
-
+	m_ucBrush = NULL;
 
 	// create one instance of each brush
 	ImpBrush::c_nBrushCount = NUM_BRUSH_TYPE;
@@ -53,6 +53,9 @@ ImpressionistDoc::ImpressionistDoc()
 
 	ImpBrush::c_pBrushes[BRUSH_RUBBER]
 		= new RubberBrush(this, "Rubber");
+
+	ImpBrush::c_pBrushes[BRUSH_CUSTOM]
+		= new CustomBrush(this, "Custom");
 
 	// make one of the brushes current
 	m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -228,6 +231,27 @@ int ImpressionistDoc::loadMural(char *iname)
 
 
 	return 1;
+}
+
+int ImpressionistDoc::loadBrush(char *iname) {
+	// try to open the image to read
+	unsigned char*	data;
+	int				width,
+		height;
+
+	if ((data = readBMP(iname, width, height)) == NULL)
+	{
+		fl_alert("Can't load bitmap file");
+		return 0;
+	}
+
+	// reflect the fact of loading the new image
+	m_nBrushWidth = width;
+	m_nBrushHeight = height;
+
+	if (m_ucBrush) delete[] m_ucBrush;
+
+	m_ucBrush = data;
 }
 
 void ImpressionistDoc::reloadBitmap() {

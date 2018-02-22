@@ -181,6 +181,7 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
 	{ "Scattered Lines",	FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_LINES },
 	{ "Scattered Circles",	FL_ALT + 'd', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES },
 	{ "Rubber",	FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_RUBBER },
+	{ "Custom",	FL_ALT + 'y', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_CUSTOM },
 	{ 0 }
 };
 
@@ -259,6 +260,11 @@ ImpressionistUI::ImpressionistUI() {
 	m_ClearCanvasButton = new Fl_Button(240, 10, 150, 25, "&Clear Canvas");
 	m_ClearCanvasButton->user_data((void*)(this));
 	m_ClearCanvasButton->callback(cb_clear_canvas_button);
+
+	m_LoadBrushButton = new Fl_Button(240, 40, 150, 25, "Load Brush");
+	m_LoadBrushButton->user_data((void*)(this));
+	m_LoadBrushButton->callback(cb_load_brush);
+	m_LoadBrushButton->deactivate();
 
 	// Add brush size slider to the dialog 
 	m_BrushSizeSlider = new Fl_Value_Slider(10, 80, 300, 20, "Size");

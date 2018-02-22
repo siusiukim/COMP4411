@@ -26,6 +26,7 @@ public:
 	OriginalView(int x, int y, int w, int h, const char *l);
 	
 	void draw();
+	int handle(int event);
 	void refresh();
 
 	void resizeWindow(int width, int height);

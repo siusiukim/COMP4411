@@ -36,6 +36,17 @@ void ImpressionistUI::cb_load_mural(Fl_Menu_* o, void* v)
 	}
 }
 
+void ImpressionistUI::cb_load_brush(Fl_Widget* o, void* v)
+{
+	ImpressionistUI* pUI = ((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc = pUI->getDocument();
+
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+	if (newfile != NULL) {
+		pDoc->loadBrush(newfile);
+	}
+}
+
 //------------------------------------------------------------------
 // Brings up a file chooser and then saves the painted image
 // This is called by the UI when the save image menu item is chosen

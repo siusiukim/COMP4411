@@ -21,6 +21,7 @@ public:
 
 	int		loadImage(char *iname);			// called by the UI to load image
 	int		loadMural(char *iname);			// called by the UI to load image
+	int		loadBrush(char *iname);
 	int		saveImage(char *iname);			// called by the UI to save image
 
 
@@ -38,10 +39,14 @@ public:
 	int				m_nWidth, m_nHeight;
 	// Dimensions of the paint window.
 	int				m_nPaintWidth, m_nPaintHeight;
+	// Dimensions of the loaded brush
+	int				m_nBrushWidth, m_nBrushHeight;
+
 	// Bitmaps for original image and painting.
 	unsigned char*	m_ucRawBitmap;
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
+	unsigned char*	m_ucBrush;
 
 
 	// The current active brush.

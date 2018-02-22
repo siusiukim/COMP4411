@@ -108,4 +108,23 @@ public:
 	void DragDirectionEnd(const Point point) {};
 };
 
+class CustomBrush : public ImpBrush
+{
+private:
+	unsigned char brush_rgb[3];
+public:
+	CustomBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
+
+	void setOriginalPixelColor(unsigned char * rgb);
+
+	void BrushBegin(const Point source, const Point target);
+	void BrushMove(const Point source, const Point target);
+	void BrushEnd(const Point source, const Point target);
+	char* BrushName(void);
+
+	void DragDirectionBegin(const Point point) {};
+	void DragDirectionMove(const Point point) {};
+	void DragDirectionEnd(const Point point) {};
+};
+
 #endif

@@ -71,6 +71,10 @@ void ImpBrush::SetColorFromPainted(const Point source)
 	glColor3ubv(color);
 }
 
+void ImpBrush::setOriginalPixelColor(unsigned char* rgb) {
+	return;
+}
+
 float ImpBrush::GetDirection(const Point source) {
 	ImpressionistUI* ui = GetDocument()->m_pUI;
 	switch (ui->getDirectionType()) {
