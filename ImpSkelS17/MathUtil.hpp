@@ -14,4 +14,4 @@ T cap_range(T a, T lower_bound, T upper_bound) {
 
 void apply_filter(const unsigned char* src, unsigned char* dst,
 	int image_width, int image_height,
-	const float* filter, int filter_size);
+	const float* filter, int filter_rows, int filter_cols);

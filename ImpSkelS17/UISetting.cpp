@@ -13,6 +13,7 @@
 #include "impressionistDoc.h"
 
 #include "MathUtil.hpp"
+#include <string>
 
 //------------------------------------------------------------
 // This returns the UI, given the menu item.  It provides a
@@ -125,49 +126,9 @@ void ImpressionistUI::cb_bScaleSlides(Fl_Widget* o, void* v)
 
 //Filter input
 
-void ImpressionistUI::cb_filterInput_00(Fl_Widget* o, void* v)
+void ImpressionistUI::cb_filterInput(Fl_Widget* o, void* v)
 {
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[0][0] = atoi(((Fl_Int_Input *)o)->value());
-}
-
-void ImpressionistUI::cb_filterInput_01(Fl_Widget* o, void* v)
-{
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[0][1] = atoi(((Fl_Int_Input *)o)->value());
-}
-
-void ImpressionistUI::cb_filterInput_02(Fl_Widget* o, void* v)
-{
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[0][2] = atoi(((Fl_Int_Input *)o)->value());
-}
-
-void ImpressionistUI::cb_filterInput_10(Fl_Widget* o, void* v)
-{
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[1][0] = atoi(((Fl_Int_Input *)o)->value());
-}
-
-void ImpressionistUI::cb_filterInput_11(Fl_Widget* o, void* v)
-{
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[1][1] = atoi(((Fl_Int_Input *)o)->value());
-}
-
-void ImpressionistUI::cb_filterInput_12(Fl_Widget* o, void* v)
-{
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[1][2] = atoi(((Fl_Int_Input *)o)->value());
-}
-
-void ImpressionistUI::cb_filterInput_20(Fl_Widget* o, void* v)
-{
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[2][0] = atoi(((Fl_Int_Input *)o)->value());
-}
-
-void ImpressionistUI::cb_filterInput_21(Fl_Widget* o, void* v)
-{
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[2][1] = atoi(((Fl_Int_Input *)o)->value());
-}
-
-void ImpressionistUI::cb_filterInput_22(Fl_Widget* o, void* v)
-{
-	((ImpressionistUI*)(o->user_data()))->m_filterValue[2][2] = atoi(((Fl_Int_Input *)o)->value());
+	((ImpressionistUI*)(o->user_data()))->m_filterValue = std::string(((Fl_Int_Input *)o)->value());
 }
 
 void ImpressionistUI::cb_normalizeSwitch(Fl_Widget* o, void* v)

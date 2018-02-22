@@ -22,6 +22,7 @@
 #include "PaintView.h"
 
 #include "ImpBrush.h"
+#include <string>
 
 #define MIN_POINT_SIZE 5
 #define MAX_POINT_SIZE 50
@@ -85,7 +86,7 @@ public:
 
 	Fl_Button*          m_SwapContentButton;
 
-	Fl_Int_Input*		m_FilterInput[3][3];
+	Fl_Input*			m_FilterInput;
 	Fl_Button*          m_ApplyFilterButton;
 	Fl_Light_Button*	m_NormalizeSwitch;
 
@@ -117,7 +118,7 @@ public:
 	int					getSpacing();
 
 	bool				m_normalize;
-	int					m_filterValue[3][3];
+	std::string			m_filterValue;
 	int					m_learnNumber;
 	int					m_iterNumber;
 	int					m_threshold;
@@ -166,15 +167,7 @@ private:
 	static void	autoDrawAction(Fl_Widget* o, void* v);
 	static void	autoMultiDrawAction(Fl_Widget* o, void* v);
 
-	static void cb_filterInput_00(Fl_Widget* o, void* v);
-	static void cb_filterInput_01(Fl_Widget* o, void* v);
-	static void cb_filterInput_02(Fl_Widget* o, void* v);
-	static void cb_filterInput_10(Fl_Widget* o, void* v);
-	static void cb_filterInput_11(Fl_Widget* o, void* v);
-	static void cb_filterInput_12(Fl_Widget* o, void* v);
-	static void cb_filterInput_20(Fl_Widget* o, void* v);
-	static void cb_filterInput_21(Fl_Widget* o, void* v);
-	static void cb_filterInput_22(Fl_Widget* o, void* v);
+	static void cb_filterInput(Fl_Widget* o, void* v);
 	
 	static void cb_applyFilter(Fl_Widget* o, void* v);
 	static void cb_normalizeSwitch(Fl_Widget* o, void* v);

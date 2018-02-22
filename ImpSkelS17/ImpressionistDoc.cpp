@@ -294,7 +294,7 @@ void ImpressionistDoc::applyFilter3x3(float filter[3][3]) {
 	{
 		unsigned char* m_newPaint = new unsigned char[m_nHeight*m_nWidth * 3];
 
-		apply_filter(m_ucBitmap, m_newPaint, m_nWidth, m_nHeight, filter[0], 3);
+		apply_filter(m_ucBitmap, m_newPaint, m_nWidth, m_nHeight, filter[0], 3, 3);
 
 		delete[] m_ucBitmap;
 		m_ucBitmap = m_newPaint;

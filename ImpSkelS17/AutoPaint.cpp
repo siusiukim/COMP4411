@@ -147,7 +147,7 @@ void PaintView::autoMultiPaint(int spacing) {
 		//Blur the image to a suitable degree
 		unsigned char * blurred_raw = new unsigned char[m_nDrawWidth*m_nDrawHeight * 3];
 		
-		apply_filter(m_pDoc->m_ucBitmap, blurred_raw, m_nDrawWidth, m_nDrawHeight, res_gau_kernel[res_idx][0], 5);
+		apply_filter(m_pDoc->m_ucBitmap, blurred_raw, m_nDrawWidth, m_nDrawHeight, res_gau_kernel[res_idx][0], 5, 5);
 
 		int *difference_map = new int[m_nDrawWidth*m_nDrawHeight];
 		if (res_idx == 0) {

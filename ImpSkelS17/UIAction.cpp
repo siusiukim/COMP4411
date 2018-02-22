@@ -7,6 +7,11 @@
 
 #include "MathUtil.hpp"
 
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iterator>
+
 //------------------------------------------------------------------
 // Brings up a file chooser and then loads the chosen image
 // This is called by the UI when the load image menu item is chosen
@@ -109,36 +114,76 @@ void ImpressionistUI::cb_copy_canvas(Fl_Widget* o, void* v)
 	pDoc->copyCanvas();
 }
 
+void split(const std::string &s, char delim, std::vector<std::string>& result) {
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim)) {
+		if (!item.empty()) {
+			result.push_back(item);
+		}
+	}
+}
+
 void ImpressionistUI::cb_applyFilter(Fl_Widget* o, void* v)
 {
 	ImpressionistUI * pUI = (ImpressionistUI*)(o->user_data());
 	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
-	float filter[3][3];
+	
+	//Parse the filter string
+	std::vector<std::string> rows;
+	split(pUI->m_filterValue, ';', rows);
+	int nRows = rows.size();
+	int nCols;
+	float* filter;
+	for (int i = 0; i < rows.size(); i++) {
+		std::vector<std::string> elems;
+		split(rows[i], ',', elems);
 
-	if (pUI->m_normalize) {
-		float sum = 0;
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				sum += (float)pUI->m_filterValue[i][j];
-			}
+		if (i == 0) {
+			nCols = elems.size();
+			filter = new float[nRows*nCols];
 		}
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				filter[i][j] = (pUI->m_filterValue[i][j]) / sum;
-				printf("%d %d %f\n", i, j, filter[i][j]);
-			}
+		else if (nCols != elems.size()){
+			printf("Size mismatch");
+			fl_alert("Size mismatch");
+			delete[] filter;
+			return;
 		}
+
+		for (int j = 0; j < elems.size(); j++) {
+			printf("%d ", atoi(elems[j].c_str()));
+		}
+		printf("\n");
 	}
 
-	else {
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				filter[i][j] = pUI->m_filterValue[i][j];
-				printf("%d %d %f\n", i, j, filter[i][j]);
-			}
-		}
-	}
-	pDoc->applyFilter3x3(filter);
+	printf("Filter size: %d*%d", nRows, nCols);
+
+	//if (pUI->m_normalize) {
+	//	float sum = 0;
+	//	for (int i = 0; i < 3; i++) {
+	//		for (int j = 0; j < 3; j++) {
+	//			sum += (float)pUI->m_filterValue[i][j];
+	//		}
+	//	}
+	//	for (int i = 0; i < 3; i++) {
+	//		for (int j = 0; j < 3; j++) {
+	//			filter[i][j] = (pUI->m_filterValue[i][j]) / sum;
+	//			printf("%d %d %f\n", i, j, filter[i][j]);
+	//		}
+	//	}
+	//}
+
+	//else {
+	//	for (int i = 0; i < 3; i++) {
+	//		for (int j = 0; j < 3; j++) {
+	//			filter[i][j] = pUI->m_filterValue[i][j];
+	//			printf("%d %d %f\n", i, j, filter[i][j]);
+	//		}
+	//	}
+	//}
+	//pDoc->applyFilter3x3(filter);
+
+	delete[] filter;
 }
 
 void ImpressionistUI::autoDrawAction(Fl_Widget* o, void*) {

@@ -239,11 +239,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_g_scale = 1.0f;
 	m_b_scale = 1.0f;
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			m_filterValue[i][j] = 1;
-		}
-	}
+	m_filterValue = "";
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 425, "Brush Dialog");
@@ -400,41 +396,9 @@ ImpressionistUI::ImpressionistUI() {
 	m_NormalizeSwitch->user_data((void*)(this));
 	m_NormalizeSwitch->callback(cb_normalizeSwitch);
 
-	m_FilterInput[0][0] = new Fl_Int_Input(100, 50, 25, 25, "[0][0]");
-	m_FilterInput[0][0]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[0][0]->callback(cb_filterInput_00);
-
-	m_FilterInput[0][1] = new Fl_Int_Input(100, 150, 25, 25, "[0][1]");
-	m_FilterInput[0][1]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[0][1]->callback(cb_filterInput_01);
-
-	m_FilterInput[0][2] = new Fl_Int_Input(100, 250, 25, 25, "[0][2]");
-	m_FilterInput[0][2]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[0][2]->callback(cb_filterInput_02);
-
-	m_FilterInput[1][0] = new Fl_Int_Input(200, 50, 25, 25, "[1][0]");
-	m_FilterInput[1][0]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[1][0]->callback(cb_filterInput_10);
-
-	m_FilterInput[1][1] = new Fl_Int_Input(200, 150, 25, 25, "[1][1]");
-	m_FilterInput[1][1]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[1][1]->callback(cb_filterInput_11);
-
-	m_FilterInput[1][2] = new Fl_Int_Input(200, 250, 25, 25, "[1][2]");
-	m_FilterInput[1][2]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[1][2]->callback(cb_filterInput_12);
-
-	m_FilterInput[2][0] = new Fl_Int_Input(300, 50, 25, 25, "[2][0]");
-	m_FilterInput[2][0]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[2][0]->callback(cb_filterInput_20);
-
-	m_FilterInput[2][1] = new Fl_Int_Input(300, 150, 25, 25, "[2][1]");
-	m_FilterInput[2][1]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[2][1]->callback(cb_filterInput_21);
-
-	m_FilterInput[2][2] = new Fl_Int_Input(300, 250, 25, 25, "[2][2]");
-	m_FilterInput[2][2]->user_data((void*)(this));   // record self to be used by static callback functions
-	m_FilterInput[2][2]->callback(cb_filterInput_22);
+	m_FilterInput = new Fl_Input(60, 50, 300, 20, "Filter:");
+	m_FilterInput->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput->callback(cb_filterInput);
 
 	m_rScaleSlider = new Fl_Value_Slider(10, 280, 250, 20, "R");
 	m_rScaleSlider->user_data((void*)(this));	// record self to be used by static callback functions
