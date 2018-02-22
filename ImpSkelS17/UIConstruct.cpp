@@ -156,6 +156,7 @@ void ImpressionistUI::cb_myInput(Fl_Widget* o, void* v)
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
 	{ "&Load Image...",	FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_load_image },
+	{ "&Load Mural...",	FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::cb_load_mural },
 	{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
 	{ "&Filter...",	FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_filters },

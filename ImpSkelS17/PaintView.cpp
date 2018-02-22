@@ -45,6 +45,32 @@ PaintView::PaintView(int			x,
 
 }
 
+void PaintView::updateThings() {
+	Point scrollpos;// = GetScrollPosition();
+	scrollpos.x = 0;
+	scrollpos.y = 0;
+
+	m_nWindowWidth = w();
+	m_nWindowHeight = h();
+
+	int drawWidth, drawHeight;
+	drawWidth = min(m_nWindowWidth, m_pDoc->m_nPaintWidth);
+	drawHeight = min(m_nWindowHeight, m_pDoc->m_nPaintHeight);
+
+	int startrow = m_pDoc->m_nPaintHeight - (scrollpos.y + drawHeight);
+	if (startrow < 0) startrow = 0;
+
+	m_pPaintBitstart = m_pDoc->m_ucPainting +
+		3 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
+
+	m_nDrawWidth = drawWidth;
+	m_nDrawHeight = drawHeight;
+
+	m_nStartRow = startrow;
+	m_nEndRow = startrow + drawHeight;
+	m_nStartCol = scrollpos.x;
+	m_nEndCol = m_nStartCol + drawWidth;
+}
 
 void PaintView::convertPoint(Point point, Point* source, Point* target) {
 	Point scrollpos;// = GetScrollPosition();
@@ -211,6 +237,7 @@ int PaintView::handle(int event)
 
 void PaintView::refresh()
 {
+	updateThings();
 	redraw();
 }
 

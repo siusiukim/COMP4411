@@ -148,6 +148,88 @@ int ImpressionistDoc::loadImage(char *iname)
 	return 1;
 }
 
+//---------------------------------------------------------
+// Load the specified image
+// This is called by the UI when the load image button is 
+// pressed.
+//---------------------------------------------------------
+int ImpressionistDoc::loadMural(char *iname)
+{
+	// try to open the image to read
+	unsigned char*	data;
+	int				width,
+		height;
+
+	if ((data = readBMP(iname, width, height)) == NULL)
+	{
+		fl_alert("Can't load bitmap file");
+		return 0;
+	}
+
+	// reflect the fact of loading the new image
+	int new_width = max(width, m_nWidth);
+	int new_height = max(height, m_nHeight);
+
+	unsigned char* new_original = new unsigned char[new_width * new_height * 3];
+	unsigned char* new_painting = new unsigned char[new_width * new_height * 3];
+
+	memset(new_original, 0, new_width * new_height * 3);
+	memset(new_painting, 0, new_width * new_height * 3);
+
+	//Copy old to current
+	for (int y = 0; y < m_nHeight; y++) {
+		for (int x = 0; x < m_nWidth; x++) {
+			for (int i = 0; i < 3; i++) {
+				//new_original[(y*new_width + x)*3+i] = data[(y*width + x)*3+i];
+				new_painting[(y*new_width + x)*3+i] = m_ucPainting[(y*m_nWidth + x)*3+i];
+			}
+		}
+	}
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			for (int i = 0; i < 3; i++) {
+				new_original[(y*new_width + x) * 3 + i] = data[(y*width + x) * 3 + i];
+				//new_painting[(y*new_width + x) * 3 + i] = m_ucPainting[(y*m_nWidth + x) * 3 + i];
+			}
+		}
+	}
+
+	m_nWidth = new_width;
+	m_nPaintWidth = new_width;
+	m_nHeight = new_height;
+	m_nPaintHeight = new_height;
+
+	// release old storage
+	if (m_ucBitmap) delete[] m_ucBitmap;
+	if (m_ucPainting) delete[] m_ucPainting;
+	if (m_ucRawBitmap) delete[] m_ucRawBitmap;
+
+	m_ucRawBitmap = new_original;
+	m_ucBitmap = new unsigned char[new_width*new_height * 3];
+	m_ucPainting = new_painting;
+	memcpy(m_ucBitmap, m_ucRawBitmap, new_width*new_height * 3);
+
+	// allocate space for draw view
+	//m_ucPainting = new unsigned char[width*height * 3];
+	//memset(m_ucPainting, 0, width*height * 3);
+
+	m_pUI->m_mainWindow->resize(m_pUI->m_mainWindow->x(),
+		m_pUI->m_mainWindow->y(),
+		new_width * 2,
+		new_height + 25);
+
+	// display it on origView
+	m_pUI->m_origView->resizeWindow(new_width, new_height);
+	m_pUI->m_origView->refresh();
+
+	// refresh paint view as well
+	m_pUI->m_paintView->resizeWindow(new_width, new_height);
+	m_pUI->m_paintView->refresh();
+
+
+	return 1;
+}
+
 void ImpressionistDoc::reloadBitmap() {
 	memcpy(m_ucBitmap, m_ucRawBitmap, m_nWidth*m_nHeight * 3);
 }

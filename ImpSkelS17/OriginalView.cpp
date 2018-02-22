@@ -65,7 +65,6 @@ void OriginalView::draw()
 		if ( startrow < 0 ) 
 			startrow = 0;
 
-
 		bitstart = m_pDoc->m_ucBitmap + 3 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
 
 		// just copy image to GLwindow conceptually

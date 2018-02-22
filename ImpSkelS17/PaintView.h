@@ -30,6 +30,8 @@ public:
 
 	void RestoreContent();
 
+	void updateThings();
+
 	void convertPoint(Point point, Point* source, Point* target);
 
 	void autoPaint(int spacing);
