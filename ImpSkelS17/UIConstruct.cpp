@@ -234,6 +234,9 @@ ImpressionistUI::ImpressionistUI() {
 	m_learnNumber = 20;
 	m_iterNumber = 1000;
 	m_threshold = 100;
+	m_r_scale = 1.0f;
+	m_g_scale = 1.0f;
+	m_b_scale = 1.0f;
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
@@ -386,7 +389,7 @@ ImpressionistUI::ImpressionistUI() {
 
 	m_brushDialog->end();
 
-	m_filterDialog = new Fl_Window(400, 325, "Filter Dialog");
+	m_filterDialog = new Fl_Window(400, 450, "Filter Dialog");
 
 	m_ApplyFilterButton = new Fl_Button(10, 10, 100, 25, "Apply filter");
 	m_ApplyFilterButton->user_data((void*)(this));
@@ -431,6 +434,42 @@ ImpressionistUI::ImpressionistUI() {
 	m_FilterInput[2][2] = new Fl_Int_Input(300, 250, 25, 25, "[2][2]");
 	m_FilterInput[2][2]->user_data((void*)(this));   // record self to be used by static callback functions
 	m_FilterInput[2][2]->callback(cb_filterInput_22);
+
+	m_rScaleSlider = new Fl_Value_Slider(10, 280, 250, 20, "R");
+	m_rScaleSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_rScaleSlider->type(FL_HOR_NICE_SLIDER);
+	m_rScaleSlider->labelfont(FL_COURIER);
+	m_rScaleSlider->labelsize(12);
+	m_rScaleSlider->minimum(0.0);
+	m_rScaleSlider->maximum(2.0);
+	m_rScaleSlider->step(0.01);
+	m_rScaleSlider->value(1.0);
+	m_rScaleSlider->align(FL_ALIGN_RIGHT);
+	m_rScaleSlider->callback(cb_rScaleSlides);
+
+	m_gScaleSlider = new Fl_Value_Slider(10, 310, 250, 20, "G");
+	m_gScaleSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_gScaleSlider->type(FL_HOR_NICE_SLIDER);
+	m_gScaleSlider->labelfont(FL_COURIER);
+	m_gScaleSlider->labelsize(12);
+	m_gScaleSlider->minimum(0.0);
+	m_gScaleSlider->maximum(2.0);
+	m_gScaleSlider->step(0.01);
+	m_gScaleSlider->value(1.0);
+	m_gScaleSlider->align(FL_ALIGN_RIGHT);
+	m_gScaleSlider->callback(cb_gScaleSlides);
+
+	m_bScaleSlider = new Fl_Value_Slider(10, 340, 250, 20, "B");
+	m_bScaleSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_bScaleSlider->type(FL_HOR_NICE_SLIDER);
+	m_bScaleSlider->labelfont(FL_COURIER);
+	m_bScaleSlider->labelsize(12);
+	m_bScaleSlider->minimum(0.0);
+	m_bScaleSlider->maximum(2.0);
+	m_bScaleSlider->step(0.01);
+	m_bScaleSlider->value(1.0);
+	m_bScaleSlider->align(FL_ALIGN_RIGHT);
+	m_bScaleSlider->callback(cb_bScaleSlides);
 
 	m_filterDialog->end();
 }

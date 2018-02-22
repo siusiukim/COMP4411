@@ -39,6 +39,7 @@ public:
 	// Dimensions of the paint window.
 	int				m_nPaintWidth, m_nPaintHeight;
 	// Bitmaps for original image and painting.
+	unsigned char*	m_ucRawBitmap;
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
 
@@ -61,6 +62,8 @@ public:
 	GLubyte* GetPaintedPixel(int x, int y);
 	// Get the color of the Painted picture at the specified point	
 	GLubyte* GetPaintedPixel(const Point p);
+
+	void reloadBitmap();
 
 
 private:

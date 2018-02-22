@@ -172,3 +172,16 @@ void ImpressionistUI::cb_swapContentButton(Fl_Widget* o, void*) {
 	pUI->m_origView->refresh();
 }
 
+void ImpressionistUI::adjustColor() {
+	ImpressionistDoc *pDoc = getDocument();
+
+	pDoc->reloadBitmap();
+	for (int i = 0; i < pDoc->m_nHeight*pDoc->m_nWidth; i++) {
+		unsigned char* pt = &pDoc->m_ucBitmap[i * 3];
+
+		pt[0] = cap_range((int)(pt[0] * m_r_scale), 0, 255);
+		pt[1] = cap_range((int)(pt[1] * m_g_scale), 0, 255);
+		pt[2] = cap_range((int)(pt[2] * m_b_scale), 0, 255);
+	}
+	m_origView->refresh();
+}

@@ -105,6 +105,24 @@ void ImpressionistUI::cb_iterNumberSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_iterNumber = float(((Fl_Slider *)o)->value());
 }
 
+void ImpressionistUI::cb_rScaleSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_r_scale = float(((Fl_Slider *)o)->value());
+	((ImpressionistUI*)(o->user_data()))->adjustColor();
+}
+
+void ImpressionistUI::cb_gScaleSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_g_scale = float(((Fl_Slider *)o)->value());
+	((ImpressionistUI*)(o->user_data()))->adjustColor();
+}
+
+void ImpressionistUI::cb_bScaleSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_b_scale = float(((Fl_Slider *)o)->value());
+	((ImpressionistUI*)(o->user_data()))->adjustColor();
+}
+
 //Filter input
 
 void ImpressionistUI::cb_filterInput_00(Fl_Widget* o, void* v)

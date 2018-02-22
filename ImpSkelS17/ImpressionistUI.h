@@ -73,6 +73,10 @@ public:
 	Fl_Slider*			m_LearnNumberSlider;
 	Fl_Slider*			m_IterNumberSlider;
 
+	Fl_Slider*			m_rScaleSlider;
+	Fl_Slider*			m_gScaleSlider;
+	Fl_Slider*			m_bScaleSlider;
+
 	Fl_Button*          m_ClearCanvasButton;
 	Fl_Button*          m_CopyCanvasButton;
 	Fl_Button*          m_AutoPaintButton;
@@ -91,6 +95,7 @@ public:
 
 	void				show();
 	void				resize_windows(int w, int h);
+	void				adjustColor();
 
 	// Interface to get attribute
 	int					getSize();
@@ -116,6 +121,8 @@ public:
 	int					m_learnNumber;
 	int					m_iterNumber;
 	int					m_threshold;
+
+	float				m_r_scale, m_g_scale, m_b_scale;
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
@@ -148,6 +155,10 @@ private:
 	static void	cb_opacitySlides(Fl_Widget* o, void* v);
 	static void	cb_spacingSlides(Fl_Widget* o, void* v);
 	static void	cb_thresholdSlides(Fl_Widget* o, void* v);
+
+	static void	cb_rScaleSlides(Fl_Widget* o, void* v);
+	static void	cb_gScaleSlides(Fl_Widget* o, void* v);
+	static void	cb_bScaleSlides(Fl_Widget* o, void* v);
 
 	static void	cb_dirTypeChoice(Fl_Widget* o, void* v);
 

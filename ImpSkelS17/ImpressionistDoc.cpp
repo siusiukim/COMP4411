@@ -25,6 +25,7 @@ ImpressionistDoc::ImpressionistDoc()
 
 	m_nWidth = -1;
 	m_ucBitmap = NULL;
+	m_ucRawBitmap = NULL;
 	m_ucPainting = NULL;
 
 
@@ -119,8 +120,12 @@ int ImpressionistDoc::loadImage(char *iname)
 	// release old storage
 	if (m_ucBitmap) delete[] m_ucBitmap;
 	if (m_ucPainting) delete[] m_ucPainting;
+	if (m_ucRawBitmap) delete[] m_ucRawBitmap;
 
-	m_ucBitmap = data;
+	m_ucRawBitmap = data;
+
+	m_ucBitmap = new unsigned char[width*height * 3];
+	memcpy(m_ucBitmap, m_ucRawBitmap, width*height * 3);
 
 	// allocate space for draw view
 	m_ucPainting = new unsigned char[width*height * 3];
@@ -143,6 +148,9 @@ int ImpressionistDoc::loadImage(char *iname)
 	return 1;
 }
 
+void ImpressionistDoc::reloadBitmap() {
+	memcpy(m_ucBitmap, m_ucRawBitmap, m_nWidth*m_nHeight * 3);
+}
 
 //----------------------------------------------------------------
 // Save the specified image
