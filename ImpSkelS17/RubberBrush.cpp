@@ -43,7 +43,7 @@ void RubberBrush::BrushMove(const Point source, const Point target)
 	const double max_dist = size/2;
 	const int x_diff = target.x - last_point.x;
 	const int y_diff = target.y - last_point.y;
-	printf("Diff: %d %d\n", x_diff, y_diff);
+	//printf("Diff: %d %d\n", x_diff, y_diff);
 	
 	struct brush_paint {
 		int x;
@@ -61,8 +61,8 @@ void RubberBrush::BrushMove(const Point source, const Point target)
 
 			Point dragging(target.x + x, target.y + y);
 
-			int rep_x = x_diff * (max_dist - dist) / max_dist;
-			int rep_y = y_diff * (max_dist - dist) / max_dist;
+			int rep_x = x_diff * (max_dist - dist) / max_dist / 2;
+			int rep_y = y_diff * (max_dist - dist) / max_dist / 2;
 			//int rep_x = x_diff;
 			//int rep_y = y_diff;
 

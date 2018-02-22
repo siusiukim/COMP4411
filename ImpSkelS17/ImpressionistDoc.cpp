@@ -289,21 +289,6 @@ int ImpressionistDoc::copyCanvas()
 	return 0;
 }
 
-void ImpressionistDoc::applyFilter3x3(float filter[3][3]) {
-	if (m_ucBitmap)
-	{
-		unsigned char* m_newPaint = new unsigned char[m_nHeight*m_nWidth * 3];
-
-		apply_filter(m_ucBitmap, m_newPaint, m_nWidth, m_nHeight, filter[0], 3, 3);
-
-		delete[] m_ucBitmap;
-		m_ucBitmap = m_newPaint;
-
-		m_pUI->m_paintView->refresh();
-		m_pUI->m_origView->refresh();
-	}
-}
-
 //------------------------------------------------------------------
 // Get the color of the pixel in the original image at coord x and y
 //------------------------------------------------------------------

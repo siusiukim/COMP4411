@@ -45,7 +45,7 @@
 #define MIN_ITER 10
 #define MAX_ITER 1000
 
-#define MIN_THRESHOLD 10
+#define MIN_THRESHOLD 5
 #define MAX_THRESHOLD 500
 
 class ImpressionistUI {

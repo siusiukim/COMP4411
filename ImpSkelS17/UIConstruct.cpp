@@ -230,16 +230,16 @@ ImpressionistUI::ImpressionistUI() {
 	m_angle = 0;
 	m_opacity = 1;
 	m_direction = DIRECTION_BY_SLIDER_OR_RIGHT;
-	m_spacing = MIN_SPACING;
+	m_spacing = 15;
 	m_normalize = false;
 	m_learnNumber = 20;
 	m_iterNumber = 1000;
-	m_threshold = 100;
+	m_threshold = 10;
 	m_r_scale = 1.0f;
 	m_g_scale = 1.0f;
 	m_b_scale = 1.0f;
 
-	m_filterValue = "";
+	m_filterValue = "1,1,1;1,1,1;1,1,1";
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 425, "Brush Dialog");
@@ -398,6 +398,7 @@ ImpressionistUI::ImpressionistUI() {
 
 	m_FilterInput = new Fl_Input(60, 50, 300, 20, "Filter:");
 	m_FilterInput->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput->value(m_filterValue.c_str());
 	m_FilterInput->callback(cb_filterInput);
 
 	m_rScaleSlider = new Fl_Value_Slider(10, 280, 250, 20, "R");

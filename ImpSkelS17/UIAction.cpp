@@ -129,6 +129,8 @@ void ImpressionistUI::cb_applyFilter(Fl_Widget* o, void* v)
 	ImpressionistUI * pUI = (ImpressionistUI*)(o->user_data());
 	ImpressionistDoc * pDoc = ((ImpressionistUI*)(o->user_data()))->getDocument();
 	
+	if (!pDoc->m_ucBitmap) return;
+
 	//Parse the filter string
 	std::vector<std::string> rows;
 	split(pUI->m_filterValue, ';', rows);
@@ -151,37 +153,37 @@ void ImpressionistUI::cb_applyFilter(Fl_Widget* o, void* v)
 		}
 
 		for (int j = 0; j < elems.size(); j++) {
-			printf("%d ", atoi(elems[j].c_str()));
+			filter[i*nCols+j] = atoi(elems[j].c_str());
+			printf("%d ", filter[i*nCols + j]);
 		}
 		printf("\n");
 	}
 
-	printf("Filter size: %d*%d", nRows, nCols);
+	printf("Filter size: %d*%d\n", nRows, nCols);
 
-	//if (pUI->m_normalize) {
-	//	float sum = 0;
-	//	for (int i = 0; i < 3; i++) {
-	//		for (int j = 0; j < 3; j++) {
-	//			sum += (float)pUI->m_filterValue[i][j];
-	//		}
-	//	}
-	//	for (int i = 0; i < 3; i++) {
-	//		for (int j = 0; j < 3; j++) {
-	//			filter[i][j] = (pUI->m_filterValue[i][j]) / sum;
-	//			printf("%d %d %f\n", i, j, filter[i][j]);
-	//		}
-	//	}
-	//}
+	if (pUI->m_normalize) {
+		float sum = 0;
+		for (int i = 0; i < nRows; i++) {
+			for (int j = 0; j < nCols; j++) {
+				sum += filter[i*nCols + j];
+			}
+		}
+		sum = abs(sum);
+		for (int i = 0; i < nRows; i++) {
+			for (int j = 0; j < nCols; j++) {
+				filter[i*nCols + j] = filter[i*nCols + j] / sum;
+				printf("%d %d %f\n", i, j, filter[i*nCols + j]);
+			}
+		}
+	}
 
-	//else {
-	//	for (int i = 0; i < 3; i++) {
-	//		for (int j = 0; j < 3; j++) {
-	//			filter[i][j] = pUI->m_filterValue[i][j];
-	//			printf("%d %d %f\n", i, j, filter[i][j]);
-	//		}
-	//	}
-	//}
-	//pDoc->applyFilter3x3(filter);
+	unsigned char* m_newPaint = new unsigned char[pDoc->m_nHeight*pDoc->m_nWidth * 3];
+	apply_filter(pDoc->m_ucBitmap, m_newPaint, pDoc->m_nWidth, pDoc->m_nHeight, filter, nRows, nCols);
+	delete[] pDoc->m_ucBitmap;
+	pDoc->m_ucBitmap = m_newPaint;
+
+	pUI->m_paintView->refresh();
+	pUI->m_origView->refresh();
 
 	delete[] filter;
 }
