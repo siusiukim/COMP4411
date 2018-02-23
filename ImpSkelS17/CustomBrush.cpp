@@ -20,7 +20,7 @@ void CustomBrush::setOriginalPixelColor(unsigned char* rgb) {
 	brush_rgb[0] = rgb[0];
 	brush_rgb[1] = rgb[1];
 	brush_rgb[2] = rgb[2];
-	printf("Color set: %d %d %d", brush_rgb[0], brush_rgb[1], brush_rgb[2]);
+	printf("Color set: %d %d %d\n", brush_rgb[0], brush_rgb[1], brush_rgb[2]);
 }
 
 void CustomBrush::BrushBegin(const Point source, const Point target)

@@ -87,7 +87,7 @@ public:
 	static int			c_nBrushCount;	// How many brushes we have,
 	static ImpBrush**	c_pBrushes;		// and what they are.
 
-	void setOriginalPixelColor(unsigned char* rgb);
+	virtual void setOriginalPixelColor(unsigned char* rgb);
 
 private:
 	ImpressionistDoc*	m_pDoc;

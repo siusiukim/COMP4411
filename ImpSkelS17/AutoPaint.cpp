@@ -22,11 +22,20 @@ extern float z_frand();
 void PaintView::autoPaint(int spacing) {
 
 	if (!m_pDoc->m_ucPainting) return;
+	draw();
 
 	std::random_device rd;
 	std::mt19937 g(rd());
 
 	glDrawBuffer(GL_FRONT_AND_BACK);
+
+	//Copy first
+	SaveCurrentContent();
+	m_pDoc->copyCanvas();
+	RestoreContent();
+	SaveCurrentContent();
+	m_pDoc->copyCanvas();
+	RestoreContent();
 
 	ImpressionistUI* ui = m_pDoc->m_pUI;
 
@@ -44,7 +53,8 @@ void PaintView::autoPaint(int spacing) {
 	std::vector<brush_attr> brush_store;
 	for (int i = 0; i < m_nDrawWidth; i += spacing) {
 		for (int j = 0; j < m_nDrawHeight; j += spacing) {
-			Point draw(i + (frand() - 0.5f) * spacing * 0.5f, j + (frand() - 0.5f) * spacing * 0.5f);
+			//Point draw(i + (frand() - 0.5f) * spacing * 0.5f, j + (frand() - 0.5f) * spacing * 0.5f);
+			Point draw(i, j);
 			Point source, target;
 			convertPoint(draw, &source, &target);
 
@@ -74,6 +84,8 @@ void PaintView::autoPaint(int spacing) {
 	glFlush();
 
 	glDrawBuffer(GL_FRONT_AND_BACK);
+
+	m_pDoc->m_pUI->m_origView->redraw();
 }
 
 const int resolution_steps[] = { 32, 16, 8, 4, 2 };
@@ -122,6 +134,7 @@ const float res_gau_kernel[resolution_count][5][5] = {
 void PaintView::autoMultiPaint(int spacing) {
 
 	if (!m_pDoc->m_ucPainting) return;
+	draw();
 
 	glDrawBuffer(GL_FRONT_AND_BACK);
 
@@ -227,6 +240,7 @@ void PaintView::autoMultiPaint(int spacing) {
 	glFlush();
 
 	glDrawBuffer(GL_FRONT_AND_BACK);
+	m_pDoc->m_pUI->m_origView->redraw();
 }
 
 double PaintView::getRootMeanSquareCost(const unsigned char* org, const unsigned char* cmp) {
@@ -244,6 +258,7 @@ double PaintView::getRootMeanSquareCost(const unsigned char* org, const unsigned
 void PaintView::autoLearnPaint(int numLearn) {
 
 	if (!m_pDoc->m_ucPainting) return;
+	draw();
 
 	double minCost = INFINITY;
 	int min_train_idx = 0;
@@ -367,6 +382,8 @@ void PaintView::autoLearnPaint(int numLearn) {
 	delete[] sizeArray;
 	delete[] thicknessArray;
 	delete[] angleArray;
+
+	m_pDoc->m_pUI->m_origView->redraw();
 }
 
 //void PaintView::autoLearnPaint(int numLearn) {

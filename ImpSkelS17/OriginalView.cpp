@@ -7,6 +7,7 @@
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include "originalview.h"
+#include "MathUtil.hpp"
 
 #ifndef WIN32
 #define min(a, b)	( ( (a)<(b) ) ? (a) : (b) )
@@ -81,17 +82,23 @@ void OriginalView::draw()
 
 int OriginalView::handle(int event)
 {
+	int x, y;
 	switch (event)
 	{
+	case FL_ENTER:
+		break;
 	case FL_PUSH:
-		int x = Fl::event_x();
-		int y = Fl::event_y();
+		x = Fl::event_x();
+		y = m_pDoc->m_nHeight - Fl::event_y();
+		x = cap_range(x, 0, m_pDoc->m_nWidth-1);
+		y = cap_range(y, 0, m_pDoc->m_nHeight -1);
 		if (m_pDoc->m_pCurrentBrush && m_pDoc->m_ucBitmap) {
 			m_pDoc->m_pCurrentBrush->setOriginalPixelColor(&m_pDoc->m_ucBitmap[(y*(m_pDoc->m_nWidth) + x) * 3]);
 		}
+		break;
+	default:
+		return 0;
 	}
-
-
 
 	return 1;
 }
