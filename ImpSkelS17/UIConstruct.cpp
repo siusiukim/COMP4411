@@ -236,6 +236,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_spacing = 15;
 	m_normalize = false;
 	m_clipEdge = false;
+	m_seeEdge = false;
 	m_learnNumber = 20;
 	m_iterNumber = 1000;
 	m_threshold = 10;
@@ -396,6 +397,10 @@ ImpressionistUI::ImpressionistUI() {
 	m_EdgeClipSwitch = new Fl_Light_Button(10, 340, 100, 20, "Edge Clip");
 	m_EdgeClipSwitch->user_data((void*)(this));
 	m_EdgeClipSwitch->callback(cb_clipEdgeSwitch);
+
+	m_SeeEdgeSwitch = new Fl_Light_Button(10, 370, 100, 20, "See edge");
+	m_SeeEdgeSwitch->user_data((void*)(this));
+	m_SeeEdgeSwitch->callback(cb_seeEdgeSwitch);
 
 	m_loadEdgeButton = new Fl_Button(120, 340, 100, 20, "Load edge");
 	m_loadEdgeButton->user_data((void*)(this));

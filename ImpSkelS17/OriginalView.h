@@ -33,6 +33,7 @@ public:
 
 	ImpressionistDoc*	m_pDoc;
 
+	unsigned char* bitmap_bt;
 private:
 	int	m_nWindowWidth, 
 		m_nWindowHeight;

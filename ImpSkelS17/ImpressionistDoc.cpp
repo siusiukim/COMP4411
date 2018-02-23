@@ -127,6 +127,11 @@ int ImpressionistDoc::loadImage(char *iname)
 	if (m_ucPainting) delete[] m_ucPainting;
 	if (m_ucRawBitmap) delete[] m_ucRawBitmap;
 
+	if (m_ucRawBitmap) {
+		delete[] m_ucEdgeImage;
+		m_ucEdgeImage = NULL;
+	}
+
 	m_ucRawBitmap = data;
 
 	m_ucBitmap = new unsigned char[width*height * 3];
@@ -149,6 +154,7 @@ int ImpressionistDoc::loadImage(char *iname)
 	m_pUI->m_paintView->resizeWindow(width, height);
 	m_pUI->m_paintView->refresh();
 
+	m_pUI->m_origView->bitmap_bt = m_ucBitmap;
 
 	return 1;
 }
@@ -208,6 +214,10 @@ int ImpressionistDoc::loadMural(char *iname)
 	if (m_ucBitmap) delete[] m_ucBitmap;
 	if (m_ucPainting) delete[] m_ucPainting;
 	if (m_ucRawBitmap) delete[] m_ucRawBitmap;
+	if (m_ucRawBitmap) {
+		delete[] m_ucEdgeImage;
+		m_ucEdgeImage = NULL;
+	}
 
 	m_ucRawBitmap = new_original;
 	m_ucBitmap = new unsigned char[new_width*new_height * 3];
@@ -299,8 +309,79 @@ int ImpressionistDoc::loadEdgeImage(char* iname) {
 	m_ucEdgeImage = data;
 }
 
+//0.8 sigma
+static const float gau_filter[5][5] = {
+	{ 0.000874, 0.006976, 0.01386, 0.006976, 0.000874 },
+	{ 0.006976,0.0557,0.110656,0.0557,0.006976 },
+	{ 0.01386,0.110656,0.219833,0.110656,0.01386 },
+	{ 0.006976,0.0557,0.110656,0.0557,0.006976 },
+	{ 0.000874,0.006976,0.01386,0.006976,0.000874 }
+};
+
+static const float sobel_x[3][3] = {
+	{1.0 / 8.0, 0, -1.0 / 8.0 },
+	{2.0 / 8.0, 0, -2.0 / 8.0 },
+	{1.0 / 8.0, 0, -1.0 / 8.0 }
+};
+
+static const float sobel_y[3][3] = {
+	{ 1.0 / 8.0, 2.0/8.0, 1.0 / 8.0 },
+{ 0, 0, 0 },
+{ -1.0 / 8.0, -2.0 / 8.0, -1.0 / 8.0 }
+};
+
 void ImpressionistDoc::computeEdgeImage() {
-	
+	if (!m_ucBitmap) return;
+
+	unsigned char* gray = new unsigned char[m_nWidth*m_nHeight];
+	//copy
+	if (m_ucEdgeImage) {
+		delete[] m_ucEdgeImage;
+	}
+	m_ucEdgeImage = new unsigned char[m_nWidth*m_nHeight * 3];
+
+	//Blur
+	apply_filter(m_ucBitmap, m_ucEdgeImage, m_nWidth, m_nHeight, gau_filter[0], 5, 5);
+
+	//Turn gray
+	for (int y = 0; y < m_nHeight; y++) {
+		for (int x = 0; x < m_nWidth; x++) {
+			int idx = y * m_nWidth + x;
+			gray[idx] = m_ucEdgeImage[idx*3] * 0.299 
+				+ m_ucEdgeImage[idx*3+1] * 0.587 + m_ucEdgeImage[idx*3+2] * 0.114;
+		}
+	}
+
+	//Re-claim
+	memset(m_ucEdgeImage, 0, m_nWidth*m_nHeight * 3);
+
+#define SOBEL_THRESHOLD 10
+	//Compute sobel and threshold
+	for (int y = 1; y < m_nHeight-1; y++) {
+		for (int x = 1; x < m_nWidth-1; x++) {
+			int idx = y * m_nWidth + x;
+			float sobel_x = gray[idx- m_nWidth-1] + 2 * gray[idx-1] + gray[idx+ m_nWidth-1]
+				- gray[idx-m_nWidth+1] - 2 * gray[idx+1] - gray[idx+ m_nWidth+1];
+
+			float sobel_y = gray[idx - m_nWidth - 1] + 2 * gray[idx - m_nWidth] + gray[idx - m_nWidth + 1]
+				- gray[idx + m_nWidth - 1] - 2 * gray[idx + m_nWidth] - gray[idx + m_nWidth + 1];
+
+			sobel_x /= 8;
+			sobel_y /= 8;
+
+			float mag = sqrtf(sobel_x * sobel_x + sobel_y * sobel_y);
+			if (mag > SOBEL_THRESHOLD) {
+				m_ucEdgeImage[idx * 3] = 255;
+				m_ucEdgeImage[idx * 3 + 1] = 255;
+				m_ucEdgeImage[idx * 3 + 2] = 255;
+			}
+		}
+	}
+
+	delete[] gray;
+	printf("Edge Done!");
+
+	//Debug
 }
 
 void ImpressionistDoc::reloadBitmap() {

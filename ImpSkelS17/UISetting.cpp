@@ -152,6 +152,22 @@ void ImpressionistUI::cb_clipEdgeSwitch(Fl_Widget* o, void* v)
 	else pUI->m_clipEdge = TRUE;
 }
 
+void ImpressionistUI::cb_seeEdgeSwitch(Fl_Widget* o, void* v)
+{
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	if (pUI->m_seeEdge == TRUE)
+	{
+		pUI->m_origView->bitmap_bt = pUI->m_pDoc->m_ucBitmap;
+		pUI->m_origView->refresh();
+		pUI->m_seeEdge = FALSE;
+	}
+	else {
+		pUI->m_origView->bitmap_bt = pUI->m_pDoc->m_ucEdgeImage;
+		pUI->m_seeEdge = TRUE;
+		pUI->m_origView->refresh();
+	}
+}
+
 ImpressionistDoc* ImpressionistUI::getDocument()
 {
 	return m_pDoc;

@@ -96,6 +96,7 @@ public:
 	Fl_Button*          m_loadEdgeButton;
 	Fl_Button*          m_computeEdgeButton;
 	Fl_Light_Button*	m_EdgeClipSwitch;
+	Fl_Light_Button*	m_SeeEdgeSwitch;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -124,7 +125,7 @@ public:
 	void				setSpacing(int spacing);
 	int					getSpacing();
 
-	bool				m_normalize, m_clipEdge;
+	bool				m_normalize, m_clipEdge, m_seeEdge;
 	std::string			m_filterValue;
 	int					m_learnNumber;
 	int					m_iterNumber;
@@ -182,6 +183,7 @@ private:
 	static void cb_applyFilter(Fl_Widget* o, void* v);
 	static void cb_normalizeSwitch(Fl_Widget* o, void* v);
 	static void cb_clipEdgeSwitch(Fl_Widget* o, void* v);
+	static void cb_seeEdgeSwitch(Fl_Widget* o, void* v);
 	static void cb_loadEdge(Fl_Widget* o, void* v);
 	static void cb_computeEdge(Fl_Widget* o, void* v);
 
