@@ -6,4 +6,5 @@ Create an "impressionist" version of an given image using different brushes and 
 
 | Original | Processed |
 | -------- | --------- |
-|![Original](/Impressionist/artifact/original.bmp)|![Processed](/Impressionist/artifact/artifact.bmp)|
+|![Original](/Impressionist/artifact/original.png)|![Processed](/Impressionist/artifact/artifact.png)|
+|![Original](/Impressionist/artifact/original_2.png)|![Processed](/Impressionist/artifact/artifact_2.png)|
