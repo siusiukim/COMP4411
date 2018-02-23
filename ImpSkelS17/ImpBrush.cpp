@@ -77,14 +77,16 @@ void ImpBrush::setOriginalPixelColor(unsigned char* rgb) {
 
 float ImpBrush::GetDirection(const Point source) {
 	ImpressionistUI* ui = GetDocument()->m_pUI;
+	ImpressionistDoc* pDoc = GetDocument();
+	float gray[3][3];
+	float sobel_x, sobel_y;
+
 	switch (ui->getDirectionType()) {
 	case DIRECTION_BY_SLIDER_OR_RIGHT:
-		return GetDocument()->m_pUI->getAngle() * 2 * M_PI / 360;
+		return (180-GetDocument()->m_pUI->getAngle()) * 2 * M_PI / 360;
 	case DIRECTION_BY_MOVEMENT:
 		return cursor_direction;
 	case DIRECTION_BY_GRADIENT:
-		ImpressionistDoc* pDoc = GetDocument();
-		float gray[3][3];
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				GLubyte color[3];
@@ -92,11 +94,29 @@ float ImpBrush::GetDirection(const Point source) {
 				gray[i][j] = color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114;
 			}
 		}
-		float sobel_x = -gray[0][0] - 2 * gray[0][1] - gray[0][2]
+		sobel_x = -gray[0][0] - 2 * gray[0][1] - gray[0][2]
 			+ gray[2][0] + 2 * gray[2][1] + gray[2][2];
-		float sobel_y = gray[0][0] + 2 * gray[1][0] + gray[2][0]
+		sobel_y = gray[0][0] + 2 * gray[1][0] + gray[2][0]
 			- gray[0][2] - 2 * gray[1][2] - gray[2][2];
 		return atan2f(sobel_x, sobel_y);
+	case DIRECTION_BY_ANOTHER_IMAGE:
+		if (pDoc->m_ucGradImage) {
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					GLubyte color[3];
+					memcpy(color, pDoc->GetGradImagePixel(Point(source.x + i - 1, source.y + j - 1)), 3);
+					gray[i][j] = color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114;
+				}
+			}
+			sobel_x = -gray[0][0] - 2 * gray[0][1] - gray[0][2]
+				+ gray[2][0] + 2 * gray[2][1] + gray[2][2];
+			sobel_y = gray[0][0] + 2 * gray[1][0] + gray[2][0]
+				- gray[0][2] - 2 * gray[1][2] - gray[2][2];
+			return atan2f(sobel_x, sobel_y);
+		}
+		else {
+			return 0;
+		}
 	}
 }
 

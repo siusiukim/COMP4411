@@ -36,6 +36,16 @@ void ImpressionistUI::cb_load_mural(Fl_Menu_* o, void* v)
 	}
 }
 
+void ImpressionistUI::cb_load_grad_image(Fl_Menu_* o, void* v)
+{
+	ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+	if (newfile != NULL) {
+		pDoc->loadGradientImage(newfile);
+	}
+}
+
 void ImpressionistUI::cb_load_brush(Fl_Widget* o, void* v)
 {
 	ImpressionistUI* pUI = ((ImpressionistUI *)(o->user_data()));

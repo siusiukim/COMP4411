@@ -21,6 +21,7 @@ public:
 
 	int		loadImage(char *iname);			// called by the UI to load image
 	int		loadMural(char *iname);			// called by the UI to load image
+	int		loadGradientImage(char *iname); 
 	int		loadBrush(char *iname);
 	int		saveImage(char *iname);			// called by the UI to save image
 
@@ -41,12 +42,15 @@ public:
 	int				m_nPaintWidth, m_nPaintHeight;
 	// Dimensions of the loaded brush
 	int				m_nBrushWidth, m_nBrushHeight;
+	// Dimensions of the gradient image
+	int				m_nGradImageWidth, m_nGradImageHeight;
 
 	// Bitmaps for original image and painting.
 	unsigned char*	m_ucRawBitmap;
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
 	unsigned char*	m_ucBrush;
+	unsigned char*	m_ucGradImage;
 
 
 	// The current active brush.
@@ -67,6 +71,11 @@ public:
 	GLubyte* GetPaintedPixel(int x, int y);
 	// Get the color of the Painted picture at the specified point	
 	GLubyte* GetPaintedPixel(const Point p);
+
+	// Get the color of the Painted picture at the specified coord
+	GLubyte* GetGradImagePixel(int x, int y);
+	// Get the color of the Painted picture at the specified point	
+	GLubyte* GetGradImagePixel(const Point p);
 
 	void reloadBitmap();
 

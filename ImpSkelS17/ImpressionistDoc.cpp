@@ -28,6 +28,7 @@ ImpressionistDoc::ImpressionistDoc()
 	m_ucRawBitmap = NULL;
 	m_ucPainting = NULL;
 	m_ucBrush = NULL;
+	m_ucGradImage = NULL;
 
 	// create one instance of each brush
 	ImpBrush::c_nBrushCount = NUM_BRUSH_TYPE;
@@ -254,6 +255,27 @@ int ImpressionistDoc::loadBrush(char *iname) {
 	m_ucBrush = data;
 }
 
+int ImpressionistDoc::loadGradientImage(char *iname) {
+	// try to open the image to read
+	unsigned char*	data;
+	int				width,
+		height;
+
+	if ((data = readBMP(iname, width, height)) == NULL)
+	{
+		fl_alert("Can't load bitmap file");
+		return 0;
+	}
+
+	// reflect the fact of loading the new image
+	m_nGradImageWidth = width;
+	m_nGradImageHeight = height;
+
+	if (m_ucGradImage) delete[] m_ucGradImage;
+
+	m_ucGradImage = data;
+}
+
 void ImpressionistDoc::reloadBitmap() {
 	memcpy(m_ucBitmap, m_ucRawBitmap, m_nWidth*m_nHeight * 3);
 }
@@ -363,4 +385,30 @@ GLubyte* ImpressionistDoc::GetPaintedPixel(int x, int y)
 GLubyte* ImpressionistDoc::GetPaintedPixel(const Point p)
 {
 	return GetPaintedPixel(p.x, p.y);
+}
+
+//------------------------------------------------------------------
+// Get the color of the pixel in the Gradient image at coord x and y
+//------------------------------------------------------------------
+GLubyte* ImpressionistDoc::GetGradImagePixel(int x, int y)
+{
+	if (x < 0)
+		x = 0;
+	else if (x >= m_nGradImageWidth)
+		x = m_nGradImageWidth - 1;
+
+	if (y < 0)
+		y = 0;
+	else if (y >= m_nGradImageHeight)
+		y = m_nGradImageHeight - 1;
+
+	return (GLubyte*)(m_ucGradImage + 3 * (y*m_nGradImageWidth + x));
+}
+
+//----------------------------------------------------------------
+// Get the color of the pixel in the Gradient image at point p
+//----------------------------------------------------------------
+GLubyte* ImpressionistDoc::GetGradImagePixel(const Point p)
+{
+	return GetGradImagePixel(p.x, p.y);
 }

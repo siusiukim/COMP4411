@@ -157,6 +157,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
 	{ "&Load Image...",	FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_load_image },
 	{ "&Load Mural...",	FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::cb_load_mural },
+	{ "&Load Gradient image...",	FL_ALT + 'g', (Fl_Callback *)ImpressionistUI::cb_load_grad_image },
 	{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
 	{ "&Filter...",	FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_filters },
@@ -190,6 +191,7 @@ Fl_Menu_Item ImpressionistUI::brushDirectionMenu[NUM_DIRECTION_TYPE + 1] = {
 	{ "Slider/Right mouse",		FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_SLIDER_OR_RIGHT },
 	{ "Cursor movement",		FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_MOVEMENT },
 	{ "Gradient",				FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_GRADIENT },
+	{ "Gradient of another image",				FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_ANOTHER_IMAGE },
 	{ 0 }
 };
 
