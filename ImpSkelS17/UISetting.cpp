@@ -145,6 +145,13 @@ void ImpressionistUI::cb_normalizeSwitch(Fl_Widget* o, void* v)
 	else pUI->m_normalize = TRUE;
 }
 
+void ImpressionistUI::cb_clipEdgeSwitch(Fl_Widget* o, void* v)
+{
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	if (pUI->m_clipEdge == TRUE) pUI->m_clipEdge = FALSE;
+	else pUI->m_clipEdge = TRUE;
+}
+
 ImpressionistDoc* ImpressionistUI::getDocument()
 {
 	return m_pDoc;

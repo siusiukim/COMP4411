@@ -235,6 +235,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_direction = DIRECTION_BY_SLIDER_OR_RIGHT;
 	m_spacing = 15;
 	m_normalize = false;
+	m_clipEdge = false;
 	m_learnNumber = 20;
 	m_iterNumber = 1000;
 	m_threshold = 10;
@@ -391,6 +392,18 @@ ImpressionistUI::ImpressionistUI() {
 	m_SwapContentButton = new Fl_Button(10, 310, 120, 20, "Swap Content");
 	m_SwapContentButton->user_data((void*)(this));
 	m_SwapContentButton->callback(cb_swapContentButton);
+
+	m_EdgeClipSwitch = new Fl_Light_Button(10, 340, 100, 20, "Edge Clip");
+	m_EdgeClipSwitch->user_data((void*)(this));
+	m_EdgeClipSwitch->callback(cb_clipEdgeSwitch);
+
+	m_loadEdgeButton = new Fl_Button(120, 340, 100, 20, "Load edge");
+	m_loadEdgeButton->user_data((void*)(this));
+	m_loadEdgeButton->callback(cb_loadEdge);
+
+	m_computeEdgeButton = new Fl_Button(230, 340, 100, 20, "Compute edge");
+	m_computeEdgeButton->user_data((void*)(this));
+	m_computeEdgeButton->callback(cb_computeEdge);
 
 	m_brushDialog->end();
 

@@ -25,6 +25,8 @@ public:
 	int		loadBrush(char *iname);
 	int		saveImage(char *iname);			// called by the UI to save image
 
+	int		loadEdgeImage(char* iname);
+	void	computeEdgeImage();
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	int		copyCanvas();					// Copy the raw image to the canvas
@@ -51,6 +53,7 @@ public:
 	unsigned char*	m_ucPainting;
 	unsigned char*	m_ucBrush;
 	unsigned char*	m_ucGradImage;
+	unsigned char*	m_ucEdgeImage;
 
 
 	// The current active brush.
@@ -72,10 +75,15 @@ public:
 	// Get the color of the Painted picture at the specified point	
 	GLubyte* GetPaintedPixel(const Point p);
 
-	// Get the color of the Painted picture at the specified coord
+	// Get the color of the Grad picture at the specified coord
 	GLubyte* GetGradImagePixel(int x, int y);
-	// Get the color of the Painted picture at the specified point	
+	// Get the color of the Grad picture at the specified point	
 	GLubyte* GetGradImagePixel(const Point p);
+
+	// Get the color of the Edge picture at the specified coord
+	bool IsEdgeAtPixel(int x, int y);
+	// Get the color of the Edge picture at the specified point	
+	bool IsEdgeAtPixel(const Point p);
 
 	void reloadBitmap();
 

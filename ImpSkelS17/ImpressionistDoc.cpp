@@ -29,6 +29,7 @@ ImpressionistDoc::ImpressionistDoc()
 	m_ucPainting = NULL;
 	m_ucBrush = NULL;
 	m_ucGradImage = NULL;
+	m_ucEdgeImage = NULL;
 
 	// create one instance of each brush
 	ImpBrush::c_nBrushCount = NUM_BRUSH_TYPE;
@@ -276,6 +277,32 @@ int ImpressionistDoc::loadGradientImage(char *iname) {
 	m_ucGradImage = data;
 }
 
+int ImpressionistDoc::loadEdgeImage(char* iname) {
+	// try to open the image to read
+	unsigned char*	data;
+	int				width,
+		height;
+
+	if ((data = readBMP(iname, width, height)) == NULL)
+	{
+		fl_alert("Can't load bitmap file");
+		return 0;
+	}
+
+	if (width != m_nWidth || height != m_nHeight) {
+		fl_alert("Dimension mismatch");
+		return 0;
+	}
+
+	if (m_ucEdgeImage) delete[] m_ucEdgeImage;
+
+	m_ucEdgeImage = data;
+}
+
+void ImpressionistDoc::computeEdgeImage() {
+	
+}
+
 void ImpressionistDoc::reloadBitmap() {
 	memcpy(m_ucBitmap, m_ucRawBitmap, m_nWidth*m_nHeight * 3);
 }
@@ -411,4 +438,28 @@ GLubyte* ImpressionistDoc::GetGradImagePixel(int x, int y)
 GLubyte* ImpressionistDoc::GetGradImagePixel(const Point p)
 {
 	return GetGradImagePixel(p.x, p.y);
+}
+
+
+bool ImpressionistDoc::IsEdgeAtPixel(int x, int y)
+{
+	if (!m_ucEdgeImage) return false;
+
+	if (x < 0)
+		x = 0;
+	else if (x >= m_nWidth)
+		x = m_nWidth - 1;
+
+	if (y < 0)
+		y = 0;
+	else if (y >= m_nHeight)
+		y = m_nHeight - 1;
+
+	return m_ucEdgeImage[3 * (y*m_nWidth + x)] != 0;
+}
+
+
+bool ImpressionistDoc::IsEdgeAtPixel(const Point p)
+{
+	return IsEdgeAtPixel(p.x, p.y);
 }

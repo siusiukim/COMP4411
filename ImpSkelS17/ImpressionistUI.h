@@ -25,7 +25,7 @@
 #include <string>
 
 #define MIN_POINT_SIZE 5
-#define MAX_POINT_SIZE 50
+#define MAX_POINT_SIZE 100
 
 #define MIN_THICKNESS 1
 #define MAX_THICKNESS 50
@@ -93,6 +93,10 @@ public:
 	Fl_Button*          m_ApplyFilterButton;
 	Fl_Light_Button*	m_NormalizeSwitch;
 
+	Fl_Button*          m_loadEdgeButton;
+	Fl_Button*          m_computeEdgeButton;
+	Fl_Light_Button*	m_EdgeClipSwitch;
+
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
 	ImpressionistDoc*	getDocument();
@@ -120,7 +124,7 @@ public:
 	void				setSpacing(int spacing);
 	int					getSpacing();
 
-	bool				m_normalize;
+	bool				m_normalize, m_clipEdge;
 	std::string			m_filterValue;
 	int					m_learnNumber;
 	int					m_iterNumber;
@@ -177,6 +181,9 @@ private:
 	
 	static void cb_applyFilter(Fl_Widget* o, void* v);
 	static void cb_normalizeSwitch(Fl_Widget* o, void* v);
+	static void cb_clipEdgeSwitch(Fl_Widget* o, void* v);
+	static void cb_loadEdge(Fl_Widget* o, void* v);
+	static void cb_computeEdge(Fl_Widget* o, void* v);
 
 	static void cb_autoLearnDrawing(Fl_Widget* o, void* v);
 	static void cb_learnNumberSlides(Fl_Widget* o, void* v);

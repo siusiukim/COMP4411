@@ -141,8 +141,8 @@ void ImpBrush::DragDirectionBegin(const Point point) {
 
 void ImpBrush::DragDirectionMove(const Point point) {
 	if (GetDocument()->m_pUI->getDirectionType() == DIRECTION_BY_SLIDER_OR_RIGHT) {
-		glBegin(GL_LINES);
 		glLineWidth(1);
+		glBegin(GL_LINES);
 		glColor3ub(255, 0, 0);
 
 		glVertex2d(dir_start_point.x, dir_start_point.y);

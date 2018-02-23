@@ -57,6 +57,25 @@ void ImpressionistUI::cb_load_brush(Fl_Widget* o, void* v)
 	}
 }
 
+void ImpressionistUI::cb_loadEdge(Fl_Widget* o, void* v)
+{
+	ImpressionistUI* pUI = ((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc = pUI->getDocument();
+
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+	if (newfile != NULL) {
+		pDoc->loadEdgeImage(newfile);
+	}
+}
+
+void ImpressionistUI::cb_computeEdge(Fl_Widget* o, void* v)
+{
+	ImpressionistUI* pUI = ((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc = pUI->getDocument();
+
+	pDoc->computeEdgeImage();
+}
+
 //------------------------------------------------------------------
 // Brings up a file chooser and then saves the painted image
 // This is called by the UI when the save image menu item is chosen
