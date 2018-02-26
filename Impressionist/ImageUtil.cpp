@@ -15,10 +15,10 @@ void apply_filter(const unsigned char* src, unsigned char* dst,
 			float sum[3] = { 0.0f };
 			for (int fy = 0; fy < filter_rows; fy++) {
 				for (int fx = 0; fx < filter_cols; fx++) {
-					int org_x = i + fx - 1;
-					int org_y = j + fy - 1;
-					org_x = cap_range(org_x, 0, image_width);
-					org_y = cap_range(org_y, 0, image_height);
+					int org_x = i + fx - filter_cols/2;
+					int org_y = j + fy - filter_rows/2;
+					org_x = cap_range(org_x, 0, image_width-1);
+					org_y = cap_range(org_y, 0, image_height-1);
 
 					const unsigned char* rgb = &src[(org_y*image_width + org_x)*3];
 					sum[0] += rgb[0] * filter[fy*filter_cols + fx];

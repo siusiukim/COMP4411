@@ -157,6 +157,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
 	{ "&Load Image...",	FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_load_image },
 	{ "&Load Mural...",	FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::cb_load_mural },
+	{ "&Load Gradient image...",	FL_ALT + 'g', (Fl_Callback *)ImpressionistUI::cb_load_grad_image },
 	{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 	{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes },
 	{ "&Filter...",	FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_filters },
@@ -181,6 +182,7 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
 	{ "Scattered Lines",	FL_ALT + 'm', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_LINES },
 	{ "Scattered Circles",	FL_ALT + 'd', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES },
 	{ "Rubber",	FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_RUBBER },
+	{ "Custom",	FL_ALT + 'y', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_CUSTOM },
 	{ 0 }
 };
 
@@ -189,6 +191,7 @@ Fl_Menu_Item ImpressionistUI::brushDirectionMenu[NUM_DIRECTION_TYPE + 1] = {
 	{ "Slider/Right mouse",		FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_SLIDER_OR_RIGHT },
 	{ "Cursor movement",		FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_MOVEMENT },
 	{ "Gradient",				FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_GRADIENT },
+	{ "Gradient of another image",				FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_dirTypeChoice, (void *)DIRECTION_BY_ANOTHER_IMAGE },
 	{ 0 }
 };
 
@@ -217,7 +220,7 @@ ImpressionistUI::ImpressionistUI() {
 	// install original view window
 	m_origView = new OriginalView(0, 25, 300, 275, "This is the orig view");//300jon
 	m_origView->box(FL_DOWN_FRAME);
-	m_origView->deactivate();
+	//m_origView->deactivate();
 
 	group->end();
 	Fl_Group::current()->resizable(group);
@@ -230,16 +233,18 @@ ImpressionistUI::ImpressionistUI() {
 	m_angle = 0;
 	m_opacity = 1;
 	m_direction = DIRECTION_BY_SLIDER_OR_RIGHT;
-	m_spacing = MIN_SPACING;
+	m_spacing = 15;
 	m_normalize = false;
+	m_clipEdge = false;
+	m_seeEdge = false;
 	m_learnNumber = 20;
 	m_iterNumber = 1000;
-	m_threshold = 100;
+	m_threshold = 10;
 	m_r_scale = 1.0f;
 	m_g_scale = 1.0f;
 	m_b_scale = 1.0f;
 
-	m_filterValue = "";
+	m_filterValue = "1,1,1;1,1,1;1,1,1";
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 425, "Brush Dialog");
@@ -259,6 +264,11 @@ ImpressionistUI::ImpressionistUI() {
 	m_ClearCanvasButton = new Fl_Button(240, 10, 150, 25, "&Clear Canvas");
 	m_ClearCanvasButton->user_data((void*)(this));
 	m_ClearCanvasButton->callback(cb_clear_canvas_button);
+
+	m_LoadBrushButton = new Fl_Button(240, 40, 150, 25, "Load Brush");
+	m_LoadBrushButton->user_data((void*)(this));
+	m_LoadBrushButton->callback(cb_load_brush);
+	m_LoadBrushButton->deactivate();
 
 	// Add brush size slider to the dialog 
 	m_BrushSizeSlider = new Fl_Value_Slider(10, 80, 300, 20, "Size");
@@ -384,6 +394,22 @@ ImpressionistUI::ImpressionistUI() {
 	m_SwapContentButton->user_data((void*)(this));
 	m_SwapContentButton->callback(cb_swapContentButton);
 
+	m_EdgeClipSwitch = new Fl_Light_Button(10, 340, 100, 20, "Edge Clip");
+	m_EdgeClipSwitch->user_data((void*)(this));
+	m_EdgeClipSwitch->callback(cb_clipEdgeSwitch);
+
+	m_SeeEdgeSwitch = new Fl_Light_Button(10, 370, 100, 20, "See edge");
+	m_SeeEdgeSwitch->user_data((void*)(this));
+	m_SeeEdgeSwitch->callback(cb_seeEdgeSwitch);
+
+	m_loadEdgeButton = new Fl_Button(120, 340, 100, 20, "Load edge");
+	m_loadEdgeButton->user_data((void*)(this));
+	m_loadEdgeButton->callback(cb_loadEdge);
+
+	m_computeEdgeButton = new Fl_Button(230, 340, 100, 20, "Compute edge");
+	m_computeEdgeButton->user_data((void*)(this));
+	m_computeEdgeButton->callback(cb_computeEdge);
+
 	m_brushDialog->end();
 
 	m_filterDialog = new Fl_Window(400, 450, "Filter Dialog");
@@ -398,6 +424,7 @@ ImpressionistUI::ImpressionistUI() {
 
 	m_FilterInput = new Fl_Input(60, 50, 300, 20, "Filter:");
 	m_FilterInput->user_data((void*)(this));   // record self to be used by static callback functions
+	m_FilterInput->value(m_filterValue.c_str());
 	m_FilterInput->callback(cb_filterInput);
 
 	m_rScaleSlider = new Fl_Value_Slider(10, 280, 250, 20, "R");

@@ -19,6 +19,7 @@ enum
 	BRUSH_SCATTERED_LINES,
 	BRUSH_SCATTERED_CIRCLES,
 	BRUSH_RUBBER,
+	BRUSH_CUSTOM,
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
@@ -27,6 +28,7 @@ enum
 	DIRECTION_BY_SLIDER_OR_RIGHT = 0,
 	DIRECTION_BY_MOVEMENT,
 	DIRECTION_BY_GRADIENT,
+	DIRECTION_BY_ANOTHER_IMAGE,
 	NUM_DIRECTION_TYPE // Make sure this stays at the end!
 };
 
@@ -85,6 +87,8 @@ public:
 
 	static int			c_nBrushCount;	// How many brushes we have,
 	static ImpBrush**	c_pBrushes;		// and what they are.
+
+	virtual void setOriginalPixelColor(unsigned char* rgb);
 
 private:
 	ImpressionistDoc*	m_pDoc;

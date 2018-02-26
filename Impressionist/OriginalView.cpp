@@ -7,6 +7,7 @@
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include "originalview.h"
+#include "MathUtil.hpp"
 
 #ifndef WIN32
 #define min(a, b)	( ( (a)<(b) ) ? (a) : (b) )
@@ -22,6 +23,7 @@ OriginalView::OriginalView(int			x,
 	m_nWindowWidth	= w;
 	m_nWindowHeight	= h;
 
+	bitmap_bt = NULL;
 }
 
 void OriginalView::draw()
@@ -42,7 +44,7 @@ void OriginalView::draw()
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
-	if ( m_pDoc->m_ucBitmap ) 
+	if (bitmap_bt)
 	{
 		// note that both OpenGL pixel storage and the Windows BMP format
 		// store pixels left-to-right, BOTTOM-to-TOP!!  thus all the fiddling
@@ -65,7 +67,7 @@ void OriginalView::draw()
 		if ( startrow < 0 ) 
 			startrow = 0;
 
-		bitstart = m_pDoc->m_ucBitmap + 3 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
+		bitstart = bitmap_bt + 3 * ((m_pDoc->m_nWidth * startrow) + scrollpos.x);
 
 		// just copy image to GLwindow conceptually
 		glRasterPos2i( 0, m_nWindowHeight - drawHeight );
@@ -77,6 +79,29 @@ void OriginalView::draw()
 	}
 			
 	glFlush();
+}
+
+int OriginalView::handle(int event)
+{
+	int x, y;
+	switch (event)
+	{
+	case FL_ENTER:
+		break;
+	case FL_PUSH:
+		x = Fl::event_x();
+		y = m_pDoc->m_nHeight - Fl::event_y();
+		x = cap_range(x, 0, m_pDoc->m_nWidth-1);
+		y = cap_range(y, 0, m_pDoc->m_nHeight -1);
+		if (m_pDoc->m_pCurrentBrush && m_pDoc->m_ucBitmap) {
+			m_pDoc->m_pCurrentBrush->setOriginalPixelColor(&m_pDoc->m_ucBitmap[(y*(m_pDoc->m_nWidth) + x) * 3]);
+		}
+		break;
+	default:
+		return 0;
+	}
+
+	return 1;
 }
 
 void OriginalView::refresh()

@@ -25,7 +25,7 @@
 #include <string>
 
 #define MIN_POINT_SIZE 5
-#define MAX_POINT_SIZE 50
+#define MAX_POINT_SIZE 100
 
 #define MIN_THICKNESS 1
 #define MAX_THICKNESS 50
@@ -45,7 +45,7 @@
 #define MIN_ITER 10
 #define MAX_ITER 1000
 
-#define MIN_THRESHOLD 10
+#define MIN_THRESHOLD 5
 #define MAX_THRESHOLD 500
 
 class ImpressionistUI {
@@ -79,7 +79,10 @@ public:
 	Fl_Slider*			m_bScaleSlider;
 
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Button*          m_LoadBrushButton;
+
 	Fl_Button*          m_CopyCanvasButton;
+
 	Fl_Button*          m_AutoPaintButton;
 	Fl_Button*          m_MultiAutoPaintButton;
 	Fl_Button*          m_AutoLearnButton;
@@ -89,6 +92,11 @@ public:
 	Fl_Input*			m_FilterInput;
 	Fl_Button*          m_ApplyFilterButton;
 	Fl_Light_Button*	m_NormalizeSwitch;
+
+	Fl_Button*          m_loadEdgeButton;
+	Fl_Button*          m_computeEdgeButton;
+	Fl_Light_Button*	m_EdgeClipSwitch;
+	Fl_Light_Button*	m_SeeEdgeSwitch;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -117,7 +125,7 @@ public:
 	void				setSpacing(int spacing);
 	int					getSpacing();
 
-	bool				m_normalize;
+	bool				m_normalize, m_clipEdge, m_seeEdge;
 	std::string			m_filterValue;
 	int					m_learnNumber;
 	int					m_iterNumber;
@@ -141,6 +149,7 @@ private:
 	// All callbacks here.  Callbacks are declared 
 	// static
 	static void	cb_load_image(Fl_Menu_* o, void* v);
+	static void	cb_load_grad_image(Fl_Menu_* o, void* v);
 	static void	cb_save_image(Fl_Menu_* o, void* v);
 	static void	cb_load_mural(Fl_Menu_* o, void* v);
 	static void	cb_brushes(Fl_Menu_* o, void* v);
@@ -158,6 +167,8 @@ private:
 	static void	cb_spacingSlides(Fl_Widget* o, void* v);
 	static void	cb_thresholdSlides(Fl_Widget* o, void* v);
 
+	static void	cb_load_brush(Fl_Widget* o, void* v);
+
 	static void	cb_rScaleSlides(Fl_Widget* o, void* v);
 	static void	cb_gScaleSlides(Fl_Widget* o, void* v);
 	static void	cb_bScaleSlides(Fl_Widget* o, void* v);
@@ -171,6 +182,10 @@ private:
 	
 	static void cb_applyFilter(Fl_Widget* o, void* v);
 	static void cb_normalizeSwitch(Fl_Widget* o, void* v);
+	static void cb_clipEdgeSwitch(Fl_Widget* o, void* v);
+	static void cb_seeEdgeSwitch(Fl_Widget* o, void* v);
+	static void cb_loadEdge(Fl_Widget* o, void* v);
+	static void cb_computeEdge(Fl_Widget* o, void* v);
 
 	static void cb_autoLearnDrawing(Fl_Widget* o, void* v);
 	static void cb_learnNumberSlides(Fl_Widget* o, void* v);

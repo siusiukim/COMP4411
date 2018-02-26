@@ -49,6 +49,13 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 		pUI->m_DirectionTypeChoice->deactivate();
 	}
 
+	if (type == BRUSH_CUSTOM) {
+		pUI->m_LoadBrushButton->activate();
+	}
+	else {
+		pUI->m_LoadBrushButton->deactivate();
+	}
+
 	pDoc->setBrushType(type);
 }
 
@@ -136,6 +143,29 @@ void ImpressionistUI::cb_normalizeSwitch(Fl_Widget* o, void* v)
 	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
 	if (pUI->m_normalize == TRUE) pUI->m_normalize = FALSE;
 	else pUI->m_normalize = TRUE;
+}
+
+void ImpressionistUI::cb_clipEdgeSwitch(Fl_Widget* o, void* v)
+{
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	if (pUI->m_clipEdge == TRUE) pUI->m_clipEdge = FALSE;
+	else pUI->m_clipEdge = TRUE;
+}
+
+void ImpressionistUI::cb_seeEdgeSwitch(Fl_Widget* o, void* v)
+{
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	if (pUI->m_seeEdge == TRUE)
+	{
+		pUI->m_origView->bitmap_bt = pUI->m_pDoc->m_ucBitmap;
+		pUI->m_origView->refresh();
+		pUI->m_seeEdge = FALSE;
+	}
+	else {
+		pUI->m_origView->bitmap_bt = pUI->m_pDoc->m_ucEdgeImage;
+		pUI->m_seeEdge = TRUE;
+		pUI->m_origView->refresh();
+	}
 }
 
 ImpressionistDoc* ImpressionistUI::getDocument()
