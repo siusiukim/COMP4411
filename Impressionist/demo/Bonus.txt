@@ -1,0 +1,12 @@
+- Swap content (0.5)
+- Manipulate color (1)
+- Mural (1.5)
+- Alpha-mapped (1.5)
+- Automatically paint (1.5)
+- Another gradient image (1.5)
+- Edge cliping (load image) (1.5)
+- Filter kernel (2)
+- Auto clip edge (2)
+- Multiresolution (2)
+- Rubber brush (2)
+Total 17
