@@ -44,72 +44,97 @@ void LineBrush::BrushMove(const Point source, const Point target)
 	int left_x = 0, left_y = 0;
 	int right_x = 0, right_y = 0;
 
-	{
-		//Check for the right end
-		float pixel_dist = 0;
-		int curr_x = target.x, curr_y = target.y;
-		float x_rem=0, y_rem=0;
-		while (pixel_dist <= length) {
-			//Compute dist
-			float this_dist = sqrtf((curr_x - target.x)*(curr_x - target.x) + (curr_y - target.y)*(curr_y - target.y));
-			pixel_dist++;
-			x_rem += 1 * abs(single_x_adj) / length;
-			y_rem += 1 * abs(single_y_adj) / length;
+	if (dlg->m_clipEdge) {
+		{
+			//Check for the right end
+			float pixel_dist = 0;
+			int curr_x = target.x, curr_y = target.y;
+			float x_rem = 0, y_rem = 0;
+			while (pixel_dist <= length) {
+				//Compute dist
+				float this_dist = sqrtf((curr_x - target.x)*(curr_x - target.x) + (curr_y - target.y)*(curr_y - target.y));
+				pixel_dist++;
+				x_rem += 1 * single_x_adj / length;
+				y_rem -= 1 * single_y_adj / length;
 
-			if (dlg->m_clipEdge) {
+				if (dlg->m_clipEdge) {
+					//Check for edge
+					if (pDoc->IsEdgeAtPixel(curr_x, curr_y)) {
+						break;
+					}
+				}
+
+				//Compute x, y
+				if (x_rem > 1) {
+					x_rem--;
+					curr_x++;
+				}
+				else if (x_rem < -1) {
+					x_rem++;
+					curr_x--;
+				}
+				if (y_rem > 1) {
+					y_rem--;
+					curr_y++;
+				}
+				else if (y_rem < -1) {
+					y_rem++;
+					curr_y--;
+				}
+
+
+			}
+			right_x = curr_x;
+			right_y = curr_y;
+		}
+
+		{
+			//Check for the left end
+			float pixel_dist = 0;
+			int curr_x = target.x, curr_y = target.y;
+			float x_rem = 0, y_rem = 0;
+			while (pixel_dist <= length) {
+				//Compute dist
+				float this_dist = sqrtf((curr_x - target.x)*(curr_x - target.x) + (curr_y - target.y)*(curr_y - target.y));
+				pixel_dist++;
+				x_rem -= 1 * single_x_adj / length;
+				y_rem += 1 * single_y_adj / length;
+
+				//Compute x, y
+				if (x_rem > 1) {
+					x_rem--;
+					curr_x++;
+				}
+				else if (x_rem < -1) {
+					x_rem++;
+					curr_x--;
+				}
+				if (y_rem > 1) {
+					y_rem--;
+					curr_y++;
+				}
+				else if (y_rem < -1) {
+					y_rem++;
+					curr_y--;
+				}
+
 				//Check for edge
-				if (pDoc->IsEdgeAtPixel(curr_x, curr_y)) {
-					break;
+				if (dlg->m_clipEdge) {
+					if (pDoc->IsEdgeAtPixel(curr_x, curr_y)) {
+						break;
+					}
 				}
 			}
 
-			//Compute x, y
-			if (x_rem > 1) {
-				x_rem--;
-				curr_x++;
-			}
-			if (y_rem > 1) {
-				y_rem--;
-				curr_y++;
-			}
-
+			left_x = curr_x;
+			left_y = curr_y;
 		}
-		right_x = curr_x;
-		right_y = curr_y;
 	}
-
-	{
-		//Check for the left end
-		float pixel_dist = 0;
-		int curr_x = target.x, curr_y = target.y;
-		float x_rem = 0, y_rem = 0;
-		while (pixel_dist <= length) {
-			//Compute dist
-			float this_dist = sqrtf((curr_x - target.x)*(curr_x - target.x) + (curr_y - target.y)*(curr_y - target.y));
-			pixel_dist++;
-			x_rem += 1 * abs(single_x_adj) / length;
-			y_rem += 1 * abs(single_y_adj) / length;
-
-			//Compute x, y
-			if (x_rem > 1) {
-				x_rem--;
-				curr_x--;
-			}
-			if (y_rem > 1) {
-				y_rem--;
-				curr_y--;
-			}
-
-			//Check for edge
-			if (dlg->m_clipEdge) {
-				if (pDoc->IsEdgeAtPixel(curr_x, curr_y)) {
-					break;
-				}
-			}
-		}
-
-		left_x = curr_x;
-		left_y = curr_y;
+	else {
+		left_x = source.x - single_x_adj;
+		left_y = source.y + single_y_adj;
+		right_x = source.x + single_x_adj;
+		right_y = source.y - single_y_adj;
 	}
 
 	//Init alpha
