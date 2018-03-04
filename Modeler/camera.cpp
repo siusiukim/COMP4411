@@ -171,16 +171,46 @@ void Camera::releaseMouse( int x, int y )
 	mCurrentMouseAction = kActionNone;
 }
 
-
+#define RAD2DEG(x) (x*360/2/M_PI)
 void Camera::applyViewingTransform() {
-	if( mDirtyTransform )
+	if (mDirtyTransform)
 		calculateViewingTransformParameters();
 
 	// Place the camera at mPosition, aim the camera at
 	// mLookAt, and twist the camera such that mUpVector is up
-	gluLookAt(	mPosition[0], mPosition[1], mPosition[2],
-				mLookAt[0],   mLookAt[1],   mLookAt[2],
-				mUpVector[0], mUpVector[1], mUpVector[2]);
+	//gluLookAt(	mPosition[0], mPosition[1], mPosition[2],
+	//			mLookAt[0],   mLookAt[1],   mLookAt[2],
+	//			mUpVector[0], mUpVector[1], mUpVector[2]);
+
+	lookAt(mPosition, mLookAt, mUpVector);
+}
+
+void Camera::lookAt(double *eye, double *at, double *up) {
+	double diff[3];
+	for (int i = 0; i<3; i++) {
+		diff[i] = at[i] - eye[i];
+	}
+
+	double x_angle = -RAD2DEG(atan2(diff[1], -diff[2]));
+	double y_angle = RAD2DEG(atan2(diff[2], diff[0])) + 90;
+
+	printf("%f %f %f\n", eye[0], eye[1], eye[2]);
+	printf("%f %f %f\n", at[0], at[1], at[2]);
+	printf("%f %f\n", x_angle, y_angle);
+
+	glRotated(x_angle, 1.0, 0, 0);
+	glRotated(y_angle, 0, 1.0, 0);
+	glTranslated(-eye[0], -eye[1], -eye[2]);
+}
+
+void Camera::lookAt(Vec3f eye, Vec3f at, Vec3f up) {
+	double _eye[3], _at[3], _up[3];
+	for (int i = 0; i < 3; i++) {
+		_eye[i] = eye[i];
+		_at[i] = at[i];
+		_up[i] = up[i];
+	}
+	lookAt(_eye, _at, _up);
 }
 
 #pragma warning(pop)

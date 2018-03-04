@@ -71,10 +71,10 @@ void SpellBreaker::draw()
 				glTranslated(0.25, 2, 0.1);
 				{
 					//Rotate around neck position
-					glTranslated(0.5, 0, 0);
+					glTranslated(0.5, 0, 0.2);
 					glRotated(head_look_x, 1.0, 0, 0);
 					glRotated(head_look_y, 0, 1.0, 0);
-					glTranslated(-0.5, 0, 0);
+					glTranslated(-0.5, 0, -0.2);
 				}
 				drawBox(1, 1, 0.8);
 
@@ -83,7 +83,8 @@ void SpellBreaker::draw()
 				glPushMatrix();
 				{
 					glTranslated(0.3, 0.7, 0.8);
-					drawBox(0.15, 0.15, 0.1);
+					glScaled(0.15, 0.15, 0.1);
+					drawBox(1, 1, 1);
 				}
 				glPopMatrix();
 
@@ -91,7 +92,8 @@ void SpellBreaker::draw()
 				glPushMatrix();
 				{
 					glTranslated(0.6, 0.7, 0.8);
-					drawBox(0.15, 0.15, 0.1);
+					glScaled(0.15, 0.15, 0.1);
+					drawBox(1, 1, 1);
 				}
 				glPopMatrix();
 
