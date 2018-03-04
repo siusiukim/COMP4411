@@ -1,5 +1,5 @@
-#ifndef _MODELER_GLOBALS_H
-#define _MODELER_GLOBALS_H
+#ifndef _SPELL_BREAKER_GLOBALS
+#define _SPELL_BREAKER_GLOBALS
 
 #ifndef M_PI
 #define M_PI 3.141592653589793238462643383279502
@@ -8,9 +8,15 @@
 // This is a list of the controls for the SampleModel
 // We'll use these constants to access the values 
 // of the controls from the user interface.
-enum SampleModelControls
-{
-	XPOS, YPOS, ZPOS, HEIGHT, ROTATE, NUMCONTROLS
+enum SpellBreakerModelControl
+{ 
+	TORSO_XPOS,
+	TORSO_YPOS,
+	TORSO_ZPOS,
+	HEAD_LOOK_X,
+	HEAD_LOOK_Y,
+	SHIELD_RISE,
+	MY_NUM_CONTROLS
 };
 
 // Colors

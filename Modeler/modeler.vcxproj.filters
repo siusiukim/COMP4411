@@ -33,7 +33,7 @@
     <ClCompile Include="modelerview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sample.cpp">
+    <ClCompile Include="spellbreaker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,9 +53,6 @@
     <ClInclude Include="modelerdraw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="modelerglobals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="modelerui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -63,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="spellbreaker_globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="modelerglobals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
