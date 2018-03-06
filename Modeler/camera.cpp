@@ -203,11 +203,11 @@ void Camera::lookAt(double *eye, double *at, double *up) {
 
 	vy = vz.cross(vx);
 
-	printf("%f %f %f\n", eye[0], eye[1], eye[2]);
-	printf("%f %f %f\n", at[0], at[1], at[2]);
-	cout << "VX: " << vx << endl;
-	cout << "VY: " << vy << endl;;
-	cout << "VZ: " << vz << endl;;
+	//printf("%f %f %f\n", eye[0], eye[1], eye[2]);
+	//printf("%f %f %f\n", at[0], at[1], at[2]);
+	//cout << "VX: " << vx << endl;
+	//cout << "VY: " << vy << endl;;
+	//cout << "VZ: " << vz << endl;;
 
 	double change_basis_mat[16];
 
@@ -234,7 +234,6 @@ void Camera::lookAt(double *eye, double *at, double *up) {
 	glMultMatrixd(change_basis_mat);
 
 	glTranslated(-eye[0], -eye[1], -eye[2]);
-	glTranslated(0, -4, -20);
 }
 
 void Camera::lookAt(Vec3f eye, Vec3f at, Vec3f up) {
