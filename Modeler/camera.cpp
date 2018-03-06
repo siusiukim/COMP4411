@@ -186,21 +186,55 @@ void Camera::applyViewingTransform() {
 }
 
 void Camera::lookAt(double *eye, double *at, double *up) {
-	double diff[3];
+	Vec3d m_eye, m_at, m_up;
 	for (int i = 0; i<3; i++) {
-		diff[i] = at[i] - eye[i];
+		m_eye[i] = eye[i];
+		m_at[i] = at[i];
+		m_up[i] = up[i];
 	}
 
-	double x_angle = -RAD2DEG(atan2(diff[1], -diff[2]));
-	double y_angle = RAD2DEG(atan2(diff[2], diff[0])) + 90;
+	//Viewpoint coordinate system
+	Vec3d vx, vy, vz;
+	vz = (m_eye - m_at);
+	vz.normalize();
+
+	vx = (m_up.cross(vz));
+	vx.normalize();
+
+	vy = vz.cross(vx);
 
 	printf("%f %f %f\n", eye[0], eye[1], eye[2]);
 	printf("%f %f %f\n", at[0], at[1], at[2]);
-	printf("%f %f\n", x_angle, y_angle);
+	cout << "VX: " << vx << endl;
+	cout << "VY: " << vy << endl;;
+	cout << "VZ: " << vz << endl;;
 
-	glRotated(x_angle, 1.0, 0, 0);
-	glRotated(y_angle, 0, 1.0, 0);
+	double change_basis_mat[16];
+
+	change_basis_mat[0] = vx[0];
+	change_basis_mat[1] = vy[0];
+	change_basis_mat[2] = vz[0];
+	change_basis_mat[3] = 0;
+
+	change_basis_mat[4] = vx[1];
+	change_basis_mat[5] = vy[1];
+	change_basis_mat[6] = vz[1];
+	change_basis_mat[7] = 0;
+
+	change_basis_mat[8] = vx[2];
+	change_basis_mat[9] = vy[2];
+	change_basis_mat[10] = vz[2];
+	change_basis_mat[11] = 0;
+
+	change_basis_mat[12] = 0;
+	change_basis_mat[13] = 0;
+	change_basis_mat[14] = 0;
+	change_basis_mat[15] = 1;
+
+	glMultMatrixd(change_basis_mat);
+
 	glTranslated(-eye[0], -eye[1], -eye[2]);
+	glTranslated(0, -4, -20);
 }
 
 void Camera::lookAt(Vec3f eye, Vec3f at, Vec3f up) {
