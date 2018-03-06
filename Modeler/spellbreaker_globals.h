@@ -13,9 +13,11 @@ enum SpellBreakerModelControl
 	TORSO_XPOS,
 	TORSO_YPOS,
 	TORSO_ZPOS,
+	TORSO_TURN,
 	HEAD_LOOK_X,
 	HEAD_LOOK_Y,
 	SHIELD_RISE,
+	LEVEL_OF_DETAIL,
 	MY_NUM_CONTROLS
 };
 
@@ -27,5 +29,36 @@ enum SpellBreakerModelControl
 // We'll be getting the instance of the application a lot; 
 // might as well have it as a macro.
 #define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
+
+class SpellBreaker : public ModelerView
+{
+private:
+	double head_look_x, head_look_y;
+	double left_upper_arm_rise, left_lower_arm_rise;
+
+	/**
+		4 - all
+		3 - no orb
+		2 - no eyes
+		1 - no shield
+	*/
+	int level_of_detail;
+	int animation_counter;
+	bool bitmap_loaded;
+
+	//Armor texture
+	unsigned char* armor_bitmap;
+	int armor_width, armor_height;
+	GLuint armor_texture_id;
+public:
+	SpellBreaker(int x, int y, int w, int h, char *label)
+		: ModelerView(x, y, w, h, label),
+		bitmap_loaded(false), 
+		animation_counter(0) {}
+
+	virtual void draw();
+	void updateParam();
+	void initTexture();
+};
 
 #endif

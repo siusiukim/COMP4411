@@ -211,6 +211,7 @@ void Camera::lookAt(double *eye, double *at, double *up) {
 
 	double change_basis_mat[16];
 
+	//COLUMN MAJOR!!!!
 	change_basis_mat[0] = vx[0];
 	change_basis_mat[1] = vy[0];
 	change_basis_mat[2] = vz[0];

@@ -1,0 +1,5 @@
+- Change default light source (0.5)
+- Adjust level of detail (0.5)
+- Texture map (1)
+- Complex shape using triangles (1)
+- Idle animation (1)

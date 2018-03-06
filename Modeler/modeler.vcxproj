@@ -180,7 +180,9 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="spellbreaker.cpp" />
+    <ClCompile Include="spellbreaker_conf.cpp" />
+    <ClCompile Include="spellbreaker_main.cpp" />
+    <ClCompile Include="spellbreaker_draw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h" />
