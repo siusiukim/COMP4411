@@ -1,6 +1,7 @@
 #include "modelerview.h"
 #include "modelerapp.h"
 #include "modelerdraw.h"
+#include "modelerui.h"
 #include <FL/gl.h>
 
 #include "bitmap.h"
@@ -30,5 +31,10 @@ void SpellBreaker::updateParam() {
 
 	level_of_detail = VAL(LEVEL_OF_DETAIL);
 
-	animation_counter = (animation_counter + 1) % 200;
+	if ((ModelerUserInterface::m_controlsAnimOnMenu->value() == 0)) {
+		animation_counter = 0;
+	}
+	else {
+		animation_counter = (animation_counter + 1) % 200;
+	}
 }

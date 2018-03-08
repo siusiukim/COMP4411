@@ -27,7 +27,7 @@ void SpellBreaker::draw()
 	// Draw the floor
 	//setAmbientColor(.5f, .1f, .1f);
 	setSpecularColor(.5, .05, .05);
-	setDiffuseColor(COLOR_RED);
+	setDiffuseColor(COLOR_WHITE);
 	glPushMatrix();
 	{
 		glTranslated(-5, 0, -5);
