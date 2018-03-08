@@ -58,14 +58,16 @@ void SpellBreaker::draw()
 			glTranslated(-0.75, 1, 0);
 			drawTorso(1.5, 2, 1, armor_texture_id, diamond_texture_id);
 
-			//My awesome CAPE
-			glPushMatrix();
-			{
-				glTranslated(0.5f, -0.2f, -3.0f);
-				glRotated(-60, 1.0, 0, 0);
-				drawCape(cape_wave);
+			if (level_of_detail > 3) {
+				//My awesome CAPE
+				glPushMatrix();
+				{
+					glTranslated(0.5f, -0.2f, -3.0f);
+					glRotated(-60, 1.0, 0, 0);
+					drawCape(cape_wave);
+				}
+				glPopMatrix();
 			}
-			glPopMatrix();
 
 			//Head
 			glPushMatrix();

@@ -42,7 +42,10 @@
     <ClCompile Include="spellbreaker_main.cpp">
       <Filter>Source Files\model</Filter>
     </ClCompile>
-    <ClCompile Include="spellbreaker_draw.cpp">
+    <ClCompile Include="spellbreaker_parts.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="spellbreaker_lsys.cpp">
       <Filter>Source Files\model</Filter>
     </ClCompile>
   </ItemGroup>

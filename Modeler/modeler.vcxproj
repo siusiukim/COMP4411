@@ -181,8 +181,9 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="spellbreaker_conf.cpp" />
+    <ClCompile Include="spellbreaker_lsys.cpp" />
     <ClCompile Include="spellbreaker_main.cpp" />
-    <ClCompile Include="spellbreaker_draw.cpp" />
+    <ClCompile Include="spellbreaker_parts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h" />
