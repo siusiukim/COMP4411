@@ -143,3 +143,100 @@ void drawShield(double w, double h, double d) {
 
 	drawTriangle(bottom_left, shield_point, mid_left);
 }
+
+/**
+* Draw a surface obtained by sweeping a curve along another curve
+* Pass two functions that takes a float and returns a Vec3f
+* Note that the sweeping function should return a offset to the along function value
+*/
+#define CURVE_FINENESS 25
+
+void drawSweepedCurve(
+	Vec3f (*sweep_fun)(float), const float sweep_min, const float sweep_max,
+	Vec3f (*along_fun)(float), const float along_min, const float along_max,
+	int degree
+)
+{
+	const int order = degree + 1;
+	GLfloat* control_points = new GLfloat[order * order * 3];
+
+	//Not divided by order!
+	const float sweep_step = (sweep_max - sweep_min) / degree;
+	const float along_step = (along_max - along_min) / degree;
+
+	//Display the control point for a bit
+	//glPointSize(5.0);
+	//glBegin(GL_POINTS);
+	float curr_along = along_min;
+	for (int i = 0; i < order; i++) {
+		//Compute points along the curve
+		curr_along += along_step;
+		float curr_sweep = sweep_min;
+		Vec3f along_v = along_fun(curr_along);
+		for (int j = 0; j < order; j++) {
+			//Compute offset from points on the curve
+			curr_sweep += sweep_step;
+			Vec3f sweep_v = sweep_fun(curr_sweep);
+			//Copy to the control point array
+			for (int s = 0; s < 3; s++) {
+				control_points[(i*order + j) * 3 + s] = along_v[s] + sweep_v[s];
+				//glVertex3fv(&control_points[(i*order + j) * 3]);
+			}
+		}
+	}
+	//glEnd();
+
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, order, 0.0, 1.0, order * 3, order, control_points);
+
+	glEnable(GL_MAP2_VERTEX_3);
+
+	//Fill the mesh
+	glMapGrid2f(CURVE_FINENESS, 0.0, 1.0, CURVE_FINENESS, 0.0, 1.0);
+	glEvalMesh2(GL_FILL, 0, CURVE_FINENESS, 0, CURVE_FINENESS);
+
+	////Actually drawing them out
+	//for (int j = 0; j < CURVE_FINENESS; j++) {
+	//	glBegin(GL_QUAD_STRIP);
+	//	for (int i = 0; i < CURVE_FINENESS - 1; i++) {
+	//		glEvalCoord2f(i / CURVE_FINENESS, j / CURVE_FINENESS);
+	//		glEvalCoord2f((i+1) / CURVE_FINENESS, j / CURVE_FINENESS);
+	//	}
+	//	glEnd();
+	//}
+
+	//for (int j = 0; j < CURVE_FINENESS; j++) {
+	//	glBegin(GL_LINE_STRIP);
+	//	for (int i = 0; i < CURVE_FINENESS; i++) {
+	//		glEvalCoord2f((float)i / CURVE_FINENESS, (float)j / CURVE_FINENESS);
+	//	}
+	//	glEnd();
+
+	//	glBegin(GL_LINE_STRIP);
+	//	for (int i = 0; i < CURVE_FINENESS; i++) {
+	//		glEvalCoord2f((float)j / CURVE_FINENESS, (float)i / CURVE_FINENESS);
+	//	}
+	//	glEnd();
+	//}
+
+	delete[] control_points;
+}
+
+//Input in degree, varying in y-direction
+Vec3f sin_sweep(float input) {
+	return Vec3f(input / 400.0, sinf(input*360/2/M_PI)/2, 0);
+}
+
+//Varying in x-direction
+Vec3f sqrt_along(float input) {
+	return Vec3f(0, sqrtf(input), input);
+}
+
+//Draw a horizontal laying cape, sweeping a sine curve along a sqrt curve.
+void drawCape() {
+	glPushMatrix();
+	{
+		glScaled(1.0, -1.5, 3.0);
+		drawSweepedCurve(sin_sweep, -360, 360, sqrt_along, 0, 1, 6);
+	}
+	glPopMatrix();
+}

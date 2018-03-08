@@ -138,11 +138,13 @@ void Camera::clickMouse( MouseAction_t action, int x, int y )
 {
 	static clock_t begin_time = clock();
 
-	if (float(clock() - begin_time) / CLOCKS_PER_SEC < 0.5) {
-		//consider as double click
-		frameAll();
+	if (action == kActionRotate) {
+		if (float(clock() - begin_time) / CLOCKS_PER_SEC < 0.5) {
+			//consider as double click
+			frameAll();
+		}
+		begin_time = clock();
 	}
-	begin_time = clock();
 
 	mCurrentMouseAction = action;
 	mLastMousePosition[0] = x;

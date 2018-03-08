@@ -3,11 +3,13 @@
 #include "modelerdraw.h"
 #include <FL/gl.h>
 
+#include "vec.h"
 #include "bitmap.h"
 #include "spellbreaker_globals.h"
 
 void drawTorso(double x, double y, double z, GLuint front_texture, GLuint back_texture);
 void drawShield(double w, double h, double d);
+void drawCape();
 
 ModelerView* createSpellBreaker(int x, int y, int w, int h, char *label)
 {
@@ -59,6 +61,15 @@ void SpellBreaker::draw()
 		{
 			glTranslated(-0.75, 1, 0);
 			drawTorso(1.5, 2, 1, armor_texture_id, diamond_texture_id);
+
+			//My awesome CAPE
+			glPushMatrix();
+			{
+				glTranslated(0.5f, -0.5f, -3.0f);
+				glRotated(-60, 1.0, 0, 0);
+				drawCape();
+			}
+			glPopMatrix();
 
 			//Head
 			glPushMatrix();
