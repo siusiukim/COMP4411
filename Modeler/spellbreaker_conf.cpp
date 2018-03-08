@@ -40,12 +40,19 @@ void SpellBreaker::updateParam() {
 	left_lower_arm_rise = VAL(SHIELD_RISE) / 2;
 
 	level_of_detail = VAL(LEVEL_OF_DETAIL);
+	cape_wave = VAL(CAPE_WAVE);
 
 	if ((ModelerUserInterface::m_controlsAnimOnMenu->value() == 0)) {
 		animation_counter = 0;
+
+		//Update from toolbar
+		cape_wave = VAL(CAPE_WAVE);
 	}
 	else {
 		animation_counter = (animation_counter + 1) % 200;
+
+		//Update from animation
+		cape_wave = (1/(abs(cos(animation_counter / 100.0 * 2 * M_PI)) + 0.001f)) * 20 + 0.5;
 	}
 
 	//Animate

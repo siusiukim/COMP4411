@@ -221,6 +221,7 @@ void drawSweepedCurve(
 	delete[] control_points;
 }
 
+float sin_angle_offset;
 //Input in degree, varying in y-direction
 Vec3f sin_sweep(float input) {
 	return Vec3f(input / 400.0, sinf(input*360/2/M_PI)/2, 0);
@@ -228,11 +229,12 @@ Vec3f sin_sweep(float input) {
 
 //Varying in x-direction
 Vec3f sqrt_along(float input) {
-	return Vec3f(0, sqrtf(input), input);
+	return Vec3f(0, powf(input, 1.0/ sin_angle_offset), input);
 }
 
 //Draw a horizontal laying cape, sweeping a sine curve along a sqrt curve.
-void drawCape() {
+void drawCape(float sweep_angle) {
+	sin_angle_offset = sweep_angle;
 	glPushMatrix();
 	{
 		glScaled(1.0, -1.5, 3.0);

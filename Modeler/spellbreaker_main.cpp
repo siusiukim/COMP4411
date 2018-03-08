@@ -9,7 +9,7 @@
 
 void drawTorso(double x, double y, double z, GLuint front_texture, GLuint back_texture);
 void drawShield(double w, double h, double d);
-void drawCape();
+void drawCape(float sweep_angle);
 
 ModelerView* createSpellBreaker(int x, int y, int w, int h, char *label)
 {
@@ -44,10 +44,6 @@ void SpellBreaker::draw()
 	setDiffuseColor(COLOR_GREEN);
 
 	updateParam();
-	double breath_y = (sin(animation_counter / 100.0 * 2 * M_PI) + 0.8) / 10;
-	double breath_head = (sin(animation_counter / 100.0 * M_PI)) * 30;
-	double breath_orb = (sin(animation_counter / 100.0 * 4 * M_PI)) / 10;
-	double rotate_orb = (sin(animation_counter / 100.0 * M_PI)) * 360;
 
 	//Entire model
 	glPushMatrix();
@@ -65,9 +61,9 @@ void SpellBreaker::draw()
 			//My awesome CAPE
 			glPushMatrix();
 			{
-				glTranslated(0.5f, -0.5f, -3.0f);
+				glTranslated(0.5f, -0.2f, -3.0f);
 				glRotated(-60, 1.0, 0, 0);
-				drawCape();
+				drawCape(cape_wave);
 			}
 			glPopMatrix();
 
@@ -230,6 +226,8 @@ int main()
 	controls[SHIELD_RISE] = ModelerControl("Shield rise", 0, 90, 1, 0);
 
 	controls[LEVEL_OF_DETAIL] = ModelerControl("Level of detail", 1, 4, 1, 4);
+
+	controls[CAPE_WAVE] = ModelerControl("Cape's wave", 0.5, 20, 0.1, 1);
 
 	ModelerApplication::Instance()->Init(&createSpellBreaker, controls, MY_NUM_CONTROLS);
 	return ModelerApplication::Instance()->Run();

@@ -20,6 +20,7 @@ enum SpellBreakerModelControl
 	HEAD_LOOK_Y,
 	SHIELD_RISE,
 	LEVEL_OF_DETAIL,
+	CAPE_WAVE,
 	MY_NUM_CONTROLS
 };
 
@@ -60,6 +61,7 @@ private:
 
 	//Animation related
 	double breath_y, breath_head, breath_orb, rotate_orb;
+	float cape_wave;
 public:
 	SpellBreaker(int x, int y, int w, int h, char *label)
 		: ModelerView(x, y, w, h, label),
