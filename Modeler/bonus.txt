@@ -3,3 +3,5 @@
 - Texture map (1)
 - Complex shape using triangles (1)
 - Idle animation (1)
+- Frame all (1)
+- Twist camera (1.5)

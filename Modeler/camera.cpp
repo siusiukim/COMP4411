@@ -2,7 +2,11 @@
 #include <Fl/gl.h>
 #include <gl/glu.h>
 
+#include <ctime>
+
 #include "camera.h"
+#include "spellbreaker_globals.h"
+#include "modelerapp.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4244)
@@ -15,6 +19,7 @@ const float kMouseRotationSensitivity		= 1.0f/90.0f;
 const float kMouseTranslationXSensitivity	= 0.03f;
 const float kMouseTranslationYSensitivity	= 0.03f;
 const float kMouseZoomSensitivity			= 0.08f;
+const float kMouseTwistSensitivity			= 1.0f / 90.0f;
 
 void MakeDiagonal(Mat4f &m, float k)
 {
@@ -79,22 +84,26 @@ void Camera::calculateViewingTransformParameters()
 	Mat4f twistXform;
 	Mat4f originXform;
 
-	Vec3f upVector;
+	Vec3f upVector(0, 1, 0);
 
 	MakeHTrans(dollyXform, Vec3f(0,0,mDolly));
 	MakeHRotY(azimXform, mAzimuth);
 	MakeHRotX(elevXform, mElevation);
-	MakeDiagonal(twistXform, 1.0f);
+	//MakeDiagonal(twistXform, 1.0f);
+	MakeHRotZ(twistXform, mTwist);
 	MakeHTrans(originXform, mLookAt);
+
+	upVector = twistXform * upVector;
 	
 	mPosition = Vec3f(0,0,0);
 	// grouped for (mat4 * vec3) ops instead of (mat4 * mat4) ops
 	mPosition = originXform * (azimXform * (elevXform * (dollyXform * mPosition)));
+	//mPosition = originXform * (azimXform * (twistXform * (elevXform * (dollyXform * mPosition))));
 
-	if ( fmod((double)mElevation, 2.0*M_PI) < 3*M_PI/2 && fmod((double)mElevation, 2.0*M_PI) > M_PI/2 )
-		mUpVector= Vec3f(0,-1,0);
+	if (fmod((double)mElevation, 2.0*M_PI) < 3 * M_PI / 2 && fmod((double)mElevation, 2.0*M_PI) > M_PI / 2)
+		mUpVector = -upVector;
 	else
-		mUpVector= Vec3f(0,1,0);
+		mUpVector = upVector;
 
 	mDirtyTransform = false;
 }
@@ -112,8 +121,29 @@ Camera::Camera()
 	calculateViewingTransformParameters();
 }
 
+void Camera::frameAll()
+{
+	mElevation = mAzimuth = mTwist = 0.0f;
+	mDolly = -20.0f;
+	mElevation = 0.2f;
+	mAzimuth = (float)M_PI;
+
+	mLookAt = Vec3f(VAL(TORSO_XPOS), VAL(TORSO_YPOS), VAL(TORSO_ZPOS));
+	mCurrentMouseAction = kActionNone;
+
+	calculateViewingTransformParameters();
+}
+
 void Camera::clickMouse( MouseAction_t action, int x, int y )
 {
+	static clock_t begin_time = clock();
+
+	if (float(clock() - begin_time) / CLOCKS_PER_SEC < 0.5) {
+		//consider as double click
+		frameAll();
+	}
+	begin_time = clock();
+
 	mCurrentMouseAction = action;
 	mLastMousePosition[0] = x;
 	mLastMousePosition[1] = y;
@@ -156,10 +186,13 @@ void Camera::dragMouse( int x, int y )
 		{
 			float dDolly = -mouseDelta[1] * kMouseZoomSensitivity;
 			setDolly(getDolly() + dDolly);
+
+			float dTwist = -mouseDelta[0] * kMouseTwistSensitivity;
+			setTwist(getTwist() + dTwist);
 			break;
 		}
 	case kActionTwist:
-		// Not implemented
+		// Implemented with kActionZoom!!
 	default:
 		break;
 	}

@@ -1,6 +1,8 @@
 #ifndef _SPELL_BREAKER_GLOBALS
 #define _SPELL_BREAKER_GLOBALS
 
+#include "modelerapp.h"
+
 #ifndef M_PI
 #define M_PI 3.141592653589793238462643383279502
 #endif
@@ -27,6 +29,9 @@ enum SpellBreakerModelControl
 #define COLOR_BLUE		0.0f, 0.0f, 1.0f
 #define COLOR_WHITE		1.0f, 1.0f, 1.0f
 
+#define COLOR_LIGHT_BLUE	0.2f, 0.2f, 0.7f
+#define COLOR_PURPLE		0.5f, 0.0f, 0.5f
+
 // We'll be getting the instance of the application a lot; 
 // might as well have it as a macro.
 #define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
@@ -48,9 +53,13 @@ private:
 	bool bitmap_loaded;
 
 	//Armor texture
-	unsigned char* armor_bitmap;
+	unsigned char *armor_bitmap, *diamond_bitmap;
 	int armor_width, armor_height;
-	GLuint armor_texture_id;
+	int diamond_width, diamond_height;
+	GLuint armor_texture_id, diamond_texture_id;
+
+	//Animation related
+	double breath_y, breath_head, breath_orb, rotate_orb;
 public:
 	SpellBreaker(int x, int y, int w, int h, char *label)
 		: ModelerView(x, y, w, h, label),

@@ -6,7 +6,7 @@
 #include "bitmap.h"
 #include "spellbreaker_globals.h"
 
-void drawTorso(double x, double y, double z, GLuint texture_id);
+void drawTorso(double x, double y, double z, GLuint front_texture, GLuint back_texture);
 void drawShield(double w, double h, double d);
 
 ModelerView* createSpellBreaker(int x, int y, int w, int h, char *label)
@@ -24,14 +24,17 @@ void SpellBreaker::draw()
 
 	ModelerView::draw();
 
+	//Translate the entire thing down a bit
+	glTranslated(0, -1.5, 0);
+
 	// Draw the floor
 	//setAmbientColor(.5f, .1f, .1f);
 	setSpecularColor(.5, .05, .05);
 	setDiffuseColor(COLOR_WHITE);
 	glPushMatrix();
 	{
-		glTranslated(-5, 0, -5);
-		drawBox(10, 0.01f, 10);
+		glTranslated(-2.5, -1, -2.5);
+		drawBox(5, 1, 5);
 	}
 	glPopMatrix();
 
@@ -39,8 +42,10 @@ void SpellBreaker::draw()
 	setDiffuseColor(COLOR_GREEN);
 
 	updateParam();
-	double breath_y = (sin(animation_counter / 100.0 * 2 * M_PI)+0.8) / 10;
-	double breath_head = (sin(animation_counter / 100.0 * M_PI))*30;
+	double breath_y = (sin(animation_counter / 100.0 * 2 * M_PI) + 0.8) / 10;
+	double breath_head = (sin(animation_counter / 100.0 * M_PI)) * 30;
+	double breath_orb = (sin(animation_counter / 100.0 * 4 * M_PI)) / 10;
+	double rotate_orb = (sin(animation_counter / 100.0 * M_PI)) * 360;
 
 	//Entire model
 	glPushMatrix();
@@ -53,7 +58,7 @@ void SpellBreaker::draw()
 		glPushMatrix();
 		{
 			glTranslated(-0.75, 1, 0);
-			drawTorso(1.5, 2, 1, armor_texture_id);
+			drawTorso(1.5, 2, 1, armor_texture_id, diamond_texture_id);
 
 			//Head
 			glPushMatrix();
@@ -117,8 +122,8 @@ void SpellBreaker::draw()
 					glTranslated(0.25, 0.8, 0.3);
 					glRotated(left_upper_arm_rise, -1.0, 0, 0);
 					glTranslated(-0.25, -0.8, -0.3);
+					drawBox(0.5, 0.9, 0.6);
 				}
-				drawBox(0.5, 0.9, 0.6);
 
 				//Lower left arm
 				glPushMatrix();
@@ -135,7 +140,6 @@ void SpellBreaker::draw()
 					if (level_of_detail > 1) {
 						glPushMatrix();
 						{
-							setDiffuseColor(COLOR_BLUE);
 							glTranslated(0, 0.9, -1.2);
 							glRotated(-90, 0, 1, 0);
 							glRotated(-90, 0, 0, 1);
@@ -159,7 +163,35 @@ void SpellBreaker::draw()
 				glPushMatrix();
 				{
 					glTranslated(0, -1, 0);
-					drawBox(0.5, 0.9, 0.6);
+					{
+						glTranslated(0.25, 0.8, 0.3);
+						glRotated(-90, 1.0, 0, 0);
+						glTranslated(-0.25, -0.8, -0.3);
+						drawBox(0.5, 0.9, 0.6);
+					}
+
+					//Staff
+					if (level_of_detail > 1) {
+						glPushMatrix();
+						{
+							setDiffuseColor(COLOR_PURPLE);
+							glTranslated(0.2, 0.2, -0.9);
+							drawCylinder(4, 0.1, 0.1);
+							setDiffuseColor(COLOR_GREEN);
+
+							//Orb
+							if (level_of_detail > 3) {
+								//Rotate around a different axis
+								
+								glRotated(rotate_orb, 0, 0, 1.0);
+								glTranslated(0.2, 0, 0);
+								glTranslated(-0.1, -0.1, 4.1 + breath_orb);
+								//Cube for now, meatball later
+								drawBox(0.2, 0.2, 0.2);
+							}
+						}
+						glPopMatrix();
+					}
 				}
 				glPopMatrix();
 			}

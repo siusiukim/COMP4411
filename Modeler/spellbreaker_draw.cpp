@@ -12,7 +12,7 @@ extern void _setupOpenGl();
 extern void _dump_current_modelview();
 extern void _dump_current_material();
 
-void drawTorso(double x, double y, double z, GLuint texture_id) {
+void drawTorso(double x, double y, double z, GLuint front_texture, GLuint back_texture) {
 	    ModelerDrawState *mds = ModelerDrawState::Instance();
 
 	_setupOpenGl();
@@ -39,10 +39,6 @@ void drawTorso(double x, double y, double z, GLuint texture_id) {
 		//Draw the un-textured part
         glBegin( GL_QUADS );
         
-        glNormal3d( 0.0, 0.0, -1.0 );
-        glVertex3d( 0.0, 0.0, 0.0 ); glVertex3d( 0.0, 1.0, 0.0 );
-        glVertex3d( 1.0, 1.0, 0.0 ); glVertex3d( 1.0, 0.0, 0.0 );
-        
         glNormal3d( 0.0, -1.0, 0.0 );
         glVertex3d( 0.0, 0.0, 0.0 ); glVertex3d( 1.0, 0.0, 0.0 );
         glVertex3d( 1.0, 0.0, 1.0 ); glVertex3d( 0.0, 0.0, 1.0 );
@@ -61,11 +57,10 @@ void drawTorso(double x, double y, double z, GLuint texture_id) {
         
         glEnd();
 
-		//Draw the textured part
-
+		//Draw the front textured part
 		glEnable(GL_TEXTURE_2D);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glBindTexture(GL_TEXTURE_2D, texture_id);
+		glBindTexture(GL_TEXTURE_2D, front_texture);
 
 		glBegin(GL_QUADS);
 
@@ -82,6 +77,25 @@ void drawTorso(double x, double y, double z, GLuint texture_id) {
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 
+		//Draw the back textured part
+		glEnable(GL_TEXTURE_2D);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		glBindTexture(GL_TEXTURE_2D, back_texture);
+
+		glBegin(GL_QUADS);
+
+		glNormal3d(0.0, 0.0, -1.0);
+		glTexCoord2f(0, 0);
+		glVertex3d(0.0, 0.0, 0.0);
+		glTexCoord2f(0, 8);
+		glVertex3d(0.0, 1.0, 0.0);
+		glTexCoord2f(8, 8);
+		glVertex3d(1.0, 1.0, 0.0);
+		glTexCoord2f(8, 0);
+		glVertex3d(1.0, 0.0, 0.0);
+
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
         
         /* restore the model matrix stack, and switch back to the matrix
         mode we were in. */
@@ -111,10 +125,21 @@ void drawShield(double w, double h, double d) {
 	Vec3d top_left(w / 4, h, 0);
 	Vec3d top_right(w * 3 / 4, h, 0);
 
+	setDiffuseColor(COLOR_LIGHT_BLUE);
 	drawTriangle(bottom_right, shield_point, bottom_left);
+	setDiffuseColor(COLOR_BLUE);
+
 	drawTriangle(mid_right, shield_point, bottom_right);
+
+	setDiffuseColor(COLOR_LIGHT_BLUE);
 	drawTriangle(top_right, shield_point, mid_right);
+	setDiffuseColor(COLOR_BLUE);
+
 	drawTriangle(top_left, shield_point, top_right);
+
+	setDiffuseColor(COLOR_LIGHT_BLUE);
 	drawTriangle(mid_left, shield_point, top_left);
+	setDiffuseColor(COLOR_BLUE);
+
 	drawTriangle(bottom_left, shield_point, mid_left);
 }

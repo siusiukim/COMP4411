@@ -79,6 +79,8 @@ public:
     void releaseMouse( int x, int y );
     
     //---[ Viewing Transform ]--------------------------------
+	void frameAll();
+
     void applyViewingTransform();
 
 	// gluLookAt equivalent
