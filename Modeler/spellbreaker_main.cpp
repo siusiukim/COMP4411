@@ -10,6 +10,7 @@
 void drawTorso(double x, double y, double z, GLuint front_texture, GLuint back_texture);
 void drawShield(double w, double h, double d);
 void drawCape(float sweep_angle);
+void drawPlant(float deg, float len, float decay, float width, int iter, int seed, float dense);
 
 ModelerView* createSpellBreaker(int x, int y, int w, int h, char *label)
 {
@@ -36,7 +37,16 @@ void SpellBreaker::draw()
 	glPushMatrix();
 	{
 		glTranslated(-2.5, -1, -2.5);
-		drawBox(5, 1, 5);
+		drawBox(7, 1, 5);
+	}
+	glPopMatrix();
+
+	//Draw the plant
+	glPushMatrix();
+	{
+		glTranslated(3, 0, 0);
+		glRotated(-90, 1, 0, 0);
+		drawPlant(VAL(LS_DEGREE), VAL(LS_LENGTH), VAL(LS_DECAY), 0.05, VAL(LS_ITERATION), VAL(LS_SEED), VAL(LS_DENSITY));
 	}
 	glPopMatrix();
 
@@ -230,6 +240,14 @@ int main()
 	controls[LEVEL_OF_DETAIL] = ModelerControl("Level of detail", 1, 4, 1, 4);
 
 	controls[CAPE_WAVE] = ModelerControl("Cape's wave", 0.5, 20, 0.1, 1);
+
+	//L-System
+	controls[LS_DEGREE] = ModelerControl("LS - Degree", 0, 180, 1, 27);
+	controls[LS_DECAY] = ModelerControl("LS - Decay", 0, 1.0, 0.01, 1.0);
+	controls[LS_LENGTH] = ModelerControl("LS - Length", 0.01, 0.1, 0.01, 0.05);
+	controls[LS_ITERATION] = ModelerControl("LS - Iteration", 1, 8, 1, 5);
+	controls[LS_SEED] = ModelerControl("LS - Random Seed", 0, 100, 1, 0);
+	controls[LS_DENSITY] = ModelerControl("LS - Density", 0, 1.0, 0.01, 0.9);
 
 	ModelerApplication::Instance()->Init(&createSpellBreaker, controls, MY_NUM_CONTROLS);
 	return ModelerApplication::Instance()->Run();
