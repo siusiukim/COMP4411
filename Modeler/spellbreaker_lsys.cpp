@@ -73,7 +73,7 @@ static void l_system_forward(float deg, float len, float decay, float width, int
 	}
 }
 
-//Draw 3 shape defined by the L-system
+//Draw the shape defined by the L-system
 void drawPlant(float deg, float len, float decay, float width, int iter, int seed, float _dense) {
 	mt.seed(seed);
 	dis = std::uniform_real_distribution<float>();

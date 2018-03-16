@@ -42,6 +42,14 @@ void SpellBreaker::updateParam() {
 	level_of_detail = VAL(LEVEL_OF_DETAIL);
 	cape_wave = VAL(CAPE_WAVE);
 
+	//IK control
+	right_upper_arm_rise = VAL(FK_UPPER_ARM);
+	right_lower_arm_rise = VAL(FK_LOWER_ARM);;
+	staff_angle = VAL(FK_STAFF_ANGLE);
+
+	//Compute IK
+	doFK();
+
 	if ((ModelerUserInterface::m_controlsAnimOnMenu->value() == 0)) {
 		animation_counter = 0;
 

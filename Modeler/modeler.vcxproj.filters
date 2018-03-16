@@ -48,6 +48,9 @@
     <ClCompile Include="spellbreaker_lsys.cpp">
       <Filter>Source Files\model</Filter>
     </ClCompile>
+    <ClCompile Include="spellbreaker_ik.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h">

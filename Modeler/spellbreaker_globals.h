@@ -2,6 +2,8 @@
 #define _SPELL_BREAKER_GLOBALS
 
 #include "modelerapp.h"
+#include "vec.h"
+#include "mat.h"
 
 #ifndef M_PI
 #define M_PI 3.141592653589793238462643383279502
@@ -27,6 +29,9 @@ enum SpellBreakerModelControl
 	LS_ITERATION,
 	LS_SEED, 
 	LS_DENSITY,
+	FK_UPPER_ARM,
+	FK_LOWER_ARM,
+	FK_STAFF_ANGLE,
 	MY_NUM_CONTROLS
 };
 
@@ -38,6 +43,7 @@ enum SpellBreakerModelControl
 
 #define COLOR_LIGHT_BLUE	0.2f, 0.2f, 0.7f
 #define COLOR_PURPLE		0.5f, 0.0f, 0.5f
+#define COLOR_LIGHT_ORANGE	1.0f, 0.7f, 0.0f
 
 // We'll be getting the instance of the application a lot; 
 // might as well have it as a macro.
@@ -48,6 +54,17 @@ class SpellBreaker : public ModelerView
 private:
 	double head_look_x, head_look_y;
 	double left_upper_arm_rise, left_lower_arm_rise;
+
+	double right_upper_arm_rise, right_lower_arm_rise;
+	double staff_angle;
+
+	//IK
+	const double upper_arm_len = 1.0;
+	const double lower_arm_len = 0.7;
+	const double staff_len = 2.7;
+	Vec3f ik_elbow_pos;
+	Vec3f ik_hand_pos;
+	Vec3f ik_staff_pos;
 
 	/**
 		4 - all
@@ -77,6 +94,9 @@ public:
 	virtual void draw();
 	void updateParam();
 	void initTexture();
+
+	void doIK();
+	void doFK();
 };
 
 #endif

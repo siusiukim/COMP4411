@@ -176,7 +176,13 @@ void SpellBreaker::draw()
 			glPushMatrix();
 			{
 				glTranslated(1.55, 1 + breath_y/2, 0.25);
-				drawBox(0.5, 0.9, 0.6);
+				{
+					//Rotate around near-top center of upper arm
+					glTranslated(0.25, 0.8, 0.3);
+					glRotated(right_upper_arm_rise, 0, 0, 1.0);
+					glTranslated(-0.25, -0.8, -0.3);
+					drawBox(0.5, 0.9, 0.6);
+				}
 
 				//Lower right arm
 				glPushMatrix();
@@ -184,7 +190,7 @@ void SpellBreaker::draw()
 					glTranslated(0, -1, 0);
 					{
 						glTranslated(0.25, 0.8, 0.3);
-						glRotated(-90, 1.0, 0, 0);
+						glRotated(right_lower_arm_rise, -1.0, 0, 0);
 						glTranslated(-0.25, -0.8, -0.3);
 						drawBox(0.5, 0.9, 0.6);
 					}
@@ -193,21 +199,30 @@ void SpellBreaker::draw()
 					if (level_of_detail > 1) {
 						glPushMatrix();
 						{
-							setDiffuseColor(COLOR_PURPLE);
 							glTranslated(0.2, 0.2, -0.9);
+							setDiffuseColor(COLOR_PURPLE);
+							{
+								glTranslated(0, 0, 1.3);
+								glRotated(staff_angle, 0, 1.0, 0);
+								glTranslated(0, 0, -1.3);
+							}
 							drawCylinder(4, 0.1, 0.1);
-							setDiffuseColor(COLOR_GREEN);
 
+							setDiffuseColor(COLOR_LIGHT_ORANGE);
 							//Orb
 							if (level_of_detail > 3) {
-								//Rotate around a different axis
-								
-								glRotated(rotate_orb, 0, 0, 1.0);
-								glTranslated(0.2, 0, 0);
-								glTranslated(-0.1, -0.1, 4.1 + breath_orb);
-								//Cube for now, meatball later
-								drawBox(0.2, 0.2, 0.2);
+								glPushMatrix();
+								{
+									//Rotate around a different axis
+									glRotated(rotate_orb, 0, 0, 1.0);
+									glTranslated(0.2, 0, 0);
+									glTranslated(-0.1, -0.1, 4.1 + breath_orb);
+									//Cube for now, meatball later
+									drawBox(0.2, 0.2, 0.2);
+								}
+								glPopMatrix();
 							}
+							setDiffuseColor(COLOR_GREEN);
 						}
 						glPopMatrix();
 					}
@@ -239,7 +254,7 @@ int main()
 
 	controls[LEVEL_OF_DETAIL] = ModelerControl("Level of detail", 1, 4, 1, 4);
 
-	controls[CAPE_WAVE] = ModelerControl("Cape's wave", 0.5, 20, 0.1, 1);
+	controls[CAPE_WAVE] = ModelerControl("Cape's wave", 0.3, 20, 0.1, 0.5);
 
 	//L-System
 	controls[LS_DEGREE] = ModelerControl("LS - Degree", 0, 180, 1, 27);
@@ -248,6 +263,11 @@ int main()
 	controls[LS_ITERATION] = ModelerControl("LS - Iteration", 1, 8, 1, 5);
 	controls[LS_SEED] = ModelerControl("LS - Random Seed", 0, 100, 1, 0);
 	controls[LS_DENSITY] = ModelerControl("LS - Density", 0, 1.0, 0.01, 0.9);
+
+	//Forward, debug only
+	controls[FK_UPPER_ARM] = ModelerControl("FK - Upper arm", -90, 180, 1, 0);
+	controls[FK_LOWER_ARM] = ModelerControl("FK - Lower arm", -90, 90, 1, 0);
+	controls[FK_STAFF_ANGLE] = ModelerControl("FK - Staff", -90, 90, 1, 0);
 
 	ModelerApplication::Instance()->Init(&createSpellBreaker, controls, MY_NUM_CONTROLS);
 	return ModelerApplication::Instance()->Run();
