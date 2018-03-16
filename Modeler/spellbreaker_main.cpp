@@ -190,7 +190,7 @@ void SpellBreaker::draw()
 					glTranslated(0, -1, 0);
 					{
 						glTranslated(0.25, 0.8, 0.3);
-						glRotated(right_lower_arm_rise, -1.0, 0, 0);
+						glRotated(right_lower_arm_rise, 1.0, 0, 0);
 						glTranslated(-0.25, -0.8, -0.3);
 						drawBox(0.5, 0.9, 0.6);
 					}
@@ -215,7 +215,7 @@ void SpellBreaker::draw()
 								{
 									//Rotate around a different axis
 									glRotated(rotate_orb, 0, 0, 1.0);
-									glTranslated(0.2, 0, 0);
+									glTranslated(0.1, 0, 0);
 									glTranslated(-0.1, -0.1, 4.1 + breath_orb);
 									//Cube for now, meatball later
 									drawBox(0.2, 0.2, 0.2);
@@ -268,6 +268,21 @@ int main()
 	controls[FK_UPPER_ARM] = ModelerControl("FK - Upper arm", -90, 180, 1, 0);
 	controls[FK_LOWER_ARM] = ModelerControl("FK - Lower arm", -90, 90, 1, 0);
 	controls[FK_STAFF_ANGLE] = ModelerControl("FK - Staff", -90, 90, 1, 0);
+
+	controls[IK_HAND_X] = ModelerControl("IK - Hand X", -1, 1, 0.1, 0);
+	controls[IK_HAND_Y] = ModelerControl("IK - Hand Y", -3, 2, 0.1, -1.7);
+	controls[IK_HAND_Z] = ModelerControl("IK - Hand Z", -1, 1, 0.1, 0);
+
+	controls[IK_STAFF_X] = ModelerControl("IK - Staff X", -2, 2, 0.1, 0);
+	controls[IK_STAFF_Y] = ModelerControl("IK - Staff Y", -3, 2, 0.1, -1.7);
+	controls[IK_STAFF_Z] = ModelerControl("IK - Staff Z", -3, 3, 0.1, 2.7);
+
+	controls[IK_UPPER_MIN_ANGLE] = ModelerControl("IK - Min upper angle", -180, 0, 1, -180);
+	controls[IK_UPPER_MAX_ANGLE] = ModelerControl("IK - Max upper angle", 0, 180, 1, 180);
+	controls[IK_LOWER_MIN_ANGLE] = ModelerControl("IK - Min lower angle", -180, 0, 1, -180);
+	controls[IK_LOWER_MAX_ANGLE] = ModelerControl("IK - Max lower angle", 0, 180, 1, 180);
+	controls[IK_STAFF_MIN_ANGLE] = ModelerControl("IK - Min staff angle", -180, 0, 1, -180);
+	controls[IK_STAFF_MAX_ANGLE] = ModelerControl("IK - Max staff angle", 0, 180, 1, 180);
 
 	ModelerApplication::Instance()->Init(&createSpellBreaker, controls, MY_NUM_CONTROLS);
 	return ModelerApplication::Instance()->Run();

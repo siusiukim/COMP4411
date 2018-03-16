@@ -32,6 +32,18 @@ enum SpellBreakerModelControl
 	FK_UPPER_ARM,
 	FK_LOWER_ARM,
 	FK_STAFF_ANGLE,
+	IK_HAND_X,
+	IK_HAND_Y,
+	IK_HAND_Z,
+	IK_STAFF_X,
+	IK_STAFF_Y,
+	IK_STAFF_Z,
+	IK_UPPER_MIN_ANGLE,
+	IK_UPPER_MAX_ANGLE,
+	IK_LOWER_MIN_ANGLE,
+	IK_LOWER_MAX_ANGLE,
+	IK_STAFF_MIN_ANGLE,
+	IK_STAFF_MAX_ANGLE,
 	MY_NUM_CONTROLS
 };
 
@@ -62,9 +74,9 @@ private:
 	const double upper_arm_len = 1.0;
 	const double lower_arm_len = 0.7;
 	const double staff_len = 2.7;
-	Vec3f ik_elbow_pos;
-	Vec3f ik_hand_pos;
-	Vec3f ik_staff_pos;
+
+	Mat4f ik_elbow_mat, ik_hand_mat, ik_staff_mat;
+	Vec3f ik_elbow_pos, ik_hand_pos, ik_staff_pos;
 
 	/**
 		4 - all

@@ -28,6 +28,11 @@ void SpellBreaker::initTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, diamond_width, diamond_height, 0,
 		GL_BGR_EXT, GL_UNSIGNED_BYTE, diamond_bitmap);
+
+	//Just init along the way
+	right_upper_arm_rise = 0;
+	right_lower_arm_rise = 0;
+	staff_angle = 0;
 }
 
 void SpellBreaker::updateParam() {
@@ -43,12 +48,13 @@ void SpellBreaker::updateParam() {
 	cape_wave = VAL(CAPE_WAVE);
 
 	//IK control
-	right_upper_arm_rise = VAL(FK_UPPER_ARM);
-	right_lower_arm_rise = VAL(FK_LOWER_ARM);;
-	staff_angle = VAL(FK_STAFF_ANGLE);
+	//right_upper_arm_rise = VAL(FK_UPPER_ARM);
+	//right_lower_arm_rise = VAL(FK_LOWER_ARM);;
+	//staff_angle = VAL(FK_STAFF_ANGLE);
 
 	//Compute IK
-	doFK();
+	//doFK();
+	doIK();
 
 	if ((ModelerUserInterface::m_controlsAnimOnMenu->value() == 0)) {
 		animation_counter = 0;
