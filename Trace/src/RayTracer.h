@@ -9,20 +9,20 @@
 class RayTracer
 {
 public:
-    RayTracer();
-    ~RayTracer();
+	RayTracer();
+	~RayTracer();
 
-    vec3f trace( Scene *scene, double x, double y );
-	vec3f traceRay( Scene *scene, const ray& r, const vec3f& thresh, int depth );
+	vec3f trace(Scene *scene, double x, double y);
+	vec3f traceRay(Scene *scene, const ray& r, const vec3f& thresh, int depth);
 
 
-	void getBuffer( unsigned char *&buf, int &w, int &h );
+	void getBuffer(unsigned char *&buf, int &w, int &h);
 	double aspectRatio();
-	void traceSetup( int w, int h );
-	void traceLines( int start = 0, int stop = 10000000 );
-	void tracePixel( int i, int j );
+	void traceSetup(int w, int h);
+	void traceLines(int start = 0, int stop = 10000000);
+	void tracePixel(int i, int j);
 
-	bool loadScene( char* fn );
+	bool loadScene(char* fn);
 
 	bool sceneLoaded();
 

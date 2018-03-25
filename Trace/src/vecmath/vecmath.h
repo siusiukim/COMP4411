@@ -15,6 +15,11 @@ class vec4f;
 class mat3f;
 class mat4f;
 
+typedef vec3f Vec3f;
+typedef vec4f Vec4f;
+typedef mat3f Mat3f;
+typedef mat4f Mat4f;
+
 // used as an exception during matrix inversion.
 class SingularMatrixException
 {};
@@ -98,6 +103,11 @@ public:
 	}
 
 	bool iszero() const { return ( (n[0]==0 && n[1]==0 && n[2]==0) ? true : false); };
+
+	//Get angle made with vector. In radian.
+	double getAngleWith(const Vec3f& b) {
+		return acos(this->dot(b) / this->length() / b.length());
+	}
 
 public:
 	double n[3];

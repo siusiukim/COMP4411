@@ -81,6 +81,7 @@ public:
 public:
     const SceneObject 	*obj;
     double t;
+	//Normal direction
     vec3f N;
     Material *material;         // if this intersection has its own material
                                 // (as opposed to one in its associated object)
