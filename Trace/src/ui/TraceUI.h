@@ -20,7 +20,7 @@
 
 class TraceUI {
 public:
-	TraceUI();
+	TraceUI(RayTracer *tracer);
 
 	// The FLTK widgets
 	Fl_Window*			m_mainWindow;
@@ -28,6 +28,13 @@ public:
 
 	Fl_Slider*			m_sizeSlider;
 	Fl_Slider*			m_depthSlider;
+
+	Fl_Slider*			m_ambientAttenSlider;
+	Fl_Slider*			m_disAttenASlider;
+	Fl_Slider*			m_disAttenBSlider;
+	Fl_Slider*			m_disAttenCSlider;
+
+	Fl_Slider*			m_recurThresholdSlider;
 
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
@@ -37,16 +44,14 @@ public:
 	// member functions
 	void show();
 
-	void		setRayTracer(RayTracer *tracer);
-
 	int			getSize();
-	int			getDepth();
+	//int			getDepth();
 
 private:
-	RayTracer*	raytracer;
+	RayTracer* const raytracer;
 
 	int			m_nSize;
-	int			m_nDepth;
+	//int			m_nDepth;
 
 // static class members
 	static Fl_Menu_Item menuitems[];
@@ -62,6 +67,12 @@ private:
 
 	static void cb_sizeSlides(Fl_Widget* o, void* v);
 	static void cb_depthSlides(Fl_Widget* o, void* v);
+
+	static void cb_ambientAttenSlides(Fl_Widget* o, void* v);
+	static void cb_disAttenASlides(Fl_Widget* o, void* v);
+	static void cb_disAttenBSlides(Fl_Widget* o, void* v);
+	static void cb_disAttenCSlides(Fl_Widget* o, void* v);
+	static void cb_recurThresholdSlides(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
 	static void cb_stop(Fl_Widget* o, void* v);

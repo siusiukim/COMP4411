@@ -12,8 +12,8 @@ bool Box::intersectLocal(const ray& r, isect& i) const
 		double interT = (tMin < 0) ? tMax : tMin;
 
 		//Deleted in isect class
-		Material* material = new Material();
-		*material = getMaterial();
+		//Material* material = new Material();
+		//*material = getMaterial();
 
 		Vec3f intersection = r.at(interT);
 
@@ -39,8 +39,8 @@ bool Box::intersectLocal(const ray& r, isect& i) const
 			cerr << "Normal error" << endl;
 		}
 
-		i.setT(interT);
-		i.setMaterial(material);
+		i.t = interT;
+		i.obj = this;
 		return true;
 	}
 	return false;

@@ -195,10 +195,8 @@ int main(int argc, char **argv) {
 	}
 	else {
 		// graphics mode
-		traceUI = new TraceUI();
 		theRayTracer = new RayTracer();
-
-		traceUI->setRayTracer(theRayTracer);
+		traceUI = new TraceUI(theRayTracer);
 
 		Fl::visual(FL_DOUBLE | FL_INDEX);
 

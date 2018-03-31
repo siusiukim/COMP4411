@@ -105,8 +105,12 @@ public:
 	bool iszero() const { return ( (n[0]==0 && n[1]==0 && n[2]==0) ? true : false); };
 
 	//Get angle made with vector. In radian.
-	double getAngleWith(const Vec3f& b) {
+	double getAngleWith(const Vec3f& b) const{
 		return acos(this->dot(b) / this->length() / b.length());
+	}
+
+	bool isNormalized() const {
+		return abs(this->length() - 1.0) < 0.01;
 	}
 
 public:

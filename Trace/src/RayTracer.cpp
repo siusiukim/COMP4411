@@ -29,7 +29,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 {
 	isect i;
 
-	if (depth > 5) return Vec3f(0, 0, 0);
+	if (depth > recurDepth) return Vec3f(0, 0, 0);
 
 	if (scene->intersect(r, i)) {
 		// An intersection occured!  We've got work to do.  For now,
@@ -48,27 +48,38 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 		Vec3f color = m.shade(scene, r, i);
 
 		//Handles reflection
-		Vec3f rd = getReflection(r.getDirection(), i.N);
-		ray ry(point, rd);
-		color += prod(m.kr, traceRay(scene, ry, thresh, depth+1));
+		Vec3f reflectDir = getReflection(r.getDirection(), i.N);
+		ray reflectRay(point, reflectDir);
+		color += prod(m.kr, traceRay(scene, reflectRay, thresh, depth + 1));
 
 		//Handles refraction
-		bool isRayEnterObject = (r.getDirection().dot(i.N) > 0);
-		double incidIndex, refraIndex;
-		if (isRayEnterObject) {
-			incidIndex = 1.0;
-			refraIndex = m.index;
-		}
-		else {
-			incidIndex = m.index;
-			refraIndex = 1.0;
-		}
+		if (!ALMOST_ZERO(m.kt.length())) {
+			double rDotN = r.getDirection().dot(-i.N);
+			if (!ALMOST_ZERO(rDotN)) {
+				bool isRayEnterObject = rDotN > 0;
+				//refractNormal should point in the opposite direction of the incoming ray
+				Vec3f refractNormal;
+				double incidIndex, refraIndex;
+				if (isRayEnterObject) {
+					incidIndex = 1.0;
+					refraIndex = m.index;
+					refractNormal = i.N;
+				}
+				else {
+					incidIndex = m.index;
+					refraIndex = 1.0;
+					refractNormal = -i.N;
+				}
 
-		double critial = getCriticalAngle(incidIndex, refraIndex);
-		double incidAngle = r.getDirection().getAngleWith(i.N);
-		if (incidAngle < critial) {
-			//Handles refraction only when total internal reflection does not occur
-			Vec3f 
+				double critial = getCriticalAngle(incidIndex, refraIndex);
+				double incidAngle = r.getDirection().getAngleWith(-refractNormal);
+				if (incidIndex <= refraIndex || incidAngle < critial) {
+					//Handles refraction only when total internal reflection does not occur
+					Vec3f refractDir = getRefraction(r.getDirection(), refractNormal, incidIndex, refraIndex);
+					ray refractRay(point, refractDir);
+					color += prod(m.kt, traceRay(scene, refractRay, thresh, depth + 1));
+				}
+			}
 		}
 
 		return color;
@@ -82,7 +93,13 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 	}
 }
 
-RayTracer::RayTracer()
+RayTracer::RayTracer():
+	ambientAtten(1.0),
+	disAttenA(.5),
+	disAttenB(.5),
+	disAttenC(.5),
+	recurThreshold(1.0),
+	recurDepth(1)
 {
 	buffer = NULL;
 	buffer_width = buffer_height = 256;
@@ -158,6 +175,13 @@ void RayTracer::traceSetup(int w, int h)
 		buffer = new unsigned char[bufferSize];
 	}
 	memset(buffer, 0, w*h * 3);
+	
+	//Putting some of the bundled data into the scene
+	scene->disAttenA = disAttenA;
+	scene->disAttenB = disAttenB;
+	scene->disAttenC = disAttenC;
+	scene->ambientAtten = ambientAtten;
+	scene->ambientLight = Vec3f(1, 1, 1);
 }
 
 void RayTracer::traceLines(int start, int stop)

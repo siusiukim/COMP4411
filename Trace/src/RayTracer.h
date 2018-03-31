@@ -15,7 +15,6 @@ public:
 	vec3f trace(Scene *scene, double x, double y);
 	vec3f traceRay(Scene *scene, const ray& r, const vec3f& thresh, int depth);
 
-
 	void getBuffer(unsigned char *&buf, int &w, int &h);
 	double aspectRatio();
 	void traceSetup(int w, int h);
@@ -25,6 +24,12 @@ public:
 	bool loadScene(char* fn);
 
 	bool sceneLoaded();
+
+	double ambientAtten;
+	double disAttenA, disAttenB, disAttenC;
+
+	double recurThreshold;
+	int recurDepth;
 
 private:
 	unsigned char *buffer;

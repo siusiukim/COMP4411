@@ -90,7 +90,32 @@ void TraceUI::cb_sizeSlides(Fl_Widget* o, void* v)
 
 void TraceUI::cb_depthSlides(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->m_nDepth = int(((Fl_Slider *)o)->value());
+	((TraceUI*)(o->user_data()))->raytracer->recurDepth = int(((Fl_Slider *)o)->value());
+}
+
+void TraceUI::cb_ambientAttenSlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->ambientAtten = double(((Fl_Slider *)o)->value());
+}
+
+void TraceUI::cb_disAttenASlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->disAttenA = double(((Fl_Slider *)o)->value());
+}
+
+void TraceUI::cb_disAttenBSlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->disAttenB = double(((Fl_Slider *)o)->value());
+}
+
+void TraceUI::cb_disAttenCSlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->disAttenC = double(((Fl_Slider *)o)->value());
+}
+
+void TraceUI::cb_recurThresholdSlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->recurThreshold = double(((Fl_Slider *)o)->value());
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -180,20 +205,9 @@ void TraceUI::show()
 	m_mainWindow->show();
 }
 
-void TraceUI::setRayTracer(RayTracer *tracer)
-{
-	raytracer = tracer;
-	m_traceGlWindow->setRayTracer(tracer);
-}
-
 int TraceUI::getSize()
 {
 	return m_nSize;
-}
-
-int TraceUI::getDepth()
-{
-	return m_nDepth;
 }
 
 // menu definition
@@ -211,14 +225,16 @@ Fl_Menu_Item TraceUI::menuitems[] = {
 	{ 0 }
 };
 
-TraceUI::TraceUI() {
+TraceUI::TraceUI(RayTracer *tracer) :
+	raytracer(tracer)
+{
 	// init.
-	m_nDepth = 0;
 	m_nSize = 150;
-	m_mainWindow = new Fl_Window(100, 40, 320, 100, "Ray <Not Loaded>");
+
+	m_mainWindow = new Fl_Window(100, 40, 400, 500, "Ray <Not Loaded>");
 	m_mainWindow->user_data((void*)(this));	// record self to be used by static callback functions
 	// install menu bar
-	m_menubar = new Fl_Menu_Bar(0, 0, 320, 25);
+	m_menubar = new Fl_Menu_Bar(0, 0, 400, 25);
 	m_menubar->menu(menuitems);
 
 	// install slider depth
@@ -230,7 +246,7 @@ TraceUI::TraceUI() {
 	m_depthSlider->minimum(0);
 	m_depthSlider->maximum(10);
 	m_depthSlider->step(1);
-	m_depthSlider->value(m_nDepth);
+	m_depthSlider->value(raytracer->recurDepth);
 	m_depthSlider->align(FL_ALIGN_RIGHT);
 	m_depthSlider->callback(cb_depthSlides);
 
@@ -247,6 +263,71 @@ TraceUI::TraceUI() {
 	m_sizeSlider->align(FL_ALIGN_RIGHT);
 	m_sizeSlider->callback(cb_sizeSlides);
 
+	// install slider ambient
+	m_ambientAttenSlider = new Fl_Value_Slider(10, 80, 180, 20, "Ambient");
+	m_ambientAttenSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_ambientAttenSlider->type(FL_HOR_NICE_SLIDER);
+	m_ambientAttenSlider->labelfont(FL_COURIER);
+	m_ambientAttenSlider->labelsize(12);
+	m_ambientAttenSlider->minimum(0.0);
+	m_ambientAttenSlider->maximum(1.0);
+	m_ambientAttenSlider->step(0.01);
+	m_ambientAttenSlider->value(raytracer->ambientAtten);
+	m_ambientAttenSlider->align(FL_ALIGN_RIGHT);
+	m_ambientAttenSlider->callback(cb_ambientAttenSlides);
+
+	// install slider dis atten A
+	m_disAttenASlider = new Fl_Value_Slider(10, 105, 180, 20, "Dis. atten. 0th order");
+	m_disAttenASlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_disAttenASlider->type(FL_HOR_NICE_SLIDER);
+	m_disAttenASlider->labelfont(FL_COURIER);
+	m_disAttenASlider->labelsize(12);
+	m_disAttenASlider->minimum(0.0);
+	m_disAttenASlider->maximum(1.0);
+	m_disAttenASlider->step(0.01);
+	m_disAttenASlider->value(raytracer->disAttenA);
+	m_disAttenASlider->align(FL_ALIGN_RIGHT);
+	m_disAttenASlider->callback(cb_disAttenASlides);
+
+	// install slider dis atten B
+	m_disAttenBSlider = new Fl_Value_Slider(10, 130, 180, 20, "Dis. atten. 1st oder");
+	m_disAttenBSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_disAttenBSlider->type(FL_HOR_NICE_SLIDER);
+	m_disAttenBSlider->labelfont(FL_COURIER);
+	m_disAttenBSlider->labelsize(12);
+	m_disAttenBSlider->minimum(0.0);
+	m_disAttenBSlider->maximum(1.0);
+	m_disAttenBSlider->step(0.01);
+	m_disAttenBSlider->value(raytracer->disAttenB);
+	m_disAttenBSlider->align(FL_ALIGN_RIGHT);
+	m_disAttenBSlider->callback(cb_disAttenBSlides);
+
+	// install slider dis atten C
+	m_disAttenCSlider = new Fl_Value_Slider(10, 155, 180, 20, "Dis. atten. 2nd order");
+	m_disAttenCSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_disAttenCSlider->type(FL_HOR_NICE_SLIDER);
+	m_disAttenCSlider->labelfont(FL_COURIER);
+	m_disAttenCSlider->labelsize(12);
+	m_disAttenCSlider->minimum(0.0);
+	m_disAttenCSlider->maximum(1.0);
+	m_disAttenCSlider->step(0.01);
+	m_disAttenCSlider->value(raytracer->disAttenC);
+	m_disAttenCSlider->align(FL_ALIGN_RIGHT);
+	m_disAttenCSlider->callback(cb_disAttenCSlides);
+
+	// install slider recur threshold
+	m_recurThresholdSlider = new Fl_Value_Slider(10, 180, 180, 20, "Recur Threshold");
+	m_recurThresholdSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_recurThresholdSlider->type(FL_HOR_NICE_SLIDER);
+	m_recurThresholdSlider->labelfont(FL_COURIER);
+	m_recurThresholdSlider->labelsize(12);
+	m_recurThresholdSlider->minimum(0.0);
+	m_recurThresholdSlider->maximum(1.0);
+	m_recurThresholdSlider->step(0.01);
+	m_recurThresholdSlider->value(raytracer->recurThreshold);
+	m_recurThresholdSlider->align(FL_ALIGN_RIGHT);
+	m_recurThresholdSlider->callback(cb_recurThresholdSlides);
+
 	m_renderButton = new Fl_Button(240, 27, 70, 25, "&Render");
 	m_renderButton->user_data((void*)(this));
 	m_renderButton->callback(cb_render);
@@ -261,6 +342,7 @@ TraceUI::TraceUI() {
 
 	// image view
 	m_traceGlWindow = new TraceGLWindow(100, 150, m_nSize, m_nSize, "Rendered Image");
+	m_traceGlWindow->setRayTracer(raytracer);
 	m_traceGlWindow->end();
 	m_traceGlWindow->resizable(m_traceGlWindow);
 }

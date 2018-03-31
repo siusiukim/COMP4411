@@ -249,6 +249,12 @@ public:
 
 	TransformRoot transformRoot;
 
+	//Some parameters of the scene here
+	Vec3f ambientLight;
+	double ambientAtten;
+
+	double disAttenA, disAttenB, disAttenC;
+
 public:
 	Scene()
 		: transformRoot(), objects(), lights() {}
