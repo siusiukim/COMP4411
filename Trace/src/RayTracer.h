@@ -30,9 +30,9 @@ public:
 	double distanceScale;
 
 	double adaptiveAmount;
-	int recurDepth;
+	int recurDepth, samplePixel;
 
-	bool adaptiveAnti;
+	bool adaptiveAnti, superSample, sampleJitter;
 
 private:
 	unsigned char *buffer;

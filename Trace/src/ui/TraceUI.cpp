@@ -123,9 +123,24 @@ void TraceUI::cb_disScaleSlides(Fl_Widget* o, void* v)
 	((TraceUI*)(o->user_data()))->raytracer->distanceScale = double(((Fl_Slider *)o)->value());
 }
 
+void TraceUI::cb_superResSlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->samplePixel = double(((Fl_Slider *)o)->value());
+}
+
 void TraceUI::cb_adaptiveAntiSwitch(Fl_Widget* o, void* v)
 {
 	((TraceUI*)(o->user_data()))->raytracer->adaptiveAnti = !((TraceUI*)(o->user_data()))->raytracer->adaptiveAnti;
+}
+
+void TraceUI::cb_superSampleSwitch(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->superSample = !((TraceUI*)(o->user_data()))->raytracer->superSample;
+}
+
+void TraceUI::cb_sampleJitterSwitch(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->sampleJitter = !((TraceUI*)(o->user_data()))->raytracer->sampleJitter;
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -332,7 +347,7 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_recurThresholdSlider->labelfont(FL_COURIER);
 	m_recurThresholdSlider->labelsize(12);
 	m_recurThresholdSlider->minimum(0.0);
-	m_recurThresholdSlider->maximum(1.0);
+	m_recurThresholdSlider->maximum(1.73);
 	m_recurThresholdSlider->step(0.01);
 	m_recurThresholdSlider->value(raytracer->adaptiveAmount);
 	m_recurThresholdSlider->align(FL_ALIGN_RIGHT);
@@ -351,9 +366,30 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_disScaleSlider->align(FL_ALIGN_RIGHT);
 	m_disScaleSlider->callback(cb_disScaleSlides);
 
-	m_adaptiveAntiSwitch = new Fl_Light_Button(10, 230, 110, 20, "Adaptive Anti");
+	m_adaptiveAntiSwitch = new Fl_Light_Button(10, 230, 160, 20, "Adaptive Termination");
 	m_adaptiveAntiSwitch->user_data((void*)(this));
 	m_adaptiveAntiSwitch->callback(cb_adaptiveAntiSwitch);
+
+	m_superSampleSwitch = new Fl_Light_Button(180, 230, 80, 20, "Super");
+	m_superSampleSwitch->user_data((void*)(this));
+	m_superSampleSwitch->callback(cb_superSampleSwitch);
+
+	m_sampleJitterSwitch = new Fl_Light_Button(270, 230, 80, 20, "Jitter");
+	m_sampleJitterSwitch->user_data((void*)(this));
+	m_sampleJitterSwitch->callback(cb_sampleJitterSwitch);
+
+	// install dist scale
+	m_recurThresholdSlider = new Fl_Value_Slider(10, 255, 180, 20, "Super-sample");
+	m_recurThresholdSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_recurThresholdSlider->type(FL_HOR_NICE_SLIDER);
+	m_recurThresholdSlider->labelfont(FL_COURIER);
+	m_recurThresholdSlider->labelsize(12);
+	m_recurThresholdSlider->minimum(1);
+	m_recurThresholdSlider->maximum(5);
+	m_recurThresholdSlider->step(1);
+	m_recurThresholdSlider->value(raytracer->samplePixel);
+	m_recurThresholdSlider->align(FL_ALIGN_RIGHT);
+	m_recurThresholdSlider->callback(cb_superResSlides);
 
 	m_renderButton = new Fl_Button(240, 27, 70, 25, "&Render");
 	m_renderButton->user_data((void*)(this));

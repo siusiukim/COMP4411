@@ -17,9 +17,46 @@
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of 0.
 vec3f RayTracer::trace(Scene *scene, double x, double y)
 {
-	ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
-	scene->getCamera()->rayThrough(x, y, r);
-	return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+	if (superSample) {
+		vector<Vec3f> traced;
+		traced.resize(samplePixel*samplePixel);
+
+		double totalX = 1.0 / (double)buffer_width;
+		double totalY = 1.0 / (double)buffer_height;
+		if (!sampleJitter) {
+			for (int i = 0; i < samplePixel; i++) {
+				double this_x = x + totalX * i / samplePixel;
+				for (int j = 0; j < samplePixel; j++) {
+					double this_y = y + totalY * j / samplePixel;
+					ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+					scene->getCamera()->rayThrough(this_x, this_y, r);
+					traced[i*samplePixel + j] = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < samplePixel; i++) {
+				for (int j = 0; j < samplePixel; j++) {
+					double this_x = x + totalX * i / samplePixel + randomInRange(-totalX / samplePixel / 2, totalX / samplePixel / 2);
+					double this_y = y + totalY * j / samplePixel + randomInRange(-totalY / samplePixel / 2, totalY / samplePixel / 2);;
+					ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+					scene->getCamera()->rayThrough(this_x, this_y, r);
+					traced[i*samplePixel + j] = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+				}
+			}
+		}
+
+		Vec3f averageColor(0, 0, 0);
+		for (vector<Vec3f>::iterator iter = traced.begin(); iter != traced.end(); iter++) {
+			averageColor += *iter;
+		}
+		return (averageColor / traced.size()).clamp();
+	}
+	else {
+		ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+		scene->getCamera()->rayThrough(x, y, r);
+		return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+	}
 }
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
@@ -29,8 +66,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 {
 	isect i;
 
-	//if (depth > recurDepth || (adaptiveAnti && thresh.length() < adaptiveAmount)) return Vec3f(0, 0, 0);
-	if (depth > recurDepth) return Vec3f(0, 0, 0);
+	if (depth > recurDepth || (adaptiveAnti && thresh.length() < adaptiveAmount)) return Vec3f(0, 0, 0);
 
 	if (scene->intersect(r, i)) {
 		// An intersection occured!  We've got work to do.  For now,
@@ -46,42 +82,42 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 		const Vec3f point = r.at(i.t);
 
 		//Shade from Phong's model
-		Vec3f color = prod(Vec3f(1, 1, 1)-m.kt, m.shade(scene, r, i));
+		Vec3f color = prod(Vec3f(1, 1, 1) - m.kt, m.shade(scene, r, i));
 		//Vec3f color = m.shade(scene, r, i);
 
 		//Relationship between ray and normal
 		double rDotN = r.getDirection().dot(-i.N);
 		bool isRayEnterObject = rDotN > 0;
-		Vec3f properNorm = isRayEnterObject  ? i.N : -i.N;
+		Vec3f properNorm = isRayEnterObject ? i.N : -i.N;
 
 		//Handles reflection
 		if (!ALMOST_ZERO(m.kr.length()) && !ALMOST_ZERO(rDotN)) {
 			Vec3f reflectDir = getReflection(r.getDirection(), properNorm);
-			ray reflectRay(point + reflectDir*RAY_EPSILON, reflectDir);
+			ray reflectRay(point + reflectDir * RAY_EPSILON, reflectDir);
 			Vec3f reflectColor = traceRay(scene, reflectRay, prod(thresh, m.kr), depth + 1);
 			color += prod(m.kr, reflectColor).clamp();
 		}
 
 		//Handles refraction
 		if (!ALMOST_ZERO(m.kt.length()) && !ALMOST_ZERO(rDotN)) {
-				double incidIndex, refraIndex;
-				if (isRayEnterObject) {
-					incidIndex = 1.0;
-					refraIndex = m.index;
-				}
-				else {
-					incidIndex = m.index;
-					refraIndex = 1.0;
-				}
+			double incidIndex, refraIndex;
+			if (isRayEnterObject) {
+				incidIndex = 1.0;
+				refraIndex = m.index;
+			}
+			else {
+				incidIndex = m.index;
+				refraIndex = 1.0;
+			}
 
-				double critial = getCriticalAngle(incidIndex, refraIndex);
-				double incidAngle = r.getDirection().getAngleWith(-properNorm);
-				if (incidIndex <= refraIndex || incidAngle < critial) {
-					//Handles refraction only when total internal reflection does not occur
-					Vec3f refractDir = getRefraction(r.getDirection(), properNorm, incidIndex, refraIndex);
-					ray refractRay(point, refractDir);
-					color += prod(m.kt, traceRay(scene, refractRay, prod(thresh, m.kt), depth + 1));
-				}
+			double critial = getCriticalAngle(incidIndex, refraIndex);
+			double incidAngle = r.getDirection().getAngleWith(-properNorm);
+			if (incidIndex <= refraIndex || incidAngle < critial) {
+				//Handles refraction only when total internal reflection does not occur
+				Vec3f refractDir = getRefraction(r.getDirection(), properNorm, incidIndex, refraIndex);
+				ray refractRay(point, refractDir);
+				color += prod(m.kt, traceRay(scene, refractRay, prod(thresh, m.kt), depth + 1));
+			}
 		}
 
 		return color.clamp();
@@ -100,10 +136,11 @@ RayTracer::RayTracer() :
 	constAtten(0.25),
 	linearAtten(0.25),
 	quadAtten(0.5),
-	adaptiveAmount(1.0),
+	adaptiveAmount(0.0),
 	recurDepth(0),
 	distanceScale(20),
-	adaptiveAnti(false)
+	adaptiveAnti(false), superSample(false), sampleJitter(false),
+	samplePixel(1)
 {
 	buffer = NULL;
 	buffer_width = buffer_height = 256;

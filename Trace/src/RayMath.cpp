@@ -1,5 +1,6 @@
 #include "RayMath.h"
 #include <cassert>
+#include <cstdlib>
 
 //Reference: http://paulbourke.net/geometry/reflected/
 Vec3f getReflection(const Vec3f& incident, const Vec3f& normal) {
@@ -27,4 +28,8 @@ Vec3f getRefraction(const Vec3f& incident, const Vec3f& normal, double incidInde
 	assert(T.isNormalized());
 
 	return T;
+}
+
+double randomInRange(double min, double max) {
+	return ((double)rand() / RAND_MAX) * (max - min) + min;
 }

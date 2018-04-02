@@ -38,10 +38,14 @@ public:
 
 	Fl_Slider*			m_recurThresholdSlider;
 
+	Fl_Slider*			m_superResSlider;
+
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
 
 	Fl_Light_Button*	m_adaptiveAntiSwitch;
+	Fl_Light_Button*	m_superSampleSwitch;
+	Fl_Light_Button*	m_sampleJitterSwitch;
 
 	TraceGLWindow*		m_traceGlWindow;
 
@@ -78,8 +82,11 @@ private:
 	static void cb_disAttenCSlides(Fl_Widget* o, void* v);
 	static void cb_recurThresholdSlides(Fl_Widget* o, void* v);
 	static void cb_disScaleSlides(Fl_Widget* o, void* v);
+	static void cb_superResSlides(Fl_Widget* o, void* v);
 
 	static void cb_adaptiveAntiSwitch(Fl_Widget* o, void* v);
+	static void cb_superSampleSwitch(Fl_Widget* o, void* v);
+	static void cb_sampleJitterSwitch(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
 	static void cb_stop(Fl_Widget* o, void* v);

@@ -573,6 +573,16 @@ static void processObject(Obj *obj, Scene *scene, mmap& materials)
 
 		scene->add(new AmbientLight(scene,
 			tupleToVec(getColorField(child))));
+	}else if (name == "spot_light") {
+		if (child == NULL) {
+			throw ParseError("No info for spot_light");
+		}
+
+		scene->add(new SpotLight(scene,
+			tupleToVec(getField(child, "position")),
+			tupleToVec(getField(child, "direction")).normalize(),
+			getField(child, "radius")->getScalar(),
+			tupleToVec(getColorField(child))));
 	}
 	else if (name == "sphere" ||
 		name == "box" ||

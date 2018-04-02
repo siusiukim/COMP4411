@@ -1,0 +1,58 @@
+SBT-raytracer 1.0
+
+
+camera
+{
+	position = (8, 0, 2);
+	viewdir = (-1, 0, -0.3);
+	updir = (0, 0, 1);
+}
+
+spot_light
+{
+	direction = (0, -0.5, -1);
+	position = (0, 0, 3);
+	color = (1, 1, 1);
+	radius = 2.0
+}
+
+spot_light
+{
+	direction = (0, 0.9, -1);
+	position = (0, 0, 3);
+	color = (1, 1, 1);
+	radius = 2.0
+}
+
+ambient_light
+{
+    color = (0.2, 0.2, 0.2);
+}
+
+
+// The box forms a plane, which should reflect the cylinder
+translate( 0, 0, -1,
+	scale( 15, 15, 1, 
+		box {
+			material = { 
+				diffuse = (0.5, 0, 0); 
+				specular = (0.5, 0.5, 0.5);
+				 ambient = (0.5, 0.5, 0.5);
+				shininess = 0.2;
+			}
+		} ) )
+
+// We'll give this a little ambient intensity to ensure
+// that the bottom, which doesn't face the light, is still 
+// reflected properly (this is a common hack, since with 
+// raytracing you don't have diffuse-diffuse reflections)
+translate( 0, 0, 1,
+	cylinder {
+		material = {
+			ambient = (0, 1, 0);
+			diffuse = (0, 0.5, 0);
+			specular = (0.5, 0.5, 0.5);
+			 ambient = (0.5, 0.5, 0.5);
+			shininess = 0.2;
+		}
+	} )

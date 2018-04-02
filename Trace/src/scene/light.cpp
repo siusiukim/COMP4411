@@ -36,14 +36,6 @@ double PointLight::distanceAttenuation(const vec3f& P) const
 	// point P.  For now, I assume no attenuation and just return 1.0
 
 	double len = (position - P).length() * scene->distanceScale;
-	//cout << scene->constAtten << endl;
-	//cout << scene->linearAtten << endl;
-	//cout << scene->quadAtten << endl;
-	//cout << scene->distanceScale << endl;
-	//cout << len << endl;
-	//cout << 1.0 / (scene->constAtten * constAtten +
-	//	scene->linearAtten*linearAtten*len +
-	//	scene->quadAtten*quadAtten*len*len) << endl << endl;
 
 	return min(1.0, 1.0 / (scene->constAtten * constAtten +
 		scene->linearAtten*linearAtten*len +
@@ -72,6 +64,39 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 	double t = (position - P).length();
 	ray r(P - orientation * RAY_EPSILON, -orientation);
 	return scene->getShadowAttenTo(r, t).clamp();
+}
+
+double SpotLight::distanceAttenuation(const vec3f& P) const
+{
+	return 1.0f;
+}
+
+vec3f SpotLight::getColor(const vec3f& P) const
+{
+	// Color doesn't depend on P 
+	return color;
+}
+
+vec3f SpotLight::getDirection(const vec3f& P) const
+{
+	return -orientation;
+}
+
+vec3f SpotLight::shadowAttenuation(const vec3f& P) const
+{
+	//First determine whether the point is shaded by this light
+	Vec3f P2Light = P - position;
+	Vec3f projection = orientation * P2Light.dot(-orientation);
+	Vec3f perpVec = -P2Light - projection;
+	if (perpVec.length() < radius) {
+
+		ray r(P - orientation * RAY_EPSILON, -orientation);
+		double t = projection.length();
+		return scene->getShadowAttenTo(r, t).clamp();
+	}
+	else {
+		return Vec3f(0, 0, 0);
+	}
 }
 
 double AmbientLight::distanceAttenuation(const vec3f& P) const
