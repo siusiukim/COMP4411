@@ -578,11 +578,24 @@ static void processObject(Obj *obj, Scene *scene, mmap& materials)
 			throw ParseError("No info for spot_light");
 		}
 
+		double constAtten = 0.25, linearAtten = 0.003372407, quadAtten = 0.000045492;
+		if (hasField(child, "constant_attenuation_coeff")) {
+			constAtten = getField(child, "constant_attenuation_coeff")->getScalar();
+		}
+
+		if (hasField(child, "linear_attenuation_coeff")) {
+			linearAtten = getField(child, "linear_attenuation_coeff")->getScalar();
+		}
+
+		if (hasField(child, "quadratic_attenuation_coeff")) {
+			quadAtten = getField(child, "quadratic_attenuation_coeff")->getScalar();
+		}
+
 		scene->add(new SpotLight(scene,
 			tupleToVec(getField(child, "position")),
 			tupleToVec(getField(child, "direction")).normalize(),
 			getField(child, "p_value")->getScalar(),
-			tupleToVec(getColorField(child))));
+			tupleToVec(getColorField(child)), constAtten, linearAtten, quadAtten));
 	}
 	else if (name == "sphere" ||
 		name == "box" ||

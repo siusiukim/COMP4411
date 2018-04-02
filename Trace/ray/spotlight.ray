@@ -20,7 +20,15 @@ spot_light
 {
 	direction = (0, 0, -1);
 	position = (3, 0, 1);
-	color = (1, 1, 1);
+	color = (1, 1, 0);
+	p_value = 50.0
+}
+
+spot_light
+{
+	direction = (0.5, 0.5, -1);
+	position = (3, 0, 1);
+	color = (1, 0, 1);
 	p_value = 50.0
 }
 
@@ -35,7 +43,7 @@ translate( 0, 0, -1,
 	scale( 15, 15, 1, 
 		box {
 			material = { 
-				diffuse = (0.5, 0, 0); 
+				diffuse = (0.5, 0.5, 0.5); 
 				specular = (0.5, 0.5, 0.5);
 				 ambient = (0.5, 0.5, 0.5);
 				shininess = 0.2;

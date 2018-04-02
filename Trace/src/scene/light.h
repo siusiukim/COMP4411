@@ -62,9 +62,11 @@ class SpotLight
 {
 public:
 	SpotLight(Scene *scene, const vec3f& pos, const vec3f& orien
-		, double p_value, const vec3f& color)
+		, double p_value, const vec3f& color, 
+		double constAtten, double linearAtten, double quadAtten)
 		: Light(scene, color), position(pos),
-		orientation(orien), p_value(p_value){}
+		orientation(orien), p_value(p_value),
+		constAtten(constAtten), linearAtten(linearAtten), quadAtten(quadAtten) {}
 
 	virtual vec3f shadowAttenuation(const vec3f& P) const;
 	virtual double distanceAttenuation(const vec3f& P) const;

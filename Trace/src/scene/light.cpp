@@ -68,7 +68,11 @@ vec3f PointLight::shadowAttenuation(const vec3f& P) const
 
 double SpotLight::distanceAttenuation(const vec3f& P) const
 {
-	return 1.0f;
+	double len = (position - P).length() * scene->distanceScale;
+
+	return min(1.0, 1.0 / (scene->constAtten * constAtten +
+		scene->linearAtten*linearAtten*len +
+		scene->quadAtten*quadAtten*len*len));
 }
 
 vec3f SpotLight::getColor(const vec3f& P) const
