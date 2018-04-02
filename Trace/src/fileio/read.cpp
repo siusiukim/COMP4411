@@ -549,7 +549,7 @@ static void processObject(Obj *obj, Scene *scene, mmap& materials)
 			throw ParseError("No info for point_light");
 		}
 
-		double constAtten = 1.0, linearAtten = 1.0, quadAtten = 1.0;
+		double constAtten = 0.25, linearAtten = 0.003372407, quadAtten = 0.000045492;
 		if (hasField(child, "constant_attenuation_coeff")) {
 			constAtten = getField(child, "constant_attenuation_coeff")->getScalar();
 		}

@@ -29,6 +29,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 {
 	isect i;
 
+	//if (depth > recurDepth || (adaptiveAnti && thresh.length() < adaptiveAmount)) return Vec3f(0, 0, 0);
 	if (depth > recurDepth) return Vec3f(0, 0, 0);
 
 	if (scene->intersect(r, i)) {
@@ -57,7 +58,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 		if (!ALMOST_ZERO(m.kr.length()) && !ALMOST_ZERO(rDotN)) {
 			Vec3f reflectDir = getReflection(r.getDirection(), properNorm);
 			ray reflectRay(point + reflectDir*RAY_EPSILON, reflectDir);
-			Vec3f reflectColor = traceRay(scene, reflectRay, thresh, depth + 1);
+			Vec3f reflectColor = traceRay(scene, reflectRay, prod(thresh, m.kr), depth + 1);
 			color += prod(m.kr, reflectColor).clamp();
 		}
 
@@ -79,7 +80,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 					//Handles refraction only when total internal reflection does not occur
 					Vec3f refractDir = getRefraction(r.getDirection(), properNorm, incidIndex, refraIndex);
 					ray refractRay(point, refractDir);
-					color += prod(m.kt, traceRay(scene, refractRay, thresh, depth + 1));
+					color += prod(m.kt, traceRay(scene, refractRay, prod(thresh, m.kt), depth + 1));
 				}
 		}
 
@@ -99,9 +100,10 @@ RayTracer::RayTracer() :
 	constAtten(0.25),
 	linearAtten(0.25),
 	quadAtten(0.5),
-	recurThreshold(1.0),
+	adaptiveAmount(1.0),
 	recurDepth(0),
-	distanceScale(100)
+	distanceScale(20),
+	adaptiveAnti(false)
 {
 	buffer = NULL;
 	buffer_width = buffer_height = 256;

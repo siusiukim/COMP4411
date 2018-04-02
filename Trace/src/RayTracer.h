@@ -29,8 +29,10 @@ public:
 	double constAtten, linearAtten, quadAtten;
 	double distanceScale;
 
-	double recurThreshold;
+	double adaptiveAmount;
 	int recurDepth;
+
+	bool adaptiveAnti;
 
 private:
 	unsigned char *buffer;

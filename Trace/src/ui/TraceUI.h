@@ -41,6 +41,8 @@ public:
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
 
+	Fl_Light_Button*	m_adaptiveAntiSwitch;
+
 	TraceGLWindow*		m_traceGlWindow;
 
 	// member functions
@@ -76,6 +78,8 @@ private:
 	static void cb_disAttenCSlides(Fl_Widget* o, void* v);
 	static void cb_recurThresholdSlides(Fl_Widget* o, void* v);
 	static void cb_disScaleSlides(Fl_Widget* o, void* v);
+
+	static void cb_adaptiveAntiSwitch(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
 	static void cb_stop(Fl_Widget* o, void* v);

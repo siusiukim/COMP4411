@@ -115,12 +115,17 @@ void TraceUI::cb_disAttenCSlides(Fl_Widget* o, void* v)
 
 void TraceUI::cb_recurThresholdSlides(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->raytracer->recurThreshold = double(((Fl_Slider *)o)->value());
+	((TraceUI*)(o->user_data()))->raytracer->adaptiveAmount = double(((Fl_Slider *)o)->value());
 }
 
 void TraceUI::cb_disScaleSlides(Fl_Widget* o, void* v)
 {
 	((TraceUI*)(o->user_data()))->raytracer->distanceScale = double(((Fl_Slider *)o)->value());
+}
+
+void TraceUI::cb_adaptiveAntiSwitch(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->adaptiveAnti = !((TraceUI*)(o->user_data()))->raytracer->adaptiveAnti;
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -321,7 +326,7 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_disAttenCSlider->callback(cb_disAttenCSlides);
 
 	// install slider recur threshold
-	m_recurThresholdSlider = new Fl_Value_Slider(10, 180, 180, 20, "Recur Threshold");
+	m_recurThresholdSlider = new Fl_Value_Slider(10, 180, 180, 20, "Adaptive Amount");
 	m_recurThresholdSlider->user_data((void*)(this));	// record self to be used by static callback functions
 	m_recurThresholdSlider->type(FL_HOR_NICE_SLIDER);
 	m_recurThresholdSlider->labelfont(FL_COURIER);
@@ -329,7 +334,7 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_recurThresholdSlider->minimum(0.0);
 	m_recurThresholdSlider->maximum(1.0);
 	m_recurThresholdSlider->step(0.01);
-	m_recurThresholdSlider->value(raytracer->recurThreshold);
+	m_recurThresholdSlider->value(raytracer->adaptiveAmount);
 	m_recurThresholdSlider->align(FL_ALIGN_RIGHT);
 	m_recurThresholdSlider->callback(cb_recurThresholdSlides);
 
@@ -340,11 +345,15 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_disScaleSlider->labelfont(FL_COURIER);
 	m_disScaleSlider->labelsize(12);
 	m_disScaleSlider->minimum(0.0);
-	m_disScaleSlider->maximum(1000.0);
-	m_disScaleSlider->step(1);
+	m_disScaleSlider->maximum(100.0);
+	m_disScaleSlider->step(0.1);
 	m_disScaleSlider->value(raytracer->distanceScale);
 	m_disScaleSlider->align(FL_ALIGN_RIGHT);
 	m_disScaleSlider->callback(cb_disScaleSlides);
+
+	m_adaptiveAntiSwitch = new Fl_Light_Button(10, 230, 110, 20, "Adaptive Anti");
+	m_adaptiveAntiSwitch->user_data((void*)(this));
+	m_adaptiveAntiSwitch->callback(cb_adaptiveAntiSwitch);
 
 	m_renderButton = new Fl_Button(240, 27, 70, 25, "&Render");
 	m_renderButton->user_data((void*)(this));

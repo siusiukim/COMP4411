@@ -28,8 +28,6 @@ vec3f Material::shade(Scene *scene, const ray& r, const isect& i) const
 		}
 		else {
 			Vec3f atten = l->shadowAttenuation(point) * l->distanceAttenuation(point);
-			//Vec3f atten(1, 1, 1);
-			//Vec3f atten = l->shadowAttenuation(point);
 
 			Vec3f diffuse = (l->getColor(point) * max(i.N.dot((l->getDirection(point))), 0.0)).clamp();
 			Vec3f specular = (l->getColor(point) * pow(max(r.getDirection().dot(getReflection(l->getDirection(point), i.N)), 0.0), shininess*128)).clamp();
