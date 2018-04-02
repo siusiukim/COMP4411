@@ -581,7 +581,7 @@ static void processObject(Obj *obj, Scene *scene, mmap& materials)
 		scene->add(new SpotLight(scene,
 			tupleToVec(getField(child, "position")),
 			tupleToVec(getField(child, "direction")).normalize(),
-			getField(child, "radius")->getScalar(),
+			getField(child, "p_value")->getScalar(),
 			tupleToVec(getColorField(child))));
 	}
 	else if (name == "sphere" ||

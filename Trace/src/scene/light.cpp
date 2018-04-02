@@ -87,16 +87,11 @@ vec3f SpotLight::shadowAttenuation(const vec3f& P) const
 	//First determine whether the point is shaded by this light
 	Vec3f P2Light = P - position;
 	Vec3f projection = orientation * P2Light.dot(-orientation);
-	Vec3f perpVec = -P2Light - projection;
-	if (perpVec.length() < radius) {
 
-		ray r(P - orientation * RAY_EPSILON, -orientation);
-		double t = projection.length();
-		return scene->getShadowAttenTo(r, t).clamp();
-	}
-	else {
-		return Vec3f(0, 0, 0);
-	}
+	ray r(P - orientation * RAY_EPSILON, -orientation);
+	double focusAtten = pow(min((P2Light.normalize().dot(-orientation)), 0.0), p_value);
+	double t = projection.length();
+	return scene->getShadowAttenTo(r, t).clamp() * focusAtten;
 }
 
 double AmbientLight::distanceAttenuation(const vec3f& P) const

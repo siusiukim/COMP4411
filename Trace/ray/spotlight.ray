@@ -10,18 +10,18 @@ camera
 
 spot_light
 {
-	direction = (0, -0.5, -1);
+	direction = (0, -0.5, -3);
 	position = (0, 0, 3);
 	color = (1, 1, 1);
-	radius = 2.0
+	p_value = 10.0
 }
 
 spot_light
 {
-	direction = (0, 0.9, -1);
-	position = (0, 0, 3);
+	direction = (0, 0, -1);
+	position = (3, 0, 1);
 	color = (1, 1, 1);
-	radius = 2.0
+	p_value = 50.0
 }
 
 ambient_light
