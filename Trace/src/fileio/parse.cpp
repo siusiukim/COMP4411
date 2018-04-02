@@ -8,128 +8,139 @@
 
 #include "parse.h"
 
-static string readID( istream& is );
-static Obj *readString( istream& is );
-static Obj *readScalar( istream& is );
-static Obj *readTuple( istream& is );
-static Obj *readDict( istream& is );
-static Obj *readObject( istream& is );
-static Obj *readName( istream& is );
-static void eatWS( istream& is );
-static void eatNL( istream& is );
+static string readID(istream& is);
+static Obj *readString(istream& is);
+static Obj *readScalar(istream& is);
+static Obj *readTuple(istream& is);
+static Obj *readDict(istream& is);
+static Obj *readObject(istream& is);
+static Obj *readName(istream& is);
+static void eatWS(istream& is);
+static void eatNL(istream& is);
 
-Obj *readFile( istream& is )
+Obj *readFile(istream& is)
 {
-	return readObject( is );
+	return readObject(is);
 }
 
-static void eatWS( istream& is )
+static void eatWS(istream& is)
 {
 	int ch = is.peek();
-	while( ch == ' ' || ch == '\t' || ch == '\n' || ch == 0x0D || ch == 0x0A) {
+	while (ch == ' ' || ch == '\t' || ch == '\n' || ch == 0x0D || ch == 0x0A) {
 		is.get();
-		if( !is ) {
+		if (!is) {
 			return;
 		}
 		ch = is.peek();
 	}
 }
 
-static void eatNL( istream& is )
+static void eatNL(istream& is)
 {
 	int ch = is.peek();
-	while( ch != '\n' ) {
+	while (ch != '\n') {
 		is.get();
-		if( !is ) {
+		if (!is) {
 			return;
 		}
 		ch = is.peek();
 	}
 }
 
-static bool eat( istream& is ) 
+static bool eat(istream& is)
 {
-	while( is ) {
-		eatWS( is );
-		if( is ) {
+	while (is) {
+		eatWS(is);
+		if (is) {
 			int ch = is.peek();
-			if( ch == '/' ) {
+			if (ch == '/') {
 				is.get();
 				int ch = is.peek();
-				if( ch == '/' ) {
-					eatNL( is );
-				} else if( ch == '*' ) {
-					while( true ) {
+				if (ch == '/') {
+					eatNL(is);
+				}
+				else if (ch == '*') {
+					while (true) {
 						is.get();
 						ch = is.peek();
-						if( ch == '*' ) {
+						if (ch == '*') {
 							is.get();
 							ch = is.peek();
-							if( ch == '/' ) {
+							if (ch == '/') {
 								is.get();
 								break;
-							} else if( ch == -1 ) {	
-								is.get();
-								throw ParseError( 
-									"Parse Error: unterminated comment" );
 							}
-						} else if( ch == -1 ) {
+							else if (ch == -1) {
+								is.get();
+								throw ParseError(
+									"Parse Error: unterminated comment");
+							}
+						}
+						else if (ch == -1) {
 							is.get();
-							throw ParseError( 
-								"Parse Error: unterminated comment" );
+							throw ParseError(
+								"Parse Error: unterminated comment");
 						}
 					}
-				} else {
+				}
+				else {
 					return true;
 				}
-			} else if( ch == -1 ) {
+			}
+			else if (ch == -1) {
 				is.get();
 				return false;
-			} else {
+			}
+			else {
 				return true;
 			}
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
 	return false;
 }
 
-static Obj *readName( istream& is )
+static Obj *readName(istream& is)
 {
-	string s = readID( is );
+	string s = readID(is);
 
-	if( s == "true" ) {
-		return new BooleanObj( true );
-	} else if( s == "false" ) {
-		return new BooleanObj( false );
-	} else {
-		if( !eat( is ) ) {
-			return new IdObj( s );
+	if (s == "true") {
+		return new BooleanObj(true);
+	}
+	else if (s == "false") {
+		return new BooleanObj(false);
+	}
+	else {
+		if (!eat(is)) {
+			return new IdObj(s);
 		}
 
 		int ch = is.peek();
-		if( strchr( "}),;", ch ) != NULL ) {
-			return new IdObj( s );
-		} else {
-			return new NamedObj( s, readObject( is ) );
+		if (strchr("}),;", ch) != NULL) {
+			return new IdObj(s);
+		}
+		else {
+			return new NamedObj(s, readObject(is));
 		}
 	}
 }
 
-static string readID( istream& is )
+static string readID(istream& is)
 {
 	int ch;
-	string ret( "" );
+	string ret("");
 
-	ret += char( is.get() );
+	ret += char(is.get());
 
-	while( is ) {
+	while (is) {
 		ch = is.peek();
-		if( strchr( " \t\n={}();,/", ch ) != NULL ) {
+		if (strchr(" \t\n={}();,/", ch) != NULL) {
 			break;
-		} else {
-			ret += char( ch );
+		}
+		else {
+			ret += char(ch);
 			is.get();
 		}
 	}
@@ -137,117 +148,126 @@ static string readID( istream& is )
 	return ret;
 }
 
-static Obj *readString( istream& is ) 
+static Obj *readString(istream& is)
 {
 	int ch;
-	string ret( "" );
+	string ret("");
 
 	is.get();
 
-	while( true ) {
+	while (true) {
 		ch = is.peek();
-		if( ch == '"' ) {
+		if (ch == '"') {
 			is.get();
-			return new StringObj( ret );
-		} else {
-			ret += char( ch );
+			return new StringObj(ret);
+		}
+		else {
+			ret += char(ch);
 		}
 		is.get();
 	}
 }
 
-static Obj *readScalar( istream& is )
+static Obj *readScalar(istream& is)
 {
 	int ch;
-	string ret( "" );
+	string ret("");
 
-	while( true ) {
+	while (true) {
 		ch = is.peek();
-		if( (ch == '-') || (ch == '.') || (ch == 'e') || (ch == 'E')
-				|| (ch >= '0' && ch <= '9') ) {
-			ret += char( ch );
+		if ((ch == '-') || (ch == '.') || (ch == 'e') || (ch == 'E')
+			|| (ch >= '0' && ch <= '9')) {
+			ret += char(ch);
 			is.get();
-		} else {
+		}
+		else {
 			break;
 		}
 	}
 
-	return new ScalarObj( atof( ret.c_str() ) );
+	return new ScalarObj(atof(ret.c_str()));
 }
 
-static Obj *readTuple( istream& is )
+static Obj *readTuple(istream& is)
 {
 	vector<Obj*> ret;
 
 	is.get();
 
-	while( true ) {
-		eat( is );
-		ret.push_back( readObject( is ) );	
-		eat( is );
+	while (true) {
+		eat(is);
+		ret.push_back(readObject(is));
+		eat(is);
 		int ch = is.get();
-		if( ch == ')' ) {
-			return new TupleObj( ret );
-		} else if( ch == ',' ) {
+		if (ch == ')') {
+			return new TupleObj(ret);
+		}
+		else if (ch == ',') {
 			continue;
-		} else {
-			throw ParseError( "Parse error: expected comma." );
+		}
+		else {
+			throw ParseError("Parse error: expected comma.");
 		}
 	}
 
-	throw ParseError( "Parse error: internal error." );
+	throw ParseError("Parse error: internal error.");
 }
 
-static Obj *readDict( istream& is )
+static Obj *readDict(istream& is)
 {
 	string lhs;
 	Obj *rhs;
 
-	map<string,Obj*> ret;
+	map<string, Obj*> ret;
 
 	is.get();
 
-	while( true ) {
-		eat( is );
-		if( is.peek() == '}' ) {
+	while (true) {
+		eat(is);
+		if (is.peek() == '}') {
 			is.get();
-			return new DictObj( ret );
+			return new DictObj(ret);
 		}
-		lhs = readID( is );
-		eat( is );
-		if( is.get() != '=' ) {
-			throw ParseError( "Parse error: expected equals." );
+		lhs = readID(is);
+		eat(is);
+		if (is.get() != '=') {
+			throw ParseError("Parse error: expected equals.");
 		}
-		rhs = readObject( is );
-		ret[ lhs ] = rhs;
-		eat( is );
+		rhs = readObject(is);
+		ret[lhs] = rhs;
+		eat(is);
 		int ch = is.peek();
-		if( ch == ';' ) {
+		if (ch == ';') {
 			is.get();
-		} else if( ch != '}' ) {
-			throw ParseError( "Parse error: expected semicolon or brace." );
+		}
+		else if (ch != '}') {
+			throw ParseError("Parse error: expected semicolon or brace.");
 		}
 	}
 }
 
-static Obj *readObject( istream& is )
+static Obj *readObject(istream& is)
 {
-	if( !eat( is ) ) {
+	if (!eat(is)) {
 		return NULL;
 	}
 
 	int ch = is.peek();
 
-	if( (ch == '-') || (ch >= '0' && ch <= '9') ) {
-		return readScalar( is );
-	} else if( ch == '"' ) {
-		return readString( is );
-	} else if( ch == '(' ) {
-		return readTuple( is );
-	} else if( ch == '{' ) {
-		return readDict( is );
-	} else {
-		return readName( is );
+	if ((ch == '-') || (ch >= '0' && ch <= '9')) {
+		return readScalar(is);
+	}
+	else if (ch == '"') {
+		return readString(is);
+	}
+	else if (ch == '(') {
+		return readTuple(is);
+	}
+	else if (ch == '{') {
+		return readDict(is);
+	}
+	else {
+		return readName(is);
 	}
 }
 

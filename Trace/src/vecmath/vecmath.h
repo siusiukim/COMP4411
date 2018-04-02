@@ -420,7 +420,7 @@ inline bool operator !=(const vec3f& a, const vec3f& b)
 
 inline ostream& operator <<( ostream& os, const vec3f& v )
 {
-	return os << v.n[0] << " " << v.n[1] << " " << v.n[2];
+	return os << "[" << v.n[0] << " " << v.n[1] << " " << v.n[2] << "]";
 }
 
 inline istream& operator >>( istream& is, vec3f& v )

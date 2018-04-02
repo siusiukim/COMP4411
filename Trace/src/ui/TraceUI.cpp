@@ -95,27 +95,32 @@ void TraceUI::cb_depthSlides(Fl_Widget* o, void* v)
 
 void TraceUI::cb_ambientAttenSlides(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->raytracer->ambientAtten = double(((Fl_Slider *)o)->value());
+	((TraceUI*)(o->user_data()))->raytracer->globalAmbient = double(((Fl_Slider *)o)->value());
 }
 
 void TraceUI::cb_disAttenASlides(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->raytracer->disAttenA = double(((Fl_Slider *)o)->value());
+	((TraceUI*)(o->user_data()))->raytracer->constAtten = double(((Fl_Slider *)o)->value());
 }
 
 void TraceUI::cb_disAttenBSlides(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->raytracer->disAttenB = double(((Fl_Slider *)o)->value());
+	((TraceUI*)(o->user_data()))->raytracer->linearAtten = double(((Fl_Slider *)o)->value());
 }
 
 void TraceUI::cb_disAttenCSlides(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->raytracer->disAttenC = double(((Fl_Slider *)o)->value());
+	((TraceUI*)(o->user_data()))->raytracer->quadAtten = double(((Fl_Slider *)o)->value());
 }
 
 void TraceUI::cb_recurThresholdSlides(Fl_Widget* o, void* v)
 {
 	((TraceUI*)(o->user_data()))->raytracer->recurThreshold = double(((Fl_Slider *)o)->value());
+}
+
+void TraceUI::cb_disScaleSlides(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->distanceScale = double(((Fl_Slider *)o)->value());
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -272,7 +277,7 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_ambientAttenSlider->minimum(0.0);
 	m_ambientAttenSlider->maximum(1.0);
 	m_ambientAttenSlider->step(0.01);
-	m_ambientAttenSlider->value(raytracer->ambientAtten);
+	m_ambientAttenSlider->value(raytracer->globalAmbient);
 	m_ambientAttenSlider->align(FL_ALIGN_RIGHT);
 	m_ambientAttenSlider->callback(cb_ambientAttenSlides);
 
@@ -285,7 +290,7 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_disAttenASlider->minimum(0.0);
 	m_disAttenASlider->maximum(1.0);
 	m_disAttenASlider->step(0.01);
-	m_disAttenASlider->value(raytracer->disAttenA);
+	m_disAttenASlider->value(raytracer->constAtten);
 	m_disAttenASlider->align(FL_ALIGN_RIGHT);
 	m_disAttenASlider->callback(cb_disAttenASlides);
 
@@ -298,7 +303,7 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_disAttenBSlider->minimum(0.0);
 	m_disAttenBSlider->maximum(1.0);
 	m_disAttenBSlider->step(0.01);
-	m_disAttenBSlider->value(raytracer->disAttenB);
+	m_disAttenBSlider->value(raytracer->linearAtten);
 	m_disAttenBSlider->align(FL_ALIGN_RIGHT);
 	m_disAttenBSlider->callback(cb_disAttenBSlides);
 
@@ -311,7 +316,7 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_disAttenCSlider->minimum(0.0);
 	m_disAttenCSlider->maximum(1.0);
 	m_disAttenCSlider->step(0.01);
-	m_disAttenCSlider->value(raytracer->disAttenC);
+	m_disAttenCSlider->value(raytracer->quadAtten);
 	m_disAttenCSlider->align(FL_ALIGN_RIGHT);
 	m_disAttenCSlider->callback(cb_disAttenCSlides);
 
@@ -327,6 +332,19 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_recurThresholdSlider->value(raytracer->recurThreshold);
 	m_recurThresholdSlider->align(FL_ALIGN_RIGHT);
 	m_recurThresholdSlider->callback(cb_recurThresholdSlides);
+
+	// install dist scale
+	m_disScaleSlider = new Fl_Value_Slider(10, 205, 180, 20, "Distance Scale");
+	m_disScaleSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_disScaleSlider->type(FL_HOR_NICE_SLIDER);
+	m_disScaleSlider->labelfont(FL_COURIER);
+	m_disScaleSlider->labelsize(12);
+	m_disScaleSlider->minimum(0.0);
+	m_disScaleSlider->maximum(1000.0);
+	m_disScaleSlider->step(1);
+	m_disScaleSlider->value(raytracer->distanceScale);
+	m_disScaleSlider->align(FL_ALIGN_RIGHT);
+	m_disScaleSlider->callback(cb_disScaleSlides);
 
 	m_renderButton = new Fl_Button(240, 27, 70, 25, "&Render");
 	m_renderButton->user_data((void*)(this));

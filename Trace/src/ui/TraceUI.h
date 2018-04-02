@@ -34,6 +34,8 @@ public:
 	Fl_Slider*			m_disAttenBSlider;
 	Fl_Slider*			m_disAttenCSlider;
 
+	Fl_Slider*			m_disScaleSlider;
+
 	Fl_Slider*			m_recurThresholdSlider;
 
 	Fl_Button*			m_renderButton;
@@ -73,6 +75,7 @@ private:
 	static void cb_disAttenBSlides(Fl_Widget* o, void* v);
 	static void cb_disAttenCSlides(Fl_Widget* o, void* v);
 	static void cb_recurThresholdSlides(Fl_Widget* o, void* v);
+	static void cb_disScaleSlides(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
 	static void cb_stop(Fl_Widget* o, void* v);

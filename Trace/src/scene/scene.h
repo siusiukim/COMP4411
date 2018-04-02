@@ -253,7 +253,8 @@ public:
 	Vec3f ambientLight;
 	double ambientAtten;
 
-	double disAttenA, disAttenB, disAttenC;
+	double constAtten, linearAtten, quadAtten;
+	double distanceScale;
 
 public:
 	Scene()
@@ -271,6 +272,7 @@ public:
 	}
 
 	bool intersect(const ray& r, isect& i) const;
+	Vec3f getShadowAttenTo(const ray& r, double maxT);
 	void initScene();
 
 	list<Light*>::const_iterator beginLights() const { return lights.begin(); }

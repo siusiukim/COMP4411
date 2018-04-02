@@ -171,6 +171,35 @@ bool Scene::intersect(const ray& r, isect& i) const
 	return have_one;
 }
 
+Vec3f Scene::getShadowAttenTo(const ray& r, double maxT) {
+	typedef list<Geometry*>::const_iterator iter;
+	iter j;
+
+	Vec3f shadowAtten(1.0, 1.0, 1.0);
+	isect cur;
+
+	// try the non-bounded objects
+	for (j = nonboundedobjects.begin(); j != nonboundedobjects.end(); ++j) {
+		if ((*j)->intersect(r, cur)) {
+			if ((0 < cur.t) && (cur.t < maxT)) {
+				shadowAtten = prod(shadowAtten, dynamic_cast<MaterialSceneObject*>(*j)->getMaterial().kt);
+			}
+		}
+	}
+
+	// try the bounded objects
+	for (j = boundedobjects.begin(); j != boundedobjects.end(); ++j) {
+		if ((*j)->intersect(r, cur)) {
+			if ((0 < cur.t) && (cur.t < maxT)) {
+				shadowAtten = prod(shadowAtten, dynamic_cast<MaterialSceneObject*>(*j)->getMaterial().kt);
+			}
+		}
+	}
+
+
+	return shadowAtten;
+}
+
 void Scene::initScene()
 {
 	bool first_boundedobject = true;

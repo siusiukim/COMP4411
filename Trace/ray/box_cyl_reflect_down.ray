@@ -8,15 +8,15 @@ SBT-raytracer 1.0
 
 camera
 {
-	position = (15, 0, 5);
-	viewdir = (-1, 0, -0.3);
+	position = (15, 0, 0);
+	viewdir = (-1, 0, 0.3);
 	updir = (0, 0, 1);
 }
 
 // Using ambient intensity of 0.25
 ambient_light
 {
-	color = (0.25, 0.25, 0.25);
+	color = (0.05, 0.05, 0.05);
 }
 
 // Directional light which shouldn't
@@ -28,7 +28,7 @@ directional_light
 }
 
 // The box forms a plane, which should reflect the cylinder
-translate( 0, 0, -2,
+translate( 0, 0, -1,
 	scale( 15, 15, 1, 
 		box {
 			material = { 

@@ -25,8 +25,9 @@ public:
 
 	bool sceneLoaded();
 
-	double ambientAtten;
-	double disAttenA, disAttenB, disAttenC;
+	double globalAmbient;
+	double constAtten, linearAtten, quadAtten;
+	double distanceScale;
 
 	double recurThreshold;
 	int recurDepth;

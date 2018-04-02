@@ -17,18 +17,24 @@ vec3f Material::shade(Scene *scene, const ray& r, const isect& i) const
 	// You will need to call both distanceAttenuation() and shadowAttenuation()
 	// somewhere in your code in order to compute shadows and light falloff.
 
-	//Vec3f shade = ke + ka * scene->getAmbient();
-	Vec3f shade = ke;
+	Vec3f shade = ke + prod(scene->ambientLight, ka);
 
 	list<Light*>::const_iterator iter = scene->beginLights();
 	Vec3f point(r.at(i.t));
 	for (; iter != scene->endLights(); iter++) {
 		Light* l = *iter;
-		Vec3f atten = l->shadowAttenuation(point) * l->distanceAttenuation(point);
+		if (l->isAmbient()) {
+			shade += prod(ka, l->getColor(point));
+		}
+		else {
+			Vec3f atten = l->shadowAttenuation(point) * l->distanceAttenuation(point);
+			//Vec3f atten(1, 1, 1);
+			//Vec3f atten = l->shadowAttenuation(point);
 
-		Vec3f diffuse = l->getColor(point) * max(i.N.dot((l->getDirection(point))), 0.0);
-		Vec3f specular = l->getColor(point) * pow(max(r.getDirection().dot(getReflection(l->getDirection(point), i.N)), 0.0), shininess);
-		shade += prod(atten, (prod(diffuse, kd) + prod(specular, ks)));
+			Vec3f diffuse = (l->getColor(point) * max(i.N.dot((l->getDirection(point))), 0.0)).clamp();
+			Vec3f specular = (l->getColor(point) * pow(max(r.getDirection().dot(getReflection(l->getDirection(point), i.N)), 0.0), shininess*128)).clamp();
+			shade += prod(atten, (prod(diffuse, kd) + prod(specular, ks)));
+		}
 	}
-	return shade;
+	return shade.clamp();
 }
