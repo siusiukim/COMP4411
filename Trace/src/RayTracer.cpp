@@ -116,12 +116,17 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 				double refraAngle = asin(sin(incidAngle)*incidIndex / refraIndex);
 				assert(refraAngle >= 0 && refraAngle <= M_PI);
 
-				double n2c1 = refraIndex * cos(incidAngle);
+				double n1c1 = incidIndex * cos(incidAngle);
 				double n1c2 = incidIndex * cos(refraAngle);
 
-				double frePara = (n2c1 - n1c2) / (n2c1 + n1c2);
+				double n2c1 = refraIndex * cos(incidAngle);
+				double n2c2 = refraIndex * cos(refraAngle);
+
+				//double frePara = (n2c1 - n1c2) / (n2c1 + n1c2);
+				double frePara = (n1c1 - n2c2) / (n1c1 + n2c2);
 				frePara = frePara * frePara;
 
+				//double frePerp = (n1c2 - n2c1) / (n1c2 + n2c1);
 				double frePerp = (n1c2 - n2c1) / (n1c2 + n2c1);
 				frePerp = frePerp * frePerp;
 
@@ -130,7 +135,8 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 
 				assert(fresnel_r >= 0 && fresnel_r <= 1);
 				assert(fresnel_t >= 0 && fresnel_t <= 1);
-				cout << "R: " << fresnel_r << " T: " << fresnel_t << endl;
+				//cout << "Incid angle: " << incidAngle << endl;
+				//cout << "R: " << fresnel_r << " T: " << fresnel_t << endl << endl;
 			}
 		}
 

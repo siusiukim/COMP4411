@@ -32,7 +32,7 @@ translate( 0, 0, -0.5,
 				diffuse = (0.5, 0, 0); 
 				reflective = (1, 1, 1);
 				transmissive = (1, 1, 1);
-				index = 20;
+				index = 1.33;
 			}
 		} ) )
 
