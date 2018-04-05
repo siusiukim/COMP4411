@@ -143,6 +143,11 @@ void TraceUI::cb_sampleJitterSwitch(Fl_Widget* o, void* v)
 	((TraceUI*)(o->user_data()))->raytracer->sampleJitter = !((TraceUI*)(o->user_data()))->raytracer->sampleJitter;
 }
 
+void TraceUI::cb_useFresnelSwitch(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->useFresnel = !((TraceUI*)(o->user_data()))->raytracer->useFresnel;
+}
+
 void TraceUI::cb_render(Fl_Widget* o, void* v)
 {
 	char buffer[256];
@@ -390,6 +395,10 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_recurThresholdSlider->value(raytracer->samplePixel);
 	m_recurThresholdSlider->align(FL_ALIGN_RIGHT);
 	m_recurThresholdSlider->callback(cb_superResSlides);
+
+	m_useFresnelSwitch = new Fl_Light_Button(10, 280, 110, 20, "Use Fresnel");
+	m_useFresnelSwitch->user_data((void*)(this));
+	m_useFresnelSwitch->callback(cb_useFresnelSwitch);
 
 	m_renderButton = new Fl_Button(240, 27, 70, 25, "&Render");
 	m_renderButton->user_data((void*)(this));

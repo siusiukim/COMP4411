@@ -2,6 +2,8 @@
 
 #include <Fl/fl_ask.h>
 
+#include <cassert>
+
 #include "RayTracer.h"
 #include "scene/light.h"
 #include "scene/material.h"
@@ -89,34 +91,64 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 		double rDotN = r.getDirection().dot(-i.N);
 		bool isRayEnterObject = rDotN > 0;
 		Vec3f properNorm = isRayEnterObject ? i.N : -i.N;
+		
+		//Compute refraction values
+		double incidIndex, refraIndex;
+		if (isRayEnterObject) {
+			incidIndex = 1.0;
+			refraIndex = m.index;
+		}
+		else {
+			incidIndex = m.index;
+			refraIndex = 1.0;
+		}
+		double critial = getCriticalAngle(incidIndex, refraIndex);
+		double incidAngle = r.getDirection().getAngleWith(-properNorm);
+
+		double fresnel_r = 1.0, fresnel_t = 1.0;
+		if (useFresnel) {
+			if (incidIndex > refraIndex && incidAngle > critial) {
+				//Total internal reflection
+				fresnel_t = 0.0;
+				fresnel_r = 1.0;
+			}
+			else {
+				double refraAngle = asin(sin(incidAngle)*incidIndex / refraIndex);
+				assert(refraAngle >= 0 && refraAngle <= M_PI);
+
+				double n2c1 = refraIndex * cos(incidAngle);
+				double n1c2 = incidIndex * cos(refraAngle);
+
+				double frePara = (n2c1 - n1c2) / (n2c1 + n1c2);
+				frePara = frePara * frePara;
+
+				double frePerp = (n1c2 - n2c1) / (n1c2 + n2c1);
+				frePerp = frePerp * frePerp;
+
+				fresnel_r = (frePara + frePerp) / 2.0;
+				fresnel_t = 1.0 - fresnel_r;
+
+				assert(fresnel_r >= 0 && fresnel_r <= 1);
+				assert(fresnel_t >= 0 && fresnel_t <= 1);
+				cout << "R: " << fresnel_r << " T: " << fresnel_t << endl;
+			}
+		}
 
 		//Handles reflection
 		if (!ALMOST_ZERO(m.kr.length()) && !ALMOST_ZERO(rDotN)) {
 			Vec3f reflectDir = getReflection(r.getDirection(), properNorm);
 			ray reflectRay(point + reflectDir * RAY_EPSILON, reflectDir);
 			Vec3f reflectColor = traceRay(scene, reflectRay, prod(thresh, m.kr), depth + 1);
-			color += prod(m.kr, reflectColor).clamp();
+			color += (prod(m.kr, reflectColor) * fresnel_r).clamp();
 		}
 
 		//Handles refraction
 		if (!ALMOST_ZERO(m.kt.length()) && !ALMOST_ZERO(rDotN)) {
-			double incidIndex, refraIndex;
-			if (isRayEnterObject) {
-				incidIndex = 1.0;
-				refraIndex = m.index;
-			}
-			else {
-				incidIndex = m.index;
-				refraIndex = 1.0;
-			}
-
-			double critial = getCriticalAngle(incidIndex, refraIndex);
-			double incidAngle = r.getDirection().getAngleWith(-properNorm);
 			if (incidIndex <= refraIndex || incidAngle < critial) {
 				//Handles refraction only when total internal reflection does not occur
 				Vec3f refractDir = getRefraction(r.getDirection(), properNorm, incidIndex, refraIndex);
-				ray refractRay(point, refractDir);
-				color += prod(m.kt, traceRay(scene, refractRay, prod(thresh, m.kt), depth + 1));
+				ray refractRay(point + refractDir * RAY_EPSILON, refractDir);
+				color += (prod(m.kt, traceRay(scene, refractRay, prod(thresh, m.kt), depth + 1)) * fresnel_t).clamp();
 			}
 		}
 
@@ -140,7 +172,8 @@ RayTracer::RayTracer() :
 	recurDepth(0),
 	distanceScale(20),
 	adaptiveAnti(false), superSample(false), sampleJitter(false),
-	samplePixel(1)
+	samplePixel(1),
+	useFresnel(false)
 {
 	buffer = NULL;
 	buffer_width = buffer_height = 256;
@@ -221,8 +254,8 @@ void RayTracer::traceSetup(int w, int h)
 	scene->constAtten = constAtten;
 	scene->linearAtten = linearAtten;
 	scene->quadAtten = quadAtten;
-	scene->ambientAtten = globalAmbient;
-	scene->ambientLight = Vec3f(0, 0, 0);
+	scene->ambientAtten = 1;
+	scene->ambientLight = Vec3f(globalAmbient, globalAmbient, globalAmbient);
 	scene->distanceScale = distanceScale;
 }
 

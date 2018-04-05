@@ -34,6 +34,8 @@ public:
 
 	bool adaptiveAnti, superSample, sampleJitter;
 
+	bool useFresnel;
+
 private:
 	unsigned char *buffer;
 	int buffer_width, buffer_height;

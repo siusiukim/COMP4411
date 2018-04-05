@@ -47,6 +47,8 @@ public:
 	Fl_Light_Button*	m_superSampleSwitch;
 	Fl_Light_Button*	m_sampleJitterSwitch;
 
+	Fl_Light_Button*	m_useFresnelSwitch;
+
 	TraceGLWindow*		m_traceGlWindow;
 
 	// member functions
@@ -87,6 +89,8 @@ private:
 	static void cb_adaptiveAntiSwitch(Fl_Widget* o, void* v);
 	static void cb_superSampleSwitch(Fl_Widget* o, void* v);
 	static void cb_sampleJitterSwitch(Fl_Widget* o, void* v);
+
+	static void cb_useFresnelSwitch(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
 	static void cb_stop(Fl_Widget* o, void* v);
