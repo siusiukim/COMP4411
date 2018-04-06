@@ -1,0 +1,6 @@
+- Adpative termination
+- Antialiasing (with jitter)
+- Spot light 
+- Warn model
+- Shading model (Fresnel)
+- Adaptive antialiasing

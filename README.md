@@ -14,5 +14,11 @@ Designed a hierarchical model using OpenGL. With Jacobian inverse kinematics.
 
 | *Pointing his staff at someone* | *Defense position* |
 | -------- | --------- |
-|![Original](/Modeler/artifact/view1.png)|![Processed](/Modeler/artifact/view2.png)|
+|![View 1](/Modeler/artifact/view1.png)|![View 2](/Modeler/artifact/view2.png)|
 
+## Project 3 - Tracer
+A ray tracer.
+
+| Image 1 | Image 2 | Guess how I created this from image 2 |
+| -------- | --------- | --------- |
+|![Depth](/Trace/artifact/depth.png)|![Reflect](/Trace/artifact/reflect.png)|![Contour](/Trace/artifact/contour.png)|
