@@ -43,9 +43,11 @@ public:
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
 
-	Fl_Light_Button*	m_adaptiveAntiSwitch;
+	Fl_Light_Button*	m_adaptiveThresholdSwitch;
 	Fl_Light_Button*	m_superSampleSwitch;
 	Fl_Light_Button*	m_sampleJitterSwitch;
+
+	Fl_Light_Button*	m_adaptiveAntiSwitch;
 
 	Fl_Light_Button*	m_useFresnelSwitch;
 
@@ -86,9 +88,11 @@ private:
 	static void cb_disScaleSlides(Fl_Widget* o, void* v);
 	static void cb_superResSlides(Fl_Widget* o, void* v);
 
-	static void cb_adaptiveAntiSwitch(Fl_Widget* o, void* v);
+	static void cb_adaptiveThresholdSwitch(Fl_Widget* o, void* v);
 	static void cb_superSampleSwitch(Fl_Widget* o, void* v);
 	static void cb_sampleJitterSwitch(Fl_Widget* o, void* v);
+
+	static void cb_adaptiveAntiSwitch(Fl_Widget* o, void* v);
 
 	static void cb_useFresnelSwitch(Fl_Widget* o, void* v);
 

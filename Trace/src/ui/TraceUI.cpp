@@ -12,6 +12,8 @@
 #include "TraceUI.h"
 #include "../RayTracer.h"
 
+#include "../fileio/bitmap.h"
+
 static bool done;
 
 //------------------------------------- Help Functions --------------------------------------------
@@ -128,14 +130,14 @@ void TraceUI::cb_superResSlides(Fl_Widget* o, void* v)
 	((TraceUI*)(o->user_data()))->raytracer->samplePixel = double(((Fl_Slider *)o)->value());
 }
 
-void TraceUI::cb_adaptiveAntiSwitch(Fl_Widget* o, void* v)
+void TraceUI::cb_adaptiveThresholdSwitch(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->raytracer->adaptiveAnti = !((TraceUI*)(o->user_data()))->raytracer->adaptiveAnti;
+	((TraceUI*)(o->user_data()))->raytracer->adaptiveThreshold = !((TraceUI*)(o->user_data()))->raytracer->adaptiveThreshold;
 }
 
 void TraceUI::cb_superSampleSwitch(Fl_Widget* o, void* v)
 {
-	((TraceUI*)(o->user_data()))->raytracer->superSample = !((TraceUI*)(o->user_data()))->raytracer->superSample;
+	((TraceUI*)(o->user_data()))->raytracer->useSuperSample = !((TraceUI*)(o->user_data()))->raytracer->useSuperSample;
 }
 
 void TraceUI::cb_sampleJitterSwitch(Fl_Widget* o, void* v)
@@ -146,6 +148,11 @@ void TraceUI::cb_sampleJitterSwitch(Fl_Widget* o, void* v)
 void TraceUI::cb_useFresnelSwitch(Fl_Widget* o, void* v)
 {
 	((TraceUI*)(o->user_data()))->raytracer->useFresnel = !((TraceUI*)(o->user_data()))->raytracer->useFresnel;
+}
+
+void TraceUI::cb_adaptiveAntiSwitch(Fl_Widget* o, void* v)
+{
+	((TraceUI*)(o->user_data()))->raytracer->useAdaptiveAnti = !((TraceUI*)(o->user_data()))->raytracer->useAdaptiveAnti;
 }
 
 void TraceUI::cb_render(Fl_Widget* o, void* v)
@@ -219,6 +226,25 @@ void TraceUI::cb_render(Fl_Widget* o, void* v)
 		}
 		done = true;
 		pUI->m_traceGlWindow->refresh();
+
+		if (done) {
+			//Output the adpative antialiasing image if it is enabled
+			if (pUI->raytracer->useAdaptiveAnti) {
+				unsigned char* buf = new unsigned char[height*width * 3];
+
+				for (int y = 0; y < height; y++) {
+					for (int x = 0; x < width; x++) {
+						buf[(y*width + x) * 3 + 0] = pUI->raytracer->adpativeAntiMap[y*width + x] * 8;
+						buf[(y*width + x) * 3 + 1] = pUI->raytracer->adpativeAntiMap[y*width + x] * 8;
+						buf[(y*width + x) * 3 + 2] = pUI->raytracer->adpativeAntiMap[y*width + x] * 8;
+					}
+				}
+
+				writeBMP("adaptive.bmp", width, height, buf);
+
+				delete[] buf;
+			}
+		}
 
 		// Restore the window label
 		pUI->m_traceGlWindow->label(old_label);
@@ -352,7 +378,7 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_recurThresholdSlider->labelfont(FL_COURIER);
 	m_recurThresholdSlider->labelsize(12);
 	m_recurThresholdSlider->minimum(0.0);
-	m_recurThresholdSlider->maximum(1.73);
+	m_recurThresholdSlider->maximum(2);
 	m_recurThresholdSlider->step(0.01);
 	m_recurThresholdSlider->value(raytracer->adaptiveAmount);
 	m_recurThresholdSlider->align(FL_ALIGN_RIGHT);
@@ -371,9 +397,9 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_disScaleSlider->align(FL_ALIGN_RIGHT);
 	m_disScaleSlider->callback(cb_disScaleSlides);
 
-	m_adaptiveAntiSwitch = new Fl_Light_Button(10, 230, 160, 20, "Adaptive Termination");
-	m_adaptiveAntiSwitch->user_data((void*)(this));
-	m_adaptiveAntiSwitch->callback(cb_adaptiveAntiSwitch);
+	m_adaptiveThresholdSwitch = new Fl_Light_Button(10, 230, 160, 20, "Adaptive Termination");
+	m_adaptiveThresholdSwitch->user_data((void*)(this));
+	m_adaptiveThresholdSwitch->callback(cb_adaptiveThresholdSwitch);
 
 	m_superSampleSwitch = new Fl_Light_Button(180, 230, 80, 20, "Super");
 	m_superSampleSwitch->user_data((void*)(this));
@@ -399,6 +425,10 @@ TraceUI::TraceUI(RayTracer *tracer) :
 	m_useFresnelSwitch = new Fl_Light_Button(10, 280, 110, 20, "Use Fresnel");
 	m_useFresnelSwitch->user_data((void*)(this));
 	m_useFresnelSwitch->callback(cb_useFresnelSwitch);
+
+	m_adaptiveAntiSwitch = new Fl_Light_Button(10, 305, 200, 20, "Adaptive Super-sampling");
+	m_adaptiveAntiSwitch->user_data((void*)(this));
+	m_adaptiveAntiSwitch->callback(cb_adaptiveAntiSwitch);
 
 	m_renderButton = new Fl_Button(240, 27, 70, 25, "&Render");
 	m_renderButton->user_data((void*)(this));

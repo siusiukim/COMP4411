@@ -19,3 +19,5 @@ double getCriticalAngle(double incidIndex, double refraIndex);
 Vec3f getRefraction(const Vec3f& incident, const Vec3f& normal, double incidIndex, double refraIndex);
 
 double randomInRange(double min, double max);
+
+bool someWhatTheSame(Vec3f v1, Vec3f v2, Vec3f v3, Vec3f v4);

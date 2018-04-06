@@ -13,52 +13,144 @@
 
 #include "RayMath.h"
 
+#include <stack>
+
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
 // enter the main ray-tracing method, getting things started by plugging
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of 0.
-vec3f RayTracer::trace(Scene *scene, double x, double y)
+vec3f RayTracer::trace(Scene *scene, double x, double y, int idx)
 {
-	if (superSample) {
-		vector<Vec3f> traced;
-		traced.resize(samplePixel*samplePixel);
+	if (useSuperSample) {
+		double pixel_width = 1.0 / (double)buffer_width;
+		double pixel_height = 1.0 / (double)buffer_height;
 
-		double totalX = 1.0 / (double)buffer_width;
-		double totalY = 1.0 / (double)buffer_height;
-		if (!sampleJitter) {
-			for (int i = 0; i < samplePixel; i++) {
-				double this_x = x + totalX * i / samplePixel;
-				for (int j = 0; j < samplePixel; j++) {
-					double this_y = y + totalY * j / samplePixel;
+		if (useAdaptiveAnti) {
+			if (samplePixel == 1) {
+				//Falls back to simple one-ray tracing
+				ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+				scene->getCamera()->rayThrough(x, y, r);
+				adpativeAntiMap[idx] = 1;
+				return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+			}
+			else {
+				int totalTraced = 0;
+				//First 3 RGB, last one width of pixel
+				vector<Vec4f> weightedResult;
+				weightedResult.reserve(samplePixel*samplePixel);
+
+				double minPixWidth = pixel_width / samplePixel;
+
+				//In the format (xmin, ymin, xmax, ymax)
+				stack<Vec4f> pending;
+				pending.push(Vec4f(x - pixel_width / 2, y - pixel_height / 2,
+					x + pixel_width / 2, y + pixel_height / 2));
+
+				int currSubSampled = 0;
+				while (!pending.empty()) {
+					Vec4f searchSpace = pending.top();
+					pending.pop();
+
+					double xmin = searchSpace[0];
+					double ymin = searchSpace[1];
+					double xmax = searchSpace[2];
+					double ymax = searchSpace[3];
+					double this_width = xmax - xmin;
+					double this_height = ymax - ymin;
+
 					ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
-					scene->getCamera()->rayThrough(this_x, this_y, r);
-					traced[i*samplePixel + j] = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+					scene->getCamera()->rayThrough(searchSpace[0], searchSpace[1], r);
+					Vec3f tfRay = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+
+					scene->getCamera()->rayThrough(searchSpace[0], searchSpace[3], r);
+					Vec3f trRay = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+
+					scene->getCamera()->rayThrough(searchSpace[2], searchSpace[1], r);
+					Vec3f llRay = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+
+					scene->getCamera()->rayThrough(searchSpace[2], searchSpace[3], r);
+					Vec3f lrRay = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+
+					totalTraced++;
+
+					if (this_width <= minPixWidth) {
+						//Just average them if threshold if reached already
+						Vec3f average = (tfRay + trRay + llRay + lrRay) / 4;
+						weightedResult.push_back(Vec4f(average[0], average[1], average[2], this_width));
+					}
+					else {
+						if (someWhatTheSame(tfRay, trRay, llRay, lrRay)) {
+							//Ah ok, return just one ray is good
+							weightedResult.push_back(Vec4f(tfRay[0], tfRay[1], tfRay[2], this_width));
+						}
+						else {
+							//Push in next target
+							pending.push(Vec4f(xmin, ymin,
+								xmin + this_width / 2, ymin + this_height / 2));
+
+							pending.push(Vec4f(xmin + this_width / 2, ymin,
+								xmax, ymin + this_height / 2));
+
+							pending.push(Vec4f(xmin, ymin + this_height,
+								xmin + this_width / 2, ymax));
+
+							pending.push(Vec4f(xmin + this_width / 2, ymin + this_height,
+								xmax, ymax));
+						}
+					}
 				}
+
+				//Sum up all weighted smaples
+				double totalWeight = pixel_width * pixel_width;
+				Vec3f tracedResult(0, 0, 0);
+				for (vector<Vec4f>::iterator i = weightedResult.begin(); i < weightedResult.end(); i++) {
+					tracedResult = tracedResult + Vec3f((*i)[0], (*i)[1], (*i)[2]) * (*i)[3] * (*i)[3] / totalWeight;
+				}
+
+				adpativeAntiMap[idx] = totalTraced;
+
+				return tracedResult.clamp();
 			}
 		}
 		else {
-			for (int i = 0; i < samplePixel; i++) {
-				for (int j = 0; j < samplePixel; j++) {
-					double this_x = x + totalX * i / samplePixel + randomInRange(-totalX / samplePixel / 2, totalX / samplePixel / 2);
-					double this_y = y + totalY * j / samplePixel + randomInRange(-totalY / samplePixel / 2, totalY / samplePixel / 2);;
-					ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
-					scene->getCamera()->rayThrough(this_x, this_y, r);
-					traced[i*samplePixel + j] = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+			vector<Vec3f> traced;
+			traced.resize(samplePixel*samplePixel);
+
+			if (!sampleJitter) {
+				for (int i = 0; i < samplePixel; i++) {
+					double this_x = x + pixel_width * i / samplePixel;
+					for (int j = 0; j < samplePixel; j++) {
+						double this_y = y + pixel_height * j / samplePixel;
+						ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+						scene->getCamera()->rayThrough(this_x, this_y, r);
+						traced[i*samplePixel + j] = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+					}
 				}
 			}
-		}
+			else {
+				for (int i = 0; i < samplePixel; i++) {
+					for (int j = 0; j < samplePixel; j++) {
+						double this_x = x + pixel_width * i / samplePixel + randomInRange(-pixel_width / samplePixel / 2, pixel_width / samplePixel / 2);
+						double this_y = y + pixel_height * j / samplePixel + randomInRange(-pixel_height / samplePixel / 2, pixel_height / samplePixel / 2);;
+						ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+						scene->getCamera()->rayThrough(this_x, this_y, r);
+						traced[i*samplePixel + j] = traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+					}
+				}
+			}
 
-		Vec3f averageColor(0, 0, 0);
-		for (vector<Vec3f>::iterator iter = traced.begin(); iter != traced.end(); iter++) {
-			averageColor += *iter;
+			Vec3f averageColor(0, 0, 0);
+			for (vector<Vec3f>::iterator iter = traced.begin(); iter != traced.end(); iter++) {
+				averageColor += *iter;
+			}
+			return (averageColor / traced.size()).clamp();
 		}
-		return (averageColor / traced.size()).clamp();
 	}
-	else {
-		ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
-		scene->getCamera()->rayThrough(x, y, r);
-		return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
-	}
+
+	//Simple one-ray center trace
+	ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+	scene->getCamera()->rayThrough(x, y, r);
+	return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
 }
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
@@ -68,7 +160,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 {
 	isect i;
 
-	if (depth > recurDepth || (adaptiveAnti && thresh.length() < adaptiveAmount)) return Vec3f(0, 0, 0);
+	if (depth > recurDepth || (adaptiveThreshold && thresh.length() < adaptiveAmount)) return Vec3f(0, 0, 0);
 
 	if (scene->intersect(r, i)) {
 		// An intersection occured!  We've got work to do.  For now,
@@ -91,7 +183,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 		double rDotN = r.getDirection().dot(-i.N);
 		bool isRayEnterObject = rDotN > 0;
 		Vec3f properNorm = isRayEnterObject ? i.N : -i.N;
-		
+
 		//Compute refraction values
 		double incidIndex, refraIndex;
 		if (isRayEnterObject) {
@@ -116,6 +208,10 @@ vec3f RayTracer::traceRay(Scene *scene, const ray& r,
 				double refraAngle = asin(sin(incidAngle)*incidIndex / refraIndex);
 				assert(refraAngle >= 0 && refraAngle <= M_PI);
 
+				//Note: The equation here: https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
+				// IS WRONG!!!
+
+				//See wiki: https://en.wikipedia.org/wiki/Fresnel_equations
 				double n1c1 = incidIndex * cos(incidAngle);
 				double n1c2 = incidIndex * cos(refraAngle);
 
@@ -177,9 +273,10 @@ RayTracer::RayTracer() :
 	adaptiveAmount(0.0),
 	recurDepth(0),
 	distanceScale(20),
-	adaptiveAnti(false), superSample(false), sampleJitter(false),
+	adaptiveThreshold(false), useSuperSample(false), sampleJitter(false),
 	samplePixel(1),
-	useFresnel(false)
+	useFresnel(false), useAdaptiveAnti(false),
+	adpativeAntiMap(0)
 {
 	buffer = NULL;
 	buffer_width = buffer_height = 256;
@@ -263,6 +360,9 @@ void RayTracer::traceSetup(int w, int h)
 	scene->ambientAtten = 1;
 	scene->ambientLight = Vec3f(globalAmbient, globalAmbient, globalAmbient);
 	scene->distanceScale = distanceScale;
+
+	delete[] adpativeAntiMap;
+	adpativeAntiMap = new char[w*h];
 }
 
 void RayTracer::traceLines(int start, int stop)
@@ -289,7 +389,7 @@ void RayTracer::tracePixel(int i, int j)
 	double x = double(i) / double(buffer_width);
 	double y = double(j) / double(buffer_height);
 
-	col = trace(scene, x, y);
+	col = trace(scene, x, y, i + j * buffer_width);
 
 	unsigned char *pixel = buffer + (i + j * buffer_width) * 3;
 

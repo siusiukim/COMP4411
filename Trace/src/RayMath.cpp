@@ -33,3 +33,11 @@ Vec3f getRefraction(const Vec3f& incident, const Vec3f& normal, double incidInde
 double randomInRange(double min, double max) {
 	return ((double)rand() / RAND_MAX) * (max - min) + min;
 }
+
+bool someWhatTheSame(Vec3f v1, Vec3f v2, Vec3f v3, Vec3f v4) {
+	if ((v1 - v2).length() > 0.01) return false;
+	if ((v1 - v3).length() > 0.01) return false;
+	if ((v1 - v4).length() > 0.01) return false;
+
+	return true;
+}
