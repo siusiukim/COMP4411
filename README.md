@@ -21,4 +21,4 @@ A ray tracer.
 
 | Image 1 | Image 2 | Guess how I created this from image 2 |
 | -------- | --------- | --------- |
-|![Depth](/Trace/artifact/depth.png)|![Reflect](/Trace/artifact/reflect.png)|![Contour](/Trace/artifact/contour.png)|
+|![Depth](/Trace/artifact/reflect.png)|![Reflect](/Trace/artifact/depth.png)|![Contour](/Trace/artifact/contour.png)|
