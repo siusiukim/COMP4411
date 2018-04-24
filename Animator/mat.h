@@ -1,6 +1,8 @@
 #ifndef __MATRIX_HEADER__
 #define __MATRIX_HEADER__
 
+#include <iostream>
+
 //==========[ Forward References ]=============================================
 
 template <class T> class Vec;
@@ -16,11 +18,13 @@ class Mat3 {
 
 	//---[ Private Variable Declarations ]-----------------
 
-		// matrix elements in row major order
-	T		n[9];
+
+
 
 public:
-	
+	// matrix elements in row major order
+	T		n[9];
+
 	//---[ Constructors ]----------------------------------
 
 	Mat3()
@@ -54,7 +58,8 @@ public:
 
 	//---[ Ordering Methods ]------------------------------
 
-	Mat3<T> transpose() const { return Mat3<T>(n[0],n[3],n[6],n[1],n[4],n[7],n[2],n[5],n[8]) }
+	Mat3<T> transpose() const { return Mat3<T>(n[0], n[3], n[6], n[1], n[4], n[7], n[2], n[5], n[8]); }
+
 	double trace() const { return n[0]+n[4]+n[8]; }
 	
 	//---[ GL Matrix ]-------------------------------------
@@ -166,6 +171,10 @@ public:
 	const T* operator []( int i ) const
 		{ return &n[i*4]; }
 
+	T get(int i) const {
+		return n[i];
+	}
+
 	//---[ Ordering Methods ]------------------------------
 
 	Mat4<T> transpose() const
@@ -252,9 +261,11 @@ public:
 	template <class U> friend Mat4<U> operator *( const Mat4<U>& a, const double d );
 	template <class U> friend Mat4<U> operator *( const double d, const Mat4<U>& a );
 	template <class U> friend Vec3<U> operator *( const Mat4<U>& a, const Vec3<U>& b );
+	template <class U> friend Vec4<U> operator *(const Mat4<U>& a, const Vec4<U>& b);
 	template <class U> friend Mat4<U> operator /( const Mat4<U>& a, const double d );
 	template <class U> friend bool operator ==( const Mat4<U>& a, const Mat4<U>& b );
 	template <class U> friend bool operator !=( const Mat4<U>& a, const Mat4<U>& b );
+	template <class U> friend std::ostream& operator <<(std::ostream& os, const Mat4<U>& v);
 
 #else // _MSC_VER >= 1300
 
@@ -318,7 +329,7 @@ template <class T>
 inline Mat3<T> operator +( const Mat3<T>& a, const Mat3<T>& b ) {
 	return Mat3<T>( a.n[0]+b.n[0], a.n[1]+b.n[1], a.n[2]+b.n[2],
 					a.n[3]+b.n[3], a.n[4]+b.n[4], a.n[5]+b.n[5],
-					a.n[6]+b.n[6], a.n[7]+b.n[7], a.n[8]+b.n[8],);
+					a.n[6]+b.n[6], a.n[7]+b.n[7], a.n[8]+b.n[8]);
 }
 
 template <class T>
@@ -473,6 +484,14 @@ inline Mat4<T> operator /( const Mat4<T>& a, const double d ) {
 					a.n[ 4]/d, a.n[ 5]/d, a.n[ 6]/d, a.n[ 7]/d,
 					a.n[ 8]/d, a.n[ 9]/d, a.n[10]/d, a.n[11]/d,
 					a.n[12]/d, a.n[13]/d, a.n[14]/d, a.n[15]/d );
+}
+
+template <class T>
+std::ostream& operator <<(std::ostream& os, const Mat4<T>& v) {
+	return os << "[" << v.n[0] << " " << v.n[1] << " " << v.n[2] << " " << v.n[3] << "]" << endl
+		<< "[" << v.n[4] << " " << v.n[5] << " " << v.n[6] << " " << v.n[7] << "]" << endl
+		<< "[" << v.n[8] << " " << v.n[9] << " " << v.n[10] << " " << v.n[11] << "]" << endl
+		<< "[" << v.n[12] << " " << v.n[13] << " " << v.n[15] << " " << v.n[15] << "]";
 }
 
 template <class T>

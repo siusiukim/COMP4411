@@ -1,4 +1,4 @@
-#include "LinearCurveEvaluator.h"
+#include "curveevaluator.h"
 #include <assert.h>
 
 void LinearCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts, 

@@ -99,15 +99,30 @@
     <ClCompile Include="rulerwindow.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="spellbreaker_ik.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="spellbreaker_lsys.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="spellbreaker_main.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="spellbreaker_parts.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="spellbreaker_conf.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="bezierevaluator.cpp">
+      <Filter>Source Files\Curves</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="curve.h">
       <Filter>Header Files\Curves.</Filter>
     </ClInclude>
     <ClInclude Include="curveevaluator.h">
-      <Filter>Header Files\Curves.</Filter>
-    </ClInclude>
-    <ClInclude Include="linearcurveevaluator.h">
       <Filter>Header Files\Curves.</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
@@ -160,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="vec.h">
       <Filter>Header Files\Math.</Filter>
+    </ClInclude>
+    <ClInclude Include="spellbreaker_globals.h">
+      <Filter>Header Files\Model.</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,8 +5,7 @@
 
 #include "Camera.h"
 #include "Curve.h"
-#include "CurveEvaluator.h"
-#include "LinearCurveEvaluator.h"
+#include "curveevaluator.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4244)
