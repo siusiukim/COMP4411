@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="bezierevaluator.cpp" />
     <ClCompile Include="bsplineevaluator.cpp" />
+    <ClCompile Include="catmullevaluator.cpp" />
     <ClCompile Include="curve.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
