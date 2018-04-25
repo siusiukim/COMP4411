@@ -6,6 +6,7 @@
 #include "vec.h"
 #include "bitmap.h"
 #include "spellbreaker_globals.h"
+#include "particleSystem.h"
 
 void drawTorso(double x, double y, double z, GLuint front_texture, GLuint back_texture);
 void drawShield(double w, double h, double d);
@@ -17,6 +18,44 @@ ModelerView* createSpellBreaker(int x, int y, int w, int h, char *label)
 	return new SpellBreaker(x, y, w, h, label);
 }
 
+Mat4f getModelViewMatrix()
+{
+	/**************************
+	**
+	**	GET THE OPENGL MODELVIEW MATRIX
+	**
+	**	Since OpenGL stores it's matricies in
+	**	column major order and our library
+	**	use row major order, we will need to
+	**	transpose what OpenGL gives us before returning.
+	**
+	**	Hint:  Use look up glGetFloatv or glGetDoublev
+	**	for how to get these values from OpenGL.
+	**
+	*******************************/
+
+	GLfloat m[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, m);
+	Mat4f matMV(m[0], m[1], m[2], m[3],
+		m[4], m[5], m[6], m[7],
+		m[8], m[9], m[10], m[11],
+		m[12], m[13], m[14], m[15]);
+
+	return matMV.transpose(); // convert to row major
+}
+
+void spawnParticle(Mat4f cameraMatrix) {
+	Mat4f modelView = getModelViewMatrix();
+	Mat4f modelTransform = cameraMatrix.inverse() * modelView;
+	Vec4f homoWorldPoint = modelTransform * Vec4f(0, 0, 0, 1);
+
+	Vec3f worldPoint(homoWorldPoint[0] / homoWorldPoint[3],
+		homoWorldPoint[1] / homoWorldPoint[3],
+		homoWorldPoint[2] / homoWorldPoint[3]);
+
+	ModelerApplication::Instance()->GetParticleSystem()->addParticle(Particle(worldPoint, Vec3f(0, 0, 0), Vec3f(0, 0, 0), 1.0));
+}
+
 void SpellBreaker::draw()
 {
 	if (!bitmap_loaded)
@@ -26,6 +65,8 @@ void SpellBreaker::draw()
 	}
 
 	ModelerView::draw();
+
+	Mat4f cameraMatrix = getModelViewMatrix();
 
 	//Translate the entire thing down a bit
 	glTranslated(0, -1.5, 0);
@@ -100,6 +141,7 @@ void SpellBreaker::draw()
 						glTranslated(0.3, 0.7, 0.8);
 						glScaled(0.15, 0.15, 0.1);
 						drawBox(1, 1, 1);
+						spawnParticle(cameraMatrix);
 					}
 					glPopMatrix();
 
@@ -283,6 +325,9 @@ int main()
 	controls[IK_LOWER_MAX_ANGLE] = ModelerControl("IK - Max lower angle", 0, 180, 1, 180);
 	controls[IK_STAFF_MIN_ANGLE] = ModelerControl("IK - Min staff angle", -180, 0, 1, -180);
 	controls[IK_STAFF_MAX_ANGLE] = ModelerControl("IK - Max staff angle", 0, 180, 1, 180);
+
+	ParticleSystem *ps = new ParticleSystem(10, 1, Vec3f(0, 1, 0));
+	ModelerApplication::Instance()->SetParticleSystem(ps);
 
 	ModelerApplication::Instance()->Init(&createSpellBreaker, controls, MY_NUM_CONTROLS);
 	return ModelerApplication::Instance()->Run();
