@@ -32,6 +32,7 @@ void ParticleSystem::startSimulation(float t)
 {
 	// TODO
 	currParticles.clear();
+	bake_start_time = t;
 	// These values are used by the UI ...
 	// -ve bake_end_time indicates that simulation
 	// is still progressing, and allows the
@@ -48,7 +49,7 @@ void ParticleSystem::stopSimulation(float t)
 {
 	// TODO
 	currParticles.clear();
-	//bake_end_time = t;
+	bake_end_time = t;
 	// These values are used by the UI
 	simulate = false;
 	dirty = true;
@@ -102,6 +103,10 @@ void ParticleSystem::addParticle(Particle p) {
 	currParticles.push_back(p);
 }
 
+void ParticleSystem::addForce(Vec3f force) {
+	forces.push_back(force);
+}
+
 /** Adds the current configuration of particles to
   * your data structure for storing baked particles **/
 void ParticleSystem::bakeParticles(float t)
@@ -124,6 +129,7 @@ void ParticleSystem::bakeParticles(float t)
 	}
 
 	//Put it into map
+	currParticles.assign(particles.begin(), particles.end());
 	baked.insert(pair<int, vector<Particle>>(key, particles));
 }
 

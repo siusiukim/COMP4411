@@ -334,6 +334,10 @@ public:
 		double len = length();
 		n[0] /= len; n[1] /= len; n[2] /= len; n[3] /= len;
 	}
+
+	Vec3f deHomogenuous() {
+		return Vec3f(n[0] / n[3], n[1] / n[3], n[2] / n[3]);
+	}
 	
 	//---[ Friend Methods ]----------------------
 

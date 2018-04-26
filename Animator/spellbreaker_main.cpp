@@ -2,6 +2,7 @@
 #include "modelerapp.h"
 #include "modelerdraw.h"
 #include <FL/gl.h>
+#include <random>
 
 #include "vec.h"
 #include "bitmap.h"
@@ -44,16 +45,37 @@ Mat4f getModelViewMatrix()
 	return matMV.transpose(); // convert to row major
 }
 
-void spawnParticle(Mat4f cameraMatrix) {
+Mat3f extractRotation(Mat4f trans) {
+	float scaleX = Vec3f(trans.get(0), trans.get(4), trans.get(8)).length();
+	float scaleY = Vec3f(trans.get(1), trans.get(5), trans.get(9)).length();
+	float scaleZ = Vec3f(trans.get(2), trans.get(6), trans.get(10)).length();
+
+	return Mat3f(
+		trans.get(0) / scaleX, trans.get(1) / scaleY, trans.get(2) / scaleZ,
+		trans.get(4) / scaleX, trans.get(5) / scaleY, trans.get(6) / scaleZ,
+		trans.get(8) / scaleX, trans.get(9) / scaleY, trans.get(10) / scaleZ
+	);
+}
+
+void spawnParticle(Mat4f cameraMatrix, Vec3f localForce, int num, float posRand, float forceRand) {
 	Mat4f modelView = getModelViewMatrix();
 	Mat4f modelTransform = cameraMatrix.inverse() * modelView;
+
 	Vec4f homoWorldPoint = modelTransform * Vec4f(0, 0, 0, 1);
+	Vec3f worldPoint = homoWorldPoint.deHomogenuous();
 
-	Vec3f worldPoint(homoWorldPoint[0] / homoWorldPoint[3],
-		homoWorldPoint[1] / homoWorldPoint[3],
-		homoWorldPoint[2] / homoWorldPoint[3]);
+	Vec3f worldForce = extractRotation(modelTransform) * localForce;
 
-	ModelerApplication::Instance()->GetParticleSystem()->addParticle(Particle(worldPoint, Vec3f(0, 0, 0), Vec3f(0, 0, 0), 1.0));
+	for (int n = 0; n < num; n++) {
+		Vec3f randWorldPoint, randWorldForce;
+		for (int i = 0; i < 3; i++) {
+			randWorldPoint[i] = worldPoint[i] + posRand * rand() / RAND_MAX;
+			randWorldForce[i] = worldForce[i] + forceRand * rand() / RAND_MAX;
+		}
+
+		ModelerApplication::Instance()->GetParticleSystem()->addParticle(
+			Particle(randWorldPoint, Vec3f(0, 0, 0), randWorldForce, 1.0));
+	}
 }
 
 void SpellBreaker::draw()
@@ -141,7 +163,7 @@ void SpellBreaker::draw()
 						glTranslated(0.3, 0.7, 0.8);
 						glScaled(0.15, 0.15, 0.1);
 						drawBox(1, 1, 1);
-						spawnParticle(cameraMatrix);
+						spawnParticle(cameraMatrix, Vec3f(0, 0, 0.2), 3, 0.2, 0.1);
 					}
 					glPopMatrix();
 
@@ -177,7 +199,7 @@ void SpellBreaker::draw()
 			//Upper left arm
 			glPushMatrix();
 			{
-				glTranslated(-0.55, 1 + breath_y/2, 0.25);
+				glTranslated(-0.55, 1 + breath_y / 2, 0.25);
 				{
 					//Rotate around near-top center of upper arm
 					glTranslated(0.25, 0.8, 0.3);
@@ -217,7 +239,7 @@ void SpellBreaker::draw()
 			//Upper right arm
 			glPushMatrix();
 			{
-				glTranslated(1.55, 1 + breath_y/2, 0.25);
+				glTranslated(1.55, 1 + breath_y / 2, 0.25);
 				{
 					//Rotate around near-top center of upper arm
 					glTranslated(0.25, 0.8, 0.3);
@@ -326,7 +348,9 @@ int main()
 	controls[IK_STAFF_MIN_ANGLE] = ModelerControl("IK - Min staff angle", -180, 0, 1, -180);
 	controls[IK_STAFF_MAX_ANGLE] = ModelerControl("IK - Max staff angle", 0, 180, 1, 180);
 
-	ParticleSystem *ps = new ParticleSystem(10, 1, Vec3f(0, 1, 0));
+	ParticleSystem *ps = new ParticleSystem(10, 1);
+	// Gravity
+	ps->addForce(Vec3f(0, -0.1, 0));
 	ModelerApplication::Instance()->SetParticleSystem(ps);
 
 	ModelerApplication::Instance()->Init(&createSpellBreaker, controls, MY_NUM_CONTROLS);

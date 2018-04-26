@@ -9,7 +9,8 @@ public:
 		pos(p),
 		vel(v),
 		fac(f),
-		mass(m)
+		mass(m),
+		life(0)
 	{
 	}
 

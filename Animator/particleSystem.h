@@ -28,10 +28,9 @@ class ParticleSystem {
 public:
 
 	/** Constructor **/
-	ParticleSystem(int life, float mass, Vec3f initialForce) 
+	ParticleSystem(int life, float mass) 
 		:particleLife(life),
-		particleMass(mass),
-		initialForce(initialForce)
+		particleMass(mass)
 	{
 	}
 
@@ -76,17 +75,16 @@ public:
 	void setDirty(bool d) { dirty = d; }
 
 	void addParticle(Particle p);
+	void addForce(Vec3f force);
 
 	//Particle properties
 	int particleLife = 100;
 	float particleMass = 1;
 
 	//Forces
-	Vec3f initialForce = Vec3f(0, 0, 0);
 	std::vector<Vec3f> forces;
 
 protected:
-
 	std::vector<Particle> currParticles;
 
 	//Baked
