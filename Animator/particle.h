@@ -5,18 +5,23 @@
 
 class Particle {
 public:
-	Particle(Vec3f p, Vec3f v, Vec3f f, float m):
+	Particle(Vec3f p, Vec3f v, Vec3f f, float m, Vec3f c, int t):
 		pos(p),
 		vel(v),
 		fac(f),
 		mass(m),
-		life(0)
+		life(0),
+		color(c),
+		type(t)
 	{
 	}
 
 	Vec3f pos, vel, fac;
 	float mass;
 	int life;
+
+	Vec3f color;
+	int type;
 
 	void doEuler() {
 		vel += fac / mass;

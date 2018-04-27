@@ -57,7 +57,7 @@ Mat3f extractRotation(Mat4f trans) {
 	);
 }
 
-void spawnParticle(Mat4f cameraMatrix, Vec3f localForce, int num, float posRand, float forceRand) {
+void spawnParticle(Mat4f cameraMatrix, Vec3f localForce, int num, float posRand, float forceRand, Vec3f color, float mass, int type) {
 	Mat4f modelView = getModelViewMatrix();
 	Mat4f modelTransform = cameraMatrix.inverse() * modelView;
 
@@ -74,7 +74,7 @@ void spawnParticle(Mat4f cameraMatrix, Vec3f localForce, int num, float posRand,
 		}
 
 		ModelerApplication::Instance()->GetParticleSystem()->addParticle(
-			Particle(randWorldPoint, Vec3f(0, 0, 0), randWorldForce, 1.0));
+			Particle(randWorldPoint, Vec3f(0, 0, 0), randWorldForce, mass, color, type));
 	}
 }
 
@@ -163,7 +163,7 @@ void SpellBreaker::draw()
 						glTranslated(0.3, 0.7, 0.8);
 						glScaled(0.15, 0.15, 0.1);
 						drawBox(1, 1, 1);
-						spawnParticle(cameraMatrix, Vec3f(0, 0, 0.2), 3, 0.2, 0.1);
+						spawnParticle(cameraMatrix, Vec3f(-0.5, 3, 0), 2, 0.1, 0.1, Vec3f(0.5, 0.3, 0.1), 30, 0);
 					}
 					glPopMatrix();
 
@@ -173,6 +173,7 @@ void SpellBreaker::draw()
 						glTranslated(0.6, 0.7, 0.8);
 						glScaled(0.15, 0.15, 0.1);
 						drawBox(1, 1, 1);
+						spawnParticle(cameraMatrix, Vec3f(0.5, 3, 0), 2, 0.1, 0.1, Vec3f(0.5, 0.1, 0.3), 30, 0);
 					}
 					glPopMatrix();
 				}
@@ -281,7 +282,8 @@ void SpellBreaker::draw()
 									glRotated(rotate_orb, 0, 0, 1.0);
 									glTranslated(0.1, 0, 0);
 									glTranslated(-0.1, -0.1, 4.1 + breath_orb);
-									//Cube for now, meatball later
+
+									spawnParticle(cameraMatrix, Vec3f(0, 0, 3), 5, 0.2, 1, Vec3f(1.0, 0, 0), 10, 1);
 									drawBox(0.2, 0.2, 0.2);
 								}
 								glPopMatrix();
@@ -298,6 +300,8 @@ void SpellBreaker::draw()
 		glPopMatrix();
 	}
 	glPopMatrix();
+
+	endDraw();
 }
 
 int main()
@@ -348,7 +352,7 @@ int main()
 	controls[IK_STAFF_MIN_ANGLE] = ModelerControl("IK - Min staff angle", -180, 0, 1, -180);
 	controls[IK_STAFF_MAX_ANGLE] = ModelerControl("IK - Max staff angle", 0, 180, 1, 180);
 
-	ParticleSystem *ps = new ParticleSystem(10, 1);
+	ParticleSystem *ps = new ParticleSystem(30, 1);
 	// Gravity
 	ps->addForce(Vec3f(0, -0.1, 0));
 	ModelerApplication::Instance()->SetParticleSystem(ps);

@@ -85,6 +85,7 @@ void ParticleSystem::drawParticles(float t)
 			vector<Particle> particles = iter->second;
 			for (int i = 0; i < particles.size(); i++) {
 				Particle p = particles[i];
+				setDiffuseColor(p.color[0], p.color[1], p.color[2]);
 				glPushMatrix();
 				{
 					glTranslated(p.pos[0], p.pos[1], p.pos[2]);
