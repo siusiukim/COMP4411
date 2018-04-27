@@ -40,11 +40,16 @@ void CatmullEvaluator::evaluateCurve(const std::vector<Point>& _ptvCtrlPts,
 
 	//Draw curves
 	int idx = 0;
+	float last_valid_x = 0;
 	for (; idx < numControlPoints - 3; idx++) {
 		Mat4f MGMatrix = constructMGMatrix(basisMatrix, modCtrlPoints[idx], modCtrlPoints[idx + 1], modCtrlPoints[idx + 2], modCtrlPoints[idx + 3]);
 		for (float t = 0; t < 1; t += 0.01) {
 			Point p = getPointAtT(MGMatrix, t);
-			ptvEvaluatedCurvePts.push_back(p);
+			//Special fix to Catmull
+			if (p.x > last_valid_x) {
+				ptvEvaluatedCurvePts.push_back(p);
+				last_valid_x = p.x;
+			}
 		}
 	}
 
@@ -69,8 +74,11 @@ void CatmullEvaluator::evaluateCurve(const std::vector<Point>& _ptvCtrlPts,
 
 			for (float t = 0; t < 1; t += 0.01) {
 				Point p = getPointAtT(MGMatrix, t);
-				p.x = warpFloat(p.x, fAniLength);
-				ptvEvaluatedCurvePts.push_back(p);
+				if (p.x > last_valid_x) {
+					last_valid_x = p.x;
+					p.x = warpFloat(p.x, fAniLength);
+					ptvEvaluatedCurvePts.push_back(p);
+				}
 			}
 		}
 	}
