@@ -19,6 +19,18 @@ public:
 	void toStream(std::ostream& output_stream) const;
 	void fromStream(std::istream& input_stream);
 
+	Point operator-(const Point& p) {
+		return Point(x - p.x, y - p.y);
+	}
+
+	Point operator+(const Point& p) {
+		return Point(x + p.x, y + p.y);
+	}
+
+	Point operator/(const float f) {
+		return Point(x/f, y/f);
+	}
+
 	float distance(const Point& p) const {
 		float xd = x - p.x;
 		float yd = y - p.y;

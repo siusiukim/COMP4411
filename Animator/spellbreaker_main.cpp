@@ -352,6 +352,9 @@ int main()
 	controls[IK_STAFF_MIN_ANGLE] = ModelerControl("IK - Min staff angle", -180, 0, 1, -180);
 	controls[IK_STAFF_MAX_ANGLE] = ModelerControl("IK - Max staff angle", 0, 180, 1, 180);
 
+	//Particle system
+
+
 	ParticleSystem *ps = new ParticleSystem(30, 1);
 	// Gravity
 	ps->addForce(Vec3f(0, -0.1, 0));

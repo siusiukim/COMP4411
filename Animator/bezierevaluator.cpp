@@ -9,7 +9,8 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 	const float& fAniLength,
 	const bool& bWrap) const
 {
-	static const Mat4f basisMatrix(-1, 3, -3, 1,
+	static const Mat4f basisMatrix
+	(-1, 3, -3, 1,
 		3, -6, 3, 0,
 		-3, 3, 0, 0,
 		1, 0, 0, 0);
